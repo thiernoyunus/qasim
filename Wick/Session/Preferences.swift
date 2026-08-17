@@ -31,6 +31,12 @@ final class Preferences {
     var salahLocationLabel = ""
     var customSalah: [String: SalahClock] = [:]
     var hiddenUntil: Date = .distantPast
+    // Persisted from the previous session so the next onboarding starts pre-populated
+    // instead of asking the user to re-add every site/app.
+    var lastBlockedApps: [AppIdentity] = []
+    var lastAllowedApps: [AppIdentity] = []
+    var lastBlockedSites: [SiteRule] = []
+    var lastAllowedSites: [SiteRule] = []
     var enabledMoves: Set<AngryMove> = [
         .glance, .talk, .lights, .fire, .sound
     ]
@@ -76,6 +82,10 @@ final class Preferences {
 
     func save() {
         let box = Box(
+            lastBlockedApps: lastBlockedApps,
+            lastAllowedApps: lastAllowedApps,
+            lastBlockedSites: lastBlockedSites,
+            lastAllowedSites: lastAllowedSites,
             userName: userName,
             companion: companion,
             voice: voice,
@@ -114,6 +124,10 @@ final class Preferences {
     private func load() {
         guard let data = UserDefaults.standard.data(forKey: key),
               let box = try? JSONDecoder().decode(Box.self, from: data) else { return }
+        lastBlockedApps = box.lastBlockedApps ?? []
+        lastAllowedApps = box.lastAllowedApps ?? []
+        lastBlockedSites = box.lastBlockedSites ?? []
+        lastAllowedSites = box.lastAllowedSites ?? []
         userName = box.userName ?? ""
         companion = box.companion
         voice = box.voice
@@ -148,6 +162,10 @@ final class Preferences {
     }
 
     private struct Box: Codable {
+        var lastBlockedApps: [AppIdentity]?
+        var lastAllowedApps: [AppIdentity]?
+        var lastBlockedSites: [SiteRule]?
+        var lastAllowedSites: [SiteRule]?
         var userName: String?
         var companion: CompanionID
         var voice: VoiceStyle

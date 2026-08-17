@@ -71,7 +71,6 @@ final class AppModel {
     private var lastTimerTask = ""
     private var lastTimerPaused = false
     private var lastTimerExpanded = false
-    private var lastTimerQuickToggleTitle: String?
     private var tickTask: Task<Void, Never>?
     private var lastLightsKick: Escalation = .calm
     private var lastTheater: Theater = .none
@@ -172,6 +171,12 @@ final class AppModel {
         isEditingSession = false
         timerExpanded = false
         prefs.hasCompletedSetup = true
+        // If the previous session left a block/allow list, pre-populate the new one
+        // so the user doesn't have to re-add the same sites/apps every time.
+        if !prefs.lastBlockedApps.isEmpty { session.blockedApps = prefs.lastBlockedApps }
+        if !prefs.lastBlockedSites.isEmpty { session.blockedSites = prefs.lastBlockedSites }
+        if !prefs.lastAllowedApps.isEmpty { session.allowedApps = prefs.lastAllowedApps }
+        if !prefs.lastAllowedSites.isEmpty { session.allowedSites = prefs.lastAllowedSites }
         prefs.save()
         session.start()
         brain.speak(SpeechLines.startLine(voice: prefs.voice, name: prefs.userName), seconds: 2.5, prefs: prefs)
@@ -205,6 +210,13 @@ final class AppModel {
                 strategy: session.strategy
             )
         }
+        // Remember what the user blocked/allowed so the next session's setup starts
+        // pre-populated and they don't have to re-add the same sites.
+        prefs.lastBlockedApps = session.blockedApps
+        prefs.lastAllowedApps = session.allowedApps
+        prefs.lastBlockedSites = session.blockedSites
+        prefs.lastAllowedSites = session.allowedSites
+        prefs.save()
         session.end(finished: finished)
         isEditingSession = false
         timerExpanded = false
@@ -238,7 +250,6 @@ final class AppModel {
         onResizeChanged: ((CGSize) -> Void)? = nil,
         onResizeEnded: (() -> Void)? = nil
     ) -> TimerChipView {
-        let qTitle = currentQuickToggleTitle()
         return TimerChipView(
             remaining: session.remainingLabel,
             angry: session.escalation >= .nudge && session.phase == .running,
@@ -254,12 +265,10 @@ final class AppModel {
             onDragEnded: onDragEnded,
             onResizeChanged: onResizeChanged,
             onResizeEnded: onResizeEnded,
-            quickToggleTitle: qTitle,
-            onQuickToggle: { [weak self] in self?.quickToggleCurrentApp() }
         )
     }
 
-    private func currentQuickToggleTitle() -> String? {
+    func currentQuickToggleTitle() -> String? {
         let ctx = session.monitor.context
         guard session.strategy != .company, !ctx.bundleID.isEmpty else { return nil }
         if let host = ctx.host {
@@ -325,14 +334,10 @@ final class AppModel {
         timerPanelSize = size
         timerPanelOrigin = origin
         timerPanel.setFrame(NSRect(origin: origin, size: size), display: true)
+        // Just resize the host; the SwiftUI view already uses maxWidth/maxHeight
+        // and lays itself out inside whatever frame we give it. Rebuilding the
+        // rootView on every drag tick was the source of the sluggishness.
         timerHost?.frame = NSRect(origin: .zero, size: size)
-        timerHost?.rootView = timerChip(
-            size: size,
-            onDragChanged: { [weak self] translation in self?.moveTimerPanel(translation) },
-            onDragEnded: { [weak self] in self?.finishMovingTimerPanel() },
-            onResizeChanged: { [weak self] translation in self?.resizeTimerPanel(translation) },
-            onResizeEnded: { [weak self] in self?.finishResizingTimerPanel() }
-        )
     }
 
     func finishResizingTimerPanel() {
@@ -790,14 +795,12 @@ final class AppModel {
         let remaining = session.remainingLabel
         let angry = session.escalation >= .nudge && session.phase == .running
         let paused = session.phase == .paused
-        let quickToggleTitle = currentQuickToggleTitle()
         let contentChanged = timerPanel == nil
             || remaining != lastTimerRemaining
             || angry != lastTimerAngry
             || session.taskTitle != lastTimerTask
             || paused != lastTimerPaused
             || timerExpanded != lastTimerExpanded
-            || quickToggleTitle != lastTimerQuickToggleTitle
 
         if timerPanel == nil {
             let panel = TimerOverlayPanel(
@@ -842,7 +845,6 @@ final class AppModel {
         lastTimerTask = session.taskTitle
         lastTimerPaused = paused
         lastTimerExpanded = timerExpanded
-        lastTimerQuickToggleTitle = quickToggleTitle
         if !contentChanged {
             if timerPanel?.isVisible == false { timerPanel?.orderFrontRegardless() }
             return

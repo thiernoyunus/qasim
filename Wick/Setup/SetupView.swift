@@ -6,6 +6,8 @@ struct SetupView: View {
     @State private var step: Int
     @State private var query = ""
     @State private var siteDraft = ""
+    @State private var customMinutes: String = ""
+    @State private var showCustomInput = false
 
     init(startAt: Int = 0) {
         _step = State(initialValue: startAt)
@@ -263,6 +265,12 @@ struct SetupView: View {
                 ForEach(options, id: \.self) { minutes in
                     Button {
                         session.durationMinutes = minutes
+                        if minutes == 0 {
+                            showCustomInput = true
+                            if customMinutes.isEmpty { customMinutes = "25" }
+                        } else {
+                            showCustomInput = false
+                        }
                     } label: {
                         Text(minutes == 0 ? "Custom" : "\(minutes)m")
                             .font(.system(size: 14, weight: .semibold))
@@ -273,6 +281,33 @@ struct SetupView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
                     }
                     .buttonStyle(.plain)
+                }
+            }
+            if showCustomInput {
+                HStack(spacing: 8) {
+                    TextField("Minutes", text: $customMinutes)
+                        .textFieldStyle(.plain)
+                        .frame(maxWidth: 80)
+                        .padding(10)
+                        .background(Palette.cream, in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                                .stroke(Palette.ink.opacity(0.2), lineWidth: 1)
+                        )
+                        .onChange(of: customMinutes) { _, raw in
+                            if let mins = Int(raw.trimmingCharacters(in: .whitespacesAndNewlines)),
+                               mins > 0, mins <= 600 {
+                                session.durationMinutes = mins
+                            }
+                        }
+                    Button("Stopwatch") {
+                        session.durationMinutes = 0
+                        customMinutes = ""
+                        showCustomInput = false
+                    }
+                    .buttonStyle(.plain)
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundStyle(Palette.inkSoft)
                 }
             }
 
@@ -290,7 +325,10 @@ struct SetupView: View {
 
     private func footer(session: SessionController) -> some View {
         HStack {
-            if step > 0 {
+            // Returning users (already onboarded) only see the task->strategy->apps->duration
+            // flow. There are no onboarding steps behind them, so Back would just re-show
+            // already-saved settings. Hide the button instead.
+            if step > 0 && !model.prefs.hasCompletedSetup {
                 Button("Back") { step -= 1 }
                     .buttonStyle(.plain)
                     .foregroundStyle(Palette.inkSoft)

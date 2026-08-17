@@ -31,6 +31,9 @@ struct MenuBarView: View {
             }
             Button("I'm done") { model.stopSession(finished: true) }
             Button("Give up") { model.stopSession(finished: false) }
+            if let toggle = model.currentQuickToggleTitle() {
+                Button(toggle) { model.quickToggleCurrentApp() }
+            }
         } else if model.session.phase == .finished {
             Text("Session finished")
             Button("Start another") { model.openSetup() }
