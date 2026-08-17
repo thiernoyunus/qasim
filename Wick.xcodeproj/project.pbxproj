@@ -46,6 +46,7 @@
 		7EAA32B2C08AAF0C9BEC498A /* SessionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE93F0C2873FC4FFC0BC334D /* SessionController.swift */; };
 		82BC2612C6E5B3B5139BAF6F /* OverlayRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1C3F19A3D5AA6CA51293B6D /* OverlayRootView.swift */; };
 		87BC51AFDC3A7B29A4D84A9C /* qasim-ruku.png in Resources */ = {isa = PBXBuildFile; fileRef = 3841FCD9027FF7CBFAEA265E /* qasim-ruku.png */; };
+		8A7F119CC15BC980594D7280 /* NewSessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3A426975D4922F21806EBBF /* NewSessionView.swift */; };
 		90B955EE8DC44FA0D0522EB6 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31BA1D9CD76EF54D96B6410C /* SettingsView.swift */; };
 		99F48C4232702440AB6AEA54 /* BrowserInspector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F87EF5185A2BFA24323A728 /* BrowserInspector.swift */; };
 		9B40DB50DEE02AA22A97A941 /* qasim-tasbih-a.png in Resources */ = {isa = PBXBuildFile; fileRef = B8F6BAA34FDA2A2DCE3348C9 /* qasim-tasbih-a.png */; };
@@ -131,6 +132,7 @@
 		D0F2840910DEC401AF766FC6 /* Companion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Companion.swift; sourceTree = "<group>"; };
 		D60AB8602C3B0B8D20739526 /* nur-switch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nur-switch.png"; sourceTree = "<group>"; };
 		E1B1666D107191ACF7F32E53 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
+		E3A426975D4922F21806EBBF /* NewSessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewSessionView.swift; sourceTree = "<group>"; };
 		E72E52619C2D99B34E65BB9E /* hana-idle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hana-idle.png"; sourceTree = "<group>"; };
 		E805D35D5FBB0FE09C74459E /* qasim-qiyam.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "qasim-qiyam.png"; sourceTree = "<group>"; };
 		E9E759A2CA6EE1E45B41FDCD /* SoundBoard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundBoard.swift; sourceTree = "<group>"; };
@@ -287,6 +289,7 @@
 		91BD737DA846B4E53A3070BA /* Setup */ = {
 			isa = PBXGroup;
 			children = (
+				E3A426975D4922F21806EBBF /* NewSessionView.swift */,
 				8175762352AC2409AB2A2C0B /* SetupView.swift */,
 			);
 			path = Setup;
@@ -510,6 +513,7 @@
 				4344C7B2724FA8091B7D7E4C /* LocationFix.swift in Sources */,
 				D131D2BAF7B3D41CA1DA0E26 /* MenuBarView.swift in Sources */,
 				E2E0973F86C1A1E18A47B590 /* Models.swift in Sources */,
+				8A7F119CC15BC980594D7280 /* NewSessionView.swift in Sources */,
 				82BC2612C6E5B3B5139BAF6F /* OverlayRootView.swift in Sources */,
 				62D9272E75D769FC010C5C81 /* OverlayWindow.swift in Sources */,
 				651989023CD3EE1F470F9A97 /* Palette.swift in Sources */,
