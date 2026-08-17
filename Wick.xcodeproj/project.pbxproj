@@ -1,0 +1,743 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0175A6C127BAFB90C68A40A2 /* qasim-switch-up.png in Resources */ = {isa = PBXBuildFile; fileRef = C80BC336F4A09F34FCA9FA80 /* qasim-switch-up.png */; };
+		043FE59DFFA13328716B8301 /* fire-crackle.wav in Resources */ = {isa = PBXBuildFile; fileRef = C41D7C606C8EC227FA72B715 /* fire-crackle.wav */; };
+		04C29902AB51061818AF9D4C /* qasim-qiyam.png in Resources */ = {isa = PBXBuildFile; fileRef = E805D35D5FBB0FE09C74459E /* qasim-qiyam.png */; };
+		0CB45AF0EE68F480E69D7E59 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A319E0B73D468AC01B6AAACA /* Assets.xcassets */; };
+		0CB62B0E8A495AED9C5D9F31 /* nur-idle.png in Resources */ = {isa = PBXBuildFile; fileRef = 468F0D186C76A2BD63473C04 /* nur-idle.png */; };
+		1186CE3DB26BAB13A9428B14 /* qasim-idle.png in Resources */ = {isa = PBXBuildFile; fileRef = 5456B44CD9BC3757B135ED27 /* qasim-idle.png */; };
+		12884742238A7CB4E79DC515 /* InstalledAppCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1965DCA93B9DC42FE26C4F64 /* InstalledAppCatalog.swift */; };
+		12EC5056376E52DC6631D4B4 /* nur-sujud.png in Resources */ = {isa = PBXBuildFile; fileRef = 3B8AD6F8823193D9DE4CCAB4 /* nur-sujud.png */; };
+		27132C31D6B58F02D5639864 /* BreakView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 885348EBB4C1C9C9AC8D5312 /* BreakView.swift */; };
+		2C3C761030EA73BE31DFCC97 /* nur-sleep.png in Resources */ = {isa = PBXBuildFile; fileRef = 4231BA55FAABE3A991F12B41 /* nur-sleep.png */; };
+		2E2FFFE482DE421B02668667 /* qasim-typing.png in Resources */ = {isa = PBXBuildFile; fileRef = AB360AB4AD389027AF0F44C6 /* qasim-typing.png */; };
+		2FC81AA5D1C8BE10FBE6EEAF /* qasim-quran.png in Resources */ = {isa = PBXBuildFile; fileRef = 4FDBDF3839F9F4892095859F /* qasim-quran.png */; };
+		392E34D41F38D07893398746 /* ProgressBoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44BE90041282C30053743CFE /* ProgressBoardView.swift */; };
+		421FD9244A79024CED9A94B4 /* hana-switch.png in Resources */ = {isa = PBXBuildFile; fileRef = 78EF1A2F91078DE28B9880D5 /* hana-switch.png */; };
+		4344C7B2724FA8091B7D7E4C /* LocationFix.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C0AC608671B33D462CCF293 /* LocationFix.swift */; };
+		463C2D0E588E90A05BBAF64E /* nur-typing.png in Resources */ = {isa = PBXBuildFile; fileRef = 85496D10C7D18949F72BDA80 /* nur-typing.png */; };
+		470FAE44C07EB650B5B64FBF /* nur-qiyam.png in Resources */ = {isa = PBXBuildFile; fileRef = FCC03326734E95AAC26943B0 /* nur-qiyam.png */; };
+		4873DE6588CA9DB8AB1B1D41 /* WickApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C0C0A0F52A18DA4B8A9AD1E /* WickApp.swift */; };
+		4B4801A1DDA3E5B232FDFE18 /* TimerChipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE804DAEA31EAF40A0242899 /* TimerChipView.swift */; };
+		4BAD3117AC32D692B1781DF3 /* nur-angry.png in Resources */ = {isa = PBXBuildFile; fileRef = 93B27DE66A0D0F2E05AA865C /* nur-angry.png */; };
+		56215403055299B4C7117FB0 /* hana-typing.png in Resources */ = {isa = PBXBuildFile; fileRef = BE73F9E8FA9F690A1990DCED /* hana-typing.png */; };
+		576999AAF9D8CC1D06BC10D7 /* CharacterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56FF20761D138211FF6FFF17 /* CharacterView.swift */; };
+		5CD86B4F515DECE8F886D823 /* qasim-tasbih-b.png in Resources */ = {isa = PBXBuildFile; fileRef = 74F4E8915AC5D093AA31314D /* qasim-tasbih-b.png */; };
+		5F30C51E6494A9442173168F /* SoundBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E759A2CA6EE1E45B41FDCD /* SoundBoard.swift */; };
+		5FFF235E09C781514FF82364 /* hana-angry.png in Resources */ = {isa = PBXBuildFile; fileRef = 3A19B0CCE95221ED5F034B02 /* hana-angry.png */; };
+		618F1BF6CB0DDD869EB1D265 /* qasim-angry.png in Resources */ = {isa = PBXBuildFile; fileRef = 12F026963C6C7C9F2F5694BE /* qasim-angry.png */; };
+		621403E8A66496BB7BA8C8F4 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 9432E8D62D9B6028182E7C34 /* Sparkle */; };
+		62D9272E75D769FC010C5C81 /* OverlayWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E320005F88DD89D3EC1003E /* OverlayWindow.swift */; };
+		632F3F64F33223DCF3D48D9A /* nur-switch.png in Resources */ = {isa = PBXBuildFile; fileRef = D60AB8602C3B0B8D20739526 /* nur-switch.png */; };
+		651989023CD3EE1F470F9A97 /* Palette.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98CD5AC2EBFEA1F99A90E0A8 /* Palette.swift */; };
+		67699F49E98AC31717355EBD /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4F3AADD21005A21BCE1AD17 /* Preferences.swift */; };
+		6A09767D93ABE09930761C4F /* hana-sleep.png in Resources */ = {isa = PBXBuildFile; fileRef = 958F39AF8FB376568CAFFCC4 /* hana-sleep.png */; };
+		6D6DE2F81DEDE3FE72209FC3 /* ProgressStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD3A66FDF0400747C6E3C7A /* ProgressStore.swift */; };
+		787D9EA352049C15F361E66C /* Companion.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0F2840910DEC401AF766FC6 /* Companion.swift */; };
+		7DD334E72C9101342C12FE65 /* DistractionMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 380D03C74D6A201A6516239B /* DistractionMonitor.swift */; };
+		7E20908050E5AA1E02625991 /* app-icon-1024.png in Resources */ = {isa = PBXBuildFile; fileRef = A2C8483230475C3B6BA1DE43 /* app-icon-1024.png */; };
+		7EAA32B2C08AAF0C9BEC498A /* SessionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE93F0C2873FC4FFC0BC334D /* SessionController.swift */; };
+		82BC2612C6E5B3B5139BAF6F /* OverlayRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1C3F19A3D5AA6CA51293B6D /* OverlayRootView.swift */; };
+		87BC51AFDC3A7B29A4D84A9C /* qasim-ruku.png in Resources */ = {isa = PBXBuildFile; fileRef = 3841FCD9027FF7CBFAEA265E /* qasim-ruku.png */; };
+		90B955EE8DC44FA0D0522EB6 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31BA1D9CD76EF54D96B6410C /* SettingsView.swift */; };
+		99F48C4232702440AB6AEA54 /* BrowserInspector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F87EF5185A2BFA24323A728 /* BrowserInspector.swift */; };
+		9B40DB50DEE02AA22A97A941 /* qasim-tasbih-a.png in Resources */ = {isa = PBXBuildFile; fileRef = B8F6BAA34FDA2A2DCE3348C9 /* qasim-tasbih-a.png */; };
+		A0549B33BA4264A37D6AD785 /* UpdaterController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BC7D72049F033E4C55AC746 /* UpdaterController.swift */; };
+		AC33639765248BC8CEB1E060 /* hana-qiyam.png in Resources */ = {isa = PBXBuildFile; fileRef = 1845B6F6E24D54E4FA1CFF2B /* hana-qiyam.png */; };
+		B38B5CA047B262CF0A1EAD0A /* SetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8175762352AC2409AB2A2C0B /* SetupView.swift */; };
+		B8543AD61BBFD4CF005241D4 /* paper-notes.wav in Resources */ = {isa = PBXBuildFile; fileRef = A59FACF6591716F5BFC5B6AB /* paper-notes.wav */; };
+		BB48CA392EF6FE94C12B708F /* CharacterBrain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50A3D56C8182797F3BEE5451 /* CharacterBrain.swift */; };
+		BD2C03D99447092615A10FFF /* scold-blip.wav in Resources */ = {isa = PBXBuildFile; fileRef = 5D48197BAAE5A5767140A4DA /* scold-blip.wav */; };
+		BDC805D36BFC280D98F523A7 /* hana-idle.png in Resources */ = {isa = PBXBuildFile; fileRef = E72E52619C2D99B34E65BB9E /* hana-idle.png */; };
+		CBD41F6E43F793903659B2F5 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1B1666D107191ACF7F32E53 /* AppModel.swift */; };
+		CCF0D7191C8A1C6144AED757 /* hana-ruku.png in Resources */ = {isa = PBXBuildFile; fileRef = EC28E40397835B4DCCBB7B06 /* hana-ruku.png */; };
+		D0E0ACB8457658AA0EA332FB /* hana-sujud.png in Resources */ = {isa = PBXBuildFile; fileRef = 11E8BE23C6F9DA9685DAFBE7 /* hana-sujud.png */; };
+		D131D2BAF7B3D41CA1DA0E26 /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7984B8CCDBC4FB8F146E01A2 /* MenuBarView.swift */; };
+		D3492F2B3E71228BA2456A91 /* BreakActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA748340F252BF7CCC64D5F2 /* BreakActivity.swift */; };
+		D4B012B4667749E45794DB53 /* qasim-sujud.png in Resources */ = {isa = PBXBuildFile; fileRef = F2514548B455E8957E6A2A73 /* qasim-sujud.png */; };
+		D72C7A5ED4703BF1E1E4E950 /* PrayerTimes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F6912FE5DEC8767A54D39C1 /* PrayerTimes.swift */; };
+		DBC3ADA458280C96F48B5B26 /* qasim-switch-down.png in Resources */ = {isa = PBXBuildFile; fileRef = FA33E8488ADB5988ADE2E223 /* qasim-switch-down.png */; };
+		DCCA159AE7DC477E2D5A35AF /* nur-ruku.png in Resources */ = {isa = PBXBuildFile; fileRef = 48494F2838F0EE0948B320F3 /* nur-ruku.png */; };
+		E1B6828773681E5FE7CB5DCB /* switch-click.wav in Resources */ = {isa = PBXBuildFile; fileRef = F9F05BEBE6FB31BB9FFFA174 /* switch-click.wav */; };
+		E2426EFC14E242624E739A07 /* Effects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0903C78444D1C811565A363E /* Effects.swift */; };
+		E2E0973F86C1A1E18A47B590 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3A742333DFA6B3866339500 /* Models.swift */; };
+		E5E0F98ACB6281776973535D /* SalahWatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB263AE7BEA5EB7A584291E5 /* SalahWatch.swift */; };
+		E995C2C2B4C61E37913000A8 /* SpeechLines.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6185DA2F4E679EA6CECAD53E /* SpeechLines.swift */; };
+		EEFA09B96E1DCE813242A7D4 /* SalahNotifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87F58BBCD0CAC70827733204 /* SalahNotifier.swift */; };
+		F4514C8889A9840CF463A8EE /* PrayerAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4757A503D1F0544C4ED5BDC /* PrayerAPI.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0903C78444D1C811565A363E /* Effects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Effects.swift; sourceTree = "<group>"; };
+		0D1BC7EB82141AA4EC2711E3 /* Wick.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Wick.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0F87EF5185A2BFA24323A728 /* BrowserInspector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserInspector.swift; sourceTree = "<group>"; };
+		11E8BE23C6F9DA9685DAFBE7 /* hana-sujud.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hana-sujud.png"; sourceTree = "<group>"; };
+		12F026963C6C7C9F2F5694BE /* qasim-angry.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "qasim-angry.png"; sourceTree = "<group>"; };
+		1845B6F6E24D54E4FA1CFF2B /* hana-qiyam.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hana-qiyam.png"; sourceTree = "<group>"; };
+		1965DCA93B9DC42FE26C4F64 /* InstalledAppCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstalledAppCatalog.swift; sourceTree = "<group>"; };
+		1AD3A66FDF0400747C6E3C7A /* ProgressStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressStore.swift; sourceTree = "<group>"; };
+		31BA1D9CD76EF54D96B6410C /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		380D03C74D6A201A6516239B /* DistractionMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistractionMonitor.swift; sourceTree = "<group>"; };
+		3841FCD9027FF7CBFAEA265E /* qasim-ruku.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "qasim-ruku.png"; sourceTree = "<group>"; };
+		3A19B0CCE95221ED5F034B02 /* hana-angry.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hana-angry.png"; sourceTree = "<group>"; };
+		3B8AD6F8823193D9DE4CCAB4 /* nur-sujud.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nur-sujud.png"; sourceTree = "<group>"; };
+		3BC7D72049F033E4C55AC746 /* UpdaterController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdaterController.swift; sourceTree = "<group>"; };
+		4231BA55FAABE3A991F12B41 /* nur-sleep.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nur-sleep.png"; sourceTree = "<group>"; };
+		44BE90041282C30053743CFE /* ProgressBoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBoardView.swift; sourceTree = "<group>"; };
+		468F0D186C76A2BD63473C04 /* nur-idle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nur-idle.png"; sourceTree = "<group>"; };
+		48494F2838F0EE0948B320F3 /* nur-ruku.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nur-ruku.png"; sourceTree = "<group>"; };
+		4FDBDF3839F9F4892095859F /* qasim-quran.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "qasim-quran.png"; sourceTree = "<group>"; };
+		50A3D56C8182797F3BEE5451 /* CharacterBrain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterBrain.swift; sourceTree = "<group>"; };
+		5456B44CD9BC3757B135ED27 /* qasim-idle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "qasim-idle.png"; sourceTree = "<group>"; };
+		56FF20761D138211FF6FFF17 /* CharacterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterView.swift; sourceTree = "<group>"; };
+		5C0AC608671B33D462CCF293 /* LocationFix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationFix.swift; sourceTree = "<group>"; };
+		5D48197BAAE5A5767140A4DA /* scold-blip.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "scold-blip.wav"; sourceTree = "<group>"; };
+		5E320005F88DD89D3EC1003E /* OverlayWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayWindow.swift; sourceTree = "<group>"; };
+		5F6912FE5DEC8767A54D39C1 /* PrayerTimes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerTimes.swift; sourceTree = "<group>"; };
+		6185DA2F4E679EA6CECAD53E /* SpeechLines.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechLines.swift; sourceTree = "<group>"; };
+		6C0C0A0F52A18DA4B8A9AD1E /* WickApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WickApp.swift; sourceTree = "<group>"; };
+		70475744D5A3508E135DF7BD /* Wick.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Wick.entitlements; sourceTree = "<group>"; };
+		74F4E8915AC5D093AA31314D /* qasim-tasbih-b.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "qasim-tasbih-b.png"; sourceTree = "<group>"; };
+		78EF1A2F91078DE28B9880D5 /* hana-switch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hana-switch.png"; sourceTree = "<group>"; };
+		7984B8CCDBC4FB8F146E01A2 /* MenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarView.swift; sourceTree = "<group>"; };
+		8175762352AC2409AB2A2C0B /* SetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupView.swift; sourceTree = "<group>"; };
+		85496D10C7D18949F72BDA80 /* nur-typing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nur-typing.png"; sourceTree = "<group>"; };
+		87F58BBCD0CAC70827733204 /* SalahNotifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SalahNotifier.swift; sourceTree = "<group>"; };
+		885348EBB4C1C9C9AC8D5312 /* BreakView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreakView.swift; sourceTree = "<group>"; };
+		93B27DE66A0D0F2E05AA865C /* nur-angry.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nur-angry.png"; sourceTree = "<group>"; };
+		958F39AF8FB376568CAFFCC4 /* hana-sleep.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hana-sleep.png"; sourceTree = "<group>"; };
+		98CD5AC2EBFEA1F99A90E0A8 /* Palette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Palette.swift; sourceTree = "<group>"; };
+		A2C8483230475C3B6BA1DE43 /* app-icon-1024.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "app-icon-1024.png"; sourceTree = "<group>"; };
+		A319E0B73D468AC01B6AAACA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A59FACF6591716F5BFC5B6AB /* paper-notes.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "paper-notes.wav"; sourceTree = "<group>"; };
+		AB360AB4AD389027AF0F44C6 /* qasim-typing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "qasim-typing.png"; sourceTree = "<group>"; };
+		B3A742333DFA6B3866339500 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		B4757A503D1F0544C4ED5BDC /* PrayerAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerAPI.swift; sourceTree = "<group>"; };
+		B8F6BAA34FDA2A2DCE3348C9 /* qasim-tasbih-a.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "qasim-tasbih-a.png"; sourceTree = "<group>"; };
+		BE73F9E8FA9F690A1990DCED /* hana-typing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hana-typing.png"; sourceTree = "<group>"; };
+		BE804DAEA31EAF40A0242899 /* TimerChipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerChipView.swift; sourceTree = "<group>"; };
+		C41D7C606C8EC227FA72B715 /* fire-crackle.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "fire-crackle.wav"; sourceTree = "<group>"; };
+		C4F3AADD21005A21BCE1AD17 /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
+		C80BC336F4A09F34FCA9FA80 /* qasim-switch-up.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "qasim-switch-up.png"; sourceTree = "<group>"; };
+		CB263AE7BEA5EB7A584291E5 /* SalahWatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SalahWatch.swift; sourceTree = "<group>"; };
+		CE93F0C2873FC4FFC0BC334D /* SessionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionController.swift; sourceTree = "<group>"; };
+		D0F2840910DEC401AF766FC6 /* Companion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Companion.swift; sourceTree = "<group>"; };
+		D60AB8602C3B0B8D20739526 /* nur-switch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nur-switch.png"; sourceTree = "<group>"; };
+		E1B1666D107191ACF7F32E53 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
+		E72E52619C2D99B34E65BB9E /* hana-idle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hana-idle.png"; sourceTree = "<group>"; };
+		E805D35D5FBB0FE09C74459E /* qasim-qiyam.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "qasim-qiyam.png"; sourceTree = "<group>"; };
+		E9E759A2CA6EE1E45B41FDCD /* SoundBoard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundBoard.swift; sourceTree = "<group>"; };
+		EC28E40397835B4DCCBB7B06 /* hana-ruku.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hana-ruku.png"; sourceTree = "<group>"; };
+		F1C3F19A3D5AA6CA51293B6D /* OverlayRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayRootView.swift; sourceTree = "<group>"; };
+		F2514548B455E8957E6A2A73 /* qasim-sujud.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "qasim-sujud.png"; sourceTree = "<group>"; };
+		F9F05BEBE6FB31BB9FFFA174 /* switch-click.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "switch-click.wav"; sourceTree = "<group>"; };
+		FA33E8488ADB5988ADE2E223 /* qasim-switch-down.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "qasim-switch-down.png"; sourceTree = "<group>"; };
+		FA748340F252BF7CCC64D5F2 /* BreakActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreakActivity.swift; sourceTree = "<group>"; };
+		FCC03326734E95AAC26943B0 /* nur-qiyam.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nur-qiyam.png"; sourceTree = "<group>"; };
+		FFEFFAAE3371280E5D9973D0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		4E31026D43BBC32462F08AC9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				621403E8A66496BB7BA8C8F4 /* Sparkle in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		009D3F4A699F3C046DE58CCC /* Progress */ = {
+			isa = PBXGroup;
+			children = (
+				44BE90041282C30053743CFE /* ProgressBoardView.swift */,
+			);
+			path = Progress;
+			sourceTree = "<group>";
+		};
+		00BA663878848337996FD3FC /* Nur */ = {
+			isa = PBXGroup;
+			children = (
+				93B27DE66A0D0F2E05AA865C /* nur-angry.png */,
+				468F0D186C76A2BD63473C04 /* nur-idle.png */,
+				FCC03326734E95AAC26943B0 /* nur-qiyam.png */,
+				48494F2838F0EE0948B320F3 /* nur-ruku.png */,
+				4231BA55FAABE3A991F12B41 /* nur-sleep.png */,
+				3B8AD6F8823193D9DE4CCAB4 /* nur-sujud.png */,
+				D60AB8602C3B0B8D20739526 /* nur-switch.png */,
+				85496D10C7D18949F72BDA80 /* nur-typing.png */,
+			);
+			path = Nur;
+			sourceTree = "<group>";
+		};
+		032362EDED4B5C522BAB65AF /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				C948F490E99028F0888E233B /* Art */,
+				1AB9890658E71D73DD32E099 /* Sounds */,
+				A319E0B73D468AC01B6AAACA /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		08899653609EC6542A93EC49 /* Hana */ = {
+			isa = PBXGroup;
+			children = (
+				3A19B0CCE95221ED5F034B02 /* hana-angry.png */,
+				E72E52619C2D99B34E65BB9E /* hana-idle.png */,
+				1845B6F6E24D54E4FA1CFF2B /* hana-qiyam.png */,
+				EC28E40397835B4DCCBB7B06 /* hana-ruku.png */,
+				958F39AF8FB376568CAFFCC4 /* hana-sleep.png */,
+				11E8BE23C6F9DA9685DAFBE7 /* hana-sujud.png */,
+				78EF1A2F91078DE28B9880D5 /* hana-switch.png */,
+				BE73F9E8FA9F690A1990DCED /* hana-typing.png */,
+			);
+			path = Hana;
+			sourceTree = "<group>";
+		};
+		09FD0E37AC342D238C113FFA /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				98CD5AC2EBFEA1F99A90E0A8 /* Palette.swift */,
+			);
+			path = Theme;
+			sourceTree = "<group>";
+		};
+		1AB9890658E71D73DD32E099 /* Sounds */ = {
+			isa = PBXGroup;
+			children = (
+				C41D7C606C8EC227FA72B715 /* fire-crackle.wav */,
+				A59FACF6591716F5BFC5B6AB /* paper-notes.wav */,
+				5D48197BAAE5A5767140A4DA /* scold-blip.wav */,
+				F9F05BEBE6FB31BB9FFFA174 /* switch-click.wav */,
+			);
+			path = Sounds;
+			sourceTree = "<group>";
+		};
+		271F860D532542B715CE7440 = {
+			isa = PBXGroup;
+			children = (
+				D35CCDCA966E56E275E47458 /* Wick */,
+				B702D83EC1B170E31CF7A9A0 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		27BD989366D8096B3345033A /* Audio */ = {
+			isa = PBXGroup;
+			children = (
+				E9E759A2CA6EE1E45B41FDCD /* SoundBoard.swift */,
+			);
+			path = Audio;
+			sourceTree = "<group>";
+		};
+		2ED1D4E3BFDA168E72C12AB5 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				31BA1D9CD76EF54D96B6410C /* SettingsView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		504F209E512BDD0D5C840B5D /* Break */ = {
+			isa = PBXGroup;
+			children = (
+				885348EBB4C1C9C9AC8D5312 /* BreakView.swift */,
+			);
+			path = Break;
+			sourceTree = "<group>";
+		};
+		77CD2B13977CA98AF1519B66 /* Overlay */ = {
+			isa = PBXGroup;
+			children = (
+				0903C78444D1C811565A363E /* Effects.swift */,
+				F1C3F19A3D5AA6CA51293B6D /* OverlayRootView.swift */,
+				5E320005F88DD89D3EC1003E /* OverlayWindow.swift */,
+				BE804DAEA31EAF40A0242899 /* TimerChipView.swift */,
+			);
+			path = Overlay;
+			sourceTree = "<group>";
+		};
+		8E9FE77FDD1C7E65962064BD /* Qasim */ = {
+			isa = PBXGroup;
+			children = (
+				12F026963C6C7C9F2F5694BE /* qasim-angry.png */,
+				5456B44CD9BC3757B135ED27 /* qasim-idle.png */,
+				E805D35D5FBB0FE09C74459E /* qasim-qiyam.png */,
+				4FDBDF3839F9F4892095859F /* qasim-quran.png */,
+				3841FCD9027FF7CBFAEA265E /* qasim-ruku.png */,
+				F2514548B455E8957E6A2A73 /* qasim-sujud.png */,
+				FA33E8488ADB5988ADE2E223 /* qasim-switch-down.png */,
+				C80BC336F4A09F34FCA9FA80 /* qasim-switch-up.png */,
+				B8F6BAA34FDA2A2DCE3348C9 /* qasim-tasbih-a.png */,
+				74F4E8915AC5D093AA31314D /* qasim-tasbih-b.png */,
+				AB360AB4AD389027AF0F44C6 /* qasim-typing.png */,
+			);
+			path = Qasim;
+			sourceTree = "<group>";
+		};
+		91BD737DA846B4E53A3070BA /* Setup */ = {
+			isa = PBXGroup;
+			children = (
+				8175762352AC2409AB2A2C0B /* SetupView.swift */,
+			);
+			path = Setup;
+			sourceTree = "<group>";
+		};
+		AC900FD01342C809238AE632 /* Session */ = {
+			isa = PBXGroup;
+			children = (
+				0F87EF5185A2BFA24323A728 /* BrowserInspector.swift */,
+				380D03C74D6A201A6516239B /* DistractionMonitor.swift */,
+				1965DCA93B9DC42FE26C4F64 /* InstalledAppCatalog.swift */,
+				B3A742333DFA6B3866339500 /* Models.swift */,
+				C4F3AADD21005A21BCE1AD17 /* Preferences.swift */,
+				1AD3A66FDF0400747C6E3C7A /* ProgressStore.swift */,
+				CE93F0C2873FC4FFC0BC334D /* SessionController.swift */,
+			);
+			path = Session;
+			sourceTree = "<group>";
+		};
+		B621557E235E79E2E133DB22 /* Character */ = {
+			isa = PBXGroup;
+			children = (
+				FA748340F252BF7CCC64D5F2 /* BreakActivity.swift */,
+				50A3D56C8182797F3BEE5451 /* CharacterBrain.swift */,
+				56FF20761D138211FF6FFF17 /* CharacterView.swift */,
+				D0F2840910DEC401AF766FC6 /* Companion.swift */,
+				6185DA2F4E679EA6CECAD53E /* SpeechLines.swift */,
+			);
+			path = Character;
+			sourceTree = "<group>";
+		};
+		B702D83EC1B170E31CF7A9A0 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0D1BC7EB82141AA4EC2711E3 /* Wick.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C00E4293B64F1A5AE7D2AD2E /* App */ = {
+			isa = PBXGroup;
+			children = (
+				E1B1666D107191ACF7F32E53 /* AppModel.swift */,
+				3BC7D72049F033E4C55AC746 /* UpdaterController.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		C948F490E99028F0888E233B /* Art */ = {
+			isa = PBXGroup;
+			children = (
+				08899653609EC6542A93EC49 /* Hana */,
+				00BA663878848337996FD3FC /* Nur */,
+				8E9FE77FDD1C7E65962064BD /* Qasim */,
+				A2C8483230475C3B6BA1DE43 /* app-icon-1024.png */,
+			);
+			path = Art;
+			sourceTree = "<group>";
+		};
+		D2B5EF97E0E4094047C8B9DE /* Salah */ = {
+			isa = PBXGroup;
+			children = (
+				5C0AC608671B33D462CCF293 /* LocationFix.swift */,
+				B4757A503D1F0544C4ED5BDC /* PrayerAPI.swift */,
+				5F6912FE5DEC8767A54D39C1 /* PrayerTimes.swift */,
+				87F58BBCD0CAC70827733204 /* SalahNotifier.swift */,
+				CB263AE7BEA5EB7A584291E5 /* SalahWatch.swift */,
+			);
+			path = Salah;
+			sourceTree = "<group>";
+		};
+		D35CCDCA966E56E275E47458 /* Wick */ = {
+			isa = PBXGroup;
+			children = (
+				C00E4293B64F1A5AE7D2AD2E /* App */,
+				27BD989366D8096B3345033A /* Audio */,
+				504F209E512BDD0D5C840B5D /* Break */,
+				B621557E235E79E2E133DB22 /* Character */,
+				DBC5FB5AFC8655D9CEF60E48 /* Menu */,
+				77CD2B13977CA98AF1519B66 /* Overlay */,
+				009D3F4A699F3C046DE58CCC /* Progress */,
+				032362EDED4B5C522BAB65AF /* Resources */,
+				D2B5EF97E0E4094047C8B9DE /* Salah */,
+				AC900FD01342C809238AE632 /* Session */,
+				2ED1D4E3BFDA168E72C12AB5 /* Settings */,
+				91BD737DA846B4E53A3070BA /* Setup */,
+				09FD0E37AC342D238C113FFA /* Theme */,
+				FFEFFAAE3371280E5D9973D0 /* Info.plist */,
+				70475744D5A3508E135DF7BD /* Wick.entitlements */,
+				6C0C0A0F52A18DA4B8A9AD1E /* WickApp.swift */,
+			);
+			path = Wick;
+			sourceTree = "<group>";
+		};
+		DBC5FB5AFC8655D9CEF60E48 /* Menu */ = {
+			isa = PBXGroup;
+			children = (
+				7984B8CCDBC4FB8F146E01A2 /* MenuBarView.swift */,
+			);
+			path = Menu;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		90EDFC4372C359FE73E5B1D4 /* Wick */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8CD9A116AA3DE1585E2D9253 /* Build configuration list for PBXNativeTarget "Wick" */;
+			buildPhases = (
+				FA04FD93FBD986FFAF24E8A2 /* Sources */,
+				C177A5EA7472B5D4BE43526F /* Resources */,
+				4E31026D43BBC32462F08AC9 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Wick;
+			packageProductDependencies = (
+				9432E8D62D9B6028182E7C34 /* Sparkle */,
+			);
+			productName = Wick;
+			productReference = 0D1BC7EB82141AA4EC2711E3 /* Wick.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		EEFB66247D53EEFF77B0D6CB /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					90EDFC4372C359FE73E5B1D4 = {
+						DevelopmentTeam = 7756PBXM2X;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 3A3D727B242B566E00988B6B /* Build configuration list for PBXProject "Wick" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 271F860D532542B715CE7440;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				21D30E5E90231CEB6535263B /* XCRemoteSwiftPackageReference "Sparkle" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = B702D83EC1B170E31CF7A9A0 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				90EDFC4372C359FE73E5B1D4 /* Wick */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		C177A5EA7472B5D4BE43526F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0CB45AF0EE68F480E69D7E59 /* Assets.xcassets in Resources */,
+				7E20908050E5AA1E02625991 /* app-icon-1024.png in Resources */,
+				043FE59DFFA13328716B8301 /* fire-crackle.wav in Resources */,
+				5FFF235E09C781514FF82364 /* hana-angry.png in Resources */,
+				BDC805D36BFC280D98F523A7 /* hana-idle.png in Resources */,
+				AC33639765248BC8CEB1E060 /* hana-qiyam.png in Resources */,
+				CCF0D7191C8A1C6144AED757 /* hana-ruku.png in Resources */,
+				6A09767D93ABE09930761C4F /* hana-sleep.png in Resources */,
+				D0E0ACB8457658AA0EA332FB /* hana-sujud.png in Resources */,
+				421FD9244A79024CED9A94B4 /* hana-switch.png in Resources */,
+				56215403055299B4C7117FB0 /* hana-typing.png in Resources */,
+				4BAD3117AC32D692B1781DF3 /* nur-angry.png in Resources */,
+				0CB62B0E8A495AED9C5D9F31 /* nur-idle.png in Resources */,
+				470FAE44C07EB650B5B64FBF /* nur-qiyam.png in Resources */,
+				DCCA159AE7DC477E2D5A35AF /* nur-ruku.png in Resources */,
+				2C3C761030EA73BE31DFCC97 /* nur-sleep.png in Resources */,
+				12EC5056376E52DC6631D4B4 /* nur-sujud.png in Resources */,
+				632F3F64F33223DCF3D48D9A /* nur-switch.png in Resources */,
+				463C2D0E588E90A05BBAF64E /* nur-typing.png in Resources */,
+				B8543AD61BBFD4CF005241D4 /* paper-notes.wav in Resources */,
+				618F1BF6CB0DDD869EB1D265 /* qasim-angry.png in Resources */,
+				1186CE3DB26BAB13A9428B14 /* qasim-idle.png in Resources */,
+				04C29902AB51061818AF9D4C /* qasim-qiyam.png in Resources */,
+				2FC81AA5D1C8BE10FBE6EEAF /* qasim-quran.png in Resources */,
+				87BC51AFDC3A7B29A4D84A9C /* qasim-ruku.png in Resources */,
+				D4B012B4667749E45794DB53 /* qasim-sujud.png in Resources */,
+				DBC3ADA458280C96F48B5B26 /* qasim-switch-down.png in Resources */,
+				0175A6C127BAFB90C68A40A2 /* qasim-switch-up.png in Resources */,
+				9B40DB50DEE02AA22A97A941 /* qasim-tasbih-a.png in Resources */,
+				5CD86B4F515DECE8F886D823 /* qasim-tasbih-b.png in Resources */,
+				2E2FFFE482DE421B02668667 /* qasim-typing.png in Resources */,
+				BD2C03D99447092615A10FFF /* scold-blip.wav in Resources */,
+				E1B6828773681E5FE7CB5DCB /* switch-click.wav in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		FA04FD93FBD986FFAF24E8A2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CBD41F6E43F793903659B2F5 /* AppModel.swift in Sources */,
+				D3492F2B3E71228BA2456A91 /* BreakActivity.swift in Sources */,
+				27132C31D6B58F02D5639864 /* BreakView.swift in Sources */,
+				99F48C4232702440AB6AEA54 /* BrowserInspector.swift in Sources */,
+				BB48CA392EF6FE94C12B708F /* CharacterBrain.swift in Sources */,
+				576999AAF9D8CC1D06BC10D7 /* CharacterView.swift in Sources */,
+				787D9EA352049C15F361E66C /* Companion.swift in Sources */,
+				7DD334E72C9101342C12FE65 /* DistractionMonitor.swift in Sources */,
+				E2426EFC14E242624E739A07 /* Effects.swift in Sources */,
+				12884742238A7CB4E79DC515 /* InstalledAppCatalog.swift in Sources */,
+				4344C7B2724FA8091B7D7E4C /* LocationFix.swift in Sources */,
+				D131D2BAF7B3D41CA1DA0E26 /* MenuBarView.swift in Sources */,
+				E2E0973F86C1A1E18A47B590 /* Models.swift in Sources */,
+				82BC2612C6E5B3B5139BAF6F /* OverlayRootView.swift in Sources */,
+				62D9272E75D769FC010C5C81 /* OverlayWindow.swift in Sources */,
+				651989023CD3EE1F470F9A97 /* Palette.swift in Sources */,
+				F4514C8889A9840CF463A8EE /* PrayerAPI.swift in Sources */,
+				D72C7A5ED4703BF1E1E4E950 /* PrayerTimes.swift in Sources */,
+				67699F49E98AC31717355EBD /* Preferences.swift in Sources */,
+				392E34D41F38D07893398746 /* ProgressBoardView.swift in Sources */,
+				6D6DE2F81DEDE3FE72209FC3 /* ProgressStore.swift in Sources */,
+				EEFA09B96E1DCE813242A7D4 /* SalahNotifier.swift in Sources */,
+				E5E0F98ACB6281776973535D /* SalahWatch.swift in Sources */,
+				7EAA32B2C08AAF0C9BEC498A /* SessionController.swift in Sources */,
+				90B955EE8DC44FA0D0522EB6 /* SettingsView.swift in Sources */,
+				B38B5CA047B262CF0A1EAD0A /* SetupView.swift in Sources */,
+				5F30C51E6494A9442173168F /* SoundBoard.swift in Sources */,
+				E995C2C2B4C61E37913000A8 /* SpeechLines.swift in Sources */,
+				4B4801A1DDA3E5B232FDFE18 /* TimerChipView.swift in Sources */,
+				A0549B33BA4264A37D6AD785 /* UpdaterController.swift in Sources */,
+				4873DE6588CA9DB8AB1B1D41 /* WickApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		465922DCEBA9A73A7A6B14CE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Wick/Wick.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 7756PBXM2X;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Wick/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = computer.wick.app;
+				PRODUCT_NAME = Wick;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		A0795CEDFE716FB9B5F9A5D4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Wick/Wick.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 7756PBXM2X;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Wick/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = computer.wick.app;
+				PRODUCT_NAME = Wick;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		B494684ADC4599C325E095F5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_STRICT_CONCURRENCY = targeted;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		F2E7E76B9E9D0043A7717E4E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_STRICT_CONCURRENCY = targeted;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		3A3D727B242B566E00988B6B /* Build configuration list for PBXProject "Wick" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F2E7E76B9E9D0043A7717E4E /* Debug */,
+				B494684ADC4599C325E095F5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		8CD9A116AA3DE1585E2D9253 /* Build configuration list for PBXNativeTarget "Wick" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				465922DCEBA9A73A7A6B14CE /* Debug */,
+				A0795CEDFE716FB9B5F9A5D4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		21D30E5E90231CEB6535263B /* XCRemoteSwiftPackageReference "Sparkle" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sparkle-project/Sparkle";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.9.5;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		9432E8D62D9B6028182E7C34 /* Sparkle */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 21D30E5E90231CEB6535263B /* XCRemoteSwiftPackageReference "Sparkle" */;
+			productName = Sparkle;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = EEFB66247D53EEFF77B0D6CB /* Project object */;
+}
