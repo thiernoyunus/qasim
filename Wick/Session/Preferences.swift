@@ -17,6 +17,7 @@ final class Preferences {
     var speechEnabled = true
     var reducedMotion = false
     var dailyGoalMinutes = 120
+    var breakMinutes = 5
     var hasCompletedSetup = false
     var customAngryLine = ""
     var salahReminders = true
@@ -89,6 +90,7 @@ final class Preferences {
             speechEnabled: speechEnabled,
             reducedMotion: reducedMotion,
             dailyGoalMinutes: dailyGoalMinutes,
+            breakMinutes: breakMinutes,
             hasCompletedSetup: hasCompletedSetup,
             customAngryLine: customAngryLine,
             salahReminders: salahReminders,
@@ -126,6 +128,7 @@ final class Preferences {
         speechEnabled = box.speechEnabled
         reducedMotion = box.reducedMotion
         dailyGoalMinutes = box.dailyGoalMinutes
+        breakMinutes = box.breakMinutes ?? 5
         hasCompletedSetup = box.hasCompletedSetup ?? false
         customAngryLine = box.customAngryLine
         salahReminders = box.salahReminders ?? true
@@ -159,6 +162,7 @@ final class Preferences {
         var speechEnabled: Bool
         var reducedMotion: Bool
         var dailyGoalMinutes: Int
+        var breakMinutes: Int?
         var hasCompletedSetup: Bool?
         var customAngryLine: String
         var salahReminders: Bool?

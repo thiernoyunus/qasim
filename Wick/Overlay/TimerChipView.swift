@@ -15,6 +15,8 @@ struct TimerChipView: View {
     var onDragEnded: (() -> Void)?
     var onResizeChanged: ((CGSize) -> Void)?
     var onResizeEnded: (() -> Void)?
+    var quickToggleTitle: String?
+    var onQuickToggle: (() -> Void)?
 
     var body: some View {
         let panelSize = size ?? CGSize(width: expanded ? 220 : 160, height: expanded ? 170 : 110)
@@ -60,6 +62,14 @@ struct TimerChipView: View {
                     )
                     actionButton(icon: "pencil", title: "Edit", action: onEdit)
                     actionButton(icon: "stop.fill", title: "Stop", action: onStop)
+                    if let quickToggleTitle {
+                        let isBlock = quickToggleTitle.hasPrefix("Block")
+                        actionButton(
+                            icon: isBlock ? "xmark.shield" : "checkmark.shield",
+                            title: quickToggleTitle,
+                            action: onQuickToggle
+                        )
+                    }
                 }
                 .padding(.top, 4)
             }

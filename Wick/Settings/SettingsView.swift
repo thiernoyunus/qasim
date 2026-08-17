@@ -213,6 +213,15 @@ struct SettingsView: View {
                     .onChange(of: prefs.dailyGoalMinutes) { _, _ in prefs.save() }
                 }
 
+                section("Break length") {
+                    Stepper(value: $prefs.breakMinutes, in: 1...30, step: 1) {
+                        Text("\(prefs.breakMinutes) minute break")
+                            .foregroundStyle(Palette.ink)
+                    }
+                    .foregroundStyle(Palette.ink)
+                    .onChange(of: prefs.breakMinutes) { _, _ in prefs.save() }
+                }
+
 
             }
             .padding(22)

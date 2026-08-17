@@ -11,23 +11,49 @@ struct DayFocus: Identifiable, Codable, Hashable {
     var focusMinutes: Int { Int(focusedSeconds / 60) }
 }
 
+struct SessionRecord: Identifiable, Codable, Hashable {
+    var id: UUID
+    var date: Date
+    var taskTitle: String
+    var durationMinutes: Int
+    var strategy: FocusStrategy
+    var finished: Bool
+}
+
 @Observable
 @MainActor
 final class ProgressStore {
     private let key = "wick.progress.days"
+    private let sessionsKey = "wick.progress.sessions"
+    private let recentLimit = 20
     private(set) var days: [String: DayFocus] = [:]
+    private(set) var recentSessions: [SessionRecord] = []
 
     init() {
         load()
     }
 
-    func record(focused: TimeInterval, distracted: TimeInterval, finishedSession: Bool) {
+    func record(focused: TimeInterval, distracted: TimeInterval, finishedSession: Bool, taskTitle: String, durationMinutes: Int, strategy: FocusStrategy) {
         let stamp = Self.stamp(Date())
         var row = days[stamp] ?? DayFocus(day: stamp, focusedSeconds: 0, distractedSeconds: 0, sessions: 0)
         row.focusedSeconds += max(0, focused)
         row.distractedSeconds += max(0, distracted)
         if finishedSession { row.sessions += 1 }
         days[stamp] = row
+
+        let entry = SessionRecord(
+            id: UUID(),
+            date: Date(),
+            taskTitle: taskTitle,
+            durationMinutes: durationMinutes,
+            strategy: strategy,
+            finished: finishedSession
+        )
+        recentSessions.insert(entry, at: 0)
+        if recentSessions.count > recentLimit {
+            recentSessions = Array(recentSessions.prefix(recentLimit))
+        }
+
         save()
     }
 
@@ -55,14 +81,22 @@ final class ProgressStore {
     }
 
     private func load() {
-        guard let data = UserDefaults.standard.data(forKey: key),
-              let decoded = try? JSONDecoder().decode([String: DayFocus].self, from: data) else { return }
-        days = decoded
+        if let data = UserDefaults.standard.data(forKey: key),
+           let decoded = try? JSONDecoder().decode([String: DayFocus].self, from: data) {
+            days = decoded
+        }
+        if let data = UserDefaults.standard.data(forKey: sessionsKey),
+           let decoded = try? JSONDecoder().decode([SessionRecord].self, from: data) {
+            recentSessions = decoded
+        }
     }
 
     private func save() {
         if let data = try? JSONEncoder().encode(days) {
             UserDefaults.standard.set(data, forKey: key)
+        }
+        if let data = try? JSONEncoder().encode(recentSessions) {
+            UserDefaults.standard.set(data, forKey: sessionsKey)
         }
     }
 

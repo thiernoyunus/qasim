@@ -71,6 +71,7 @@ final class AppModel {
     private var lastTimerTask = ""
     private var lastTimerPaused = false
     private var lastTimerExpanded = false
+    private var lastTimerQuickToggleTitle: String?
     private var tickTask: Task<Void, Never>?
     private var lastLightsKick: Escalation = .calm
     private var lastTheater: Theater = .none
@@ -156,6 +157,13 @@ final class AppModel {
         present(progressPanel)
     }
 
+    func restartSession(_ record: SessionRecord) {
+        session.taskTitle = record.taskTitle
+        session.durationMinutes = record.durationMinutes
+        session.strategy = record.strategy
+        beginSession()
+    }
+
     func beginSession() {
         stopPreview(spoken: false)
         clearBreakFlow()
@@ -191,7 +199,10 @@ final class AppModel {
             progress.record(
                 focused: session.elapsedFocused,
                 distracted: session.elapsedDistracted,
-                finishedSession: finished
+                finishedSession: finished,
+                taskTitle: session.taskTitle,
+                durationMinutes: session.durationMinutes,
+                strategy: session.strategy
             )
         }
         session.end(finished: finished)
@@ -227,7 +238,8 @@ final class AppModel {
         onResizeChanged: ((CGSize) -> Void)? = nil,
         onResizeEnded: (() -> Void)? = nil
     ) -> TimerChipView {
-        TimerChipView(
+        let qTitle = currentQuickToggleTitle()
+        return TimerChipView(
             remaining: session.remainingLabel,
             angry: session.escalation >= .nudge && session.phase == .running,
             task: session.taskTitle,
@@ -241,8 +253,27 @@ final class AppModel {
             onDragChanged: onDragChanged,
             onDragEnded: onDragEnded,
             onResizeChanged: onResizeChanged,
-            onResizeEnded: onResizeEnded
+            onResizeEnded: onResizeEnded,
+            quickToggleTitle: qTitle,
+            onQuickToggle: { [weak self] in self?.quickToggleCurrentApp() }
         )
+    }
+
+    private func currentQuickToggleTitle() -> String? {
+        let ctx = session.monitor.context
+        guard session.strategy != .company, !ctx.bundleID.isEmpty else { return nil }
+        if let host = ctx.host {
+            guard let rule = SiteRule.normalize(host).map(SiteRule.init) else { return nil }
+            let already = session.strategy == .block
+                ? session.blockedSites.contains(rule)
+                : session.allowedSites.contains(rule)
+            return already ? nil : (session.strategy == .block ? "Block \(host)" : "Allow \(host)")
+        }
+        let app = AppIdentity(bundleID: ctx.bundleID, name: ctx.appName, path: "")
+        let already = session.strategy == .block
+            ? session.blockedApps.contains(app)
+            : session.allowedApps.contains(app)
+        return already ? nil : (session.strategy == .block ? "Block \(ctx.appName)" : "Allow \(ctx.appName)")
     }
 
     func moveTimerPanel(_ translation: CGSize) {
@@ -311,7 +342,7 @@ final class AppModel {
     func startBreak() {
         guard breakState == .choice else { return }
         breakActivity = [BreakActivity.adhkar, .quran].randomElement() ?? .adhkar
-        breakRemaining = 5 * 60
+        breakRemaining = TimeInterval(prefs.breakMinutes * 60)
         breakState = .running
         presentBreakPanel()
     }
@@ -350,6 +381,26 @@ final class AppModel {
             return
         }
         startMovePreview(move)
+    }
+
+    func quickToggleCurrentApp() {
+        let ctx = session.monitor.context
+        guard session.strategy != .company, !ctx.bundleID.isEmpty else { return }
+        if let host = ctx.host {
+            guard let rule = SiteRule.normalize(host).map(SiteRule.init) else { return }
+            if session.strategy == .block, !session.blockedSites.contains(rule) {
+                session.blockedSites.append(rule)
+            } else if session.strategy == .allow, !session.allowedSites.contains(rule) {
+                session.allowedSites.append(rule)
+            }
+        } else {
+            let app = AppIdentity(bundleID: ctx.bundleID, name: ctx.appName, path: "")
+            if session.strategy == .block, !session.blockedApps.contains(app) {
+                session.blockedApps.append(app)
+            } else if session.strategy == .allow, !session.allowedApps.contains(app) {
+                session.allowedApps.append(app)
+            }
+        }
     }
 
     func preview(_ activity: BreakActivity) {
@@ -523,7 +574,10 @@ final class AppModel {
             progress.record(
                 focused: session.elapsedFocused,
                 distracted: session.elapsedDistracted,
-                finishedSession: true
+                finishedSession: true,
+                taskTitle: session.taskTitle,
+                durationMinutes: session.durationMinutes,
+                strategy: session.strategy
             )
             brain.speak(SpeechLines.doneLine(voice: prefs.voice, name: prefs.userName), seconds: 4, prefs: prefs)
             showBreakChoice()
@@ -736,12 +790,14 @@ final class AppModel {
         let remaining = session.remainingLabel
         let angry = session.escalation >= .nudge && session.phase == .running
         let paused = session.phase == .paused
+        let quickToggleTitle = currentQuickToggleTitle()
         let contentChanged = timerPanel == nil
             || remaining != lastTimerRemaining
             || angry != lastTimerAngry
             || session.taskTitle != lastTimerTask
             || paused != lastTimerPaused
             || timerExpanded != lastTimerExpanded
+            || quickToggleTitle != lastTimerQuickToggleTitle
 
         if timerPanel == nil {
             let panel = TimerOverlayPanel(
@@ -786,6 +842,7 @@ final class AppModel {
         lastTimerTask = session.taskTitle
         lastTimerPaused = paused
         lastTimerExpanded = timerExpanded
+        lastTimerQuickToggleTitle = quickToggleTitle
         if !contentChanged {
             if timerPanel?.isVisible == false { timerPanel?.orderFrontRegardless() }
             return
@@ -861,7 +918,7 @@ final class AppModel {
 
     private func showBreakChoice() {
         guard breakState == .none else { return }
-        breakRemaining = 5 * 60
+        breakRemaining = TimeInterval(prefs.breakMinutes * 60)
         breakActivity = nil
         breakState = .choice
         setupPanel?.orderOut(nil)
