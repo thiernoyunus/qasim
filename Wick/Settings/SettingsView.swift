@@ -372,7 +372,7 @@ struct ActionsCustomizeSection: View {
             Text("Distraction actions")
                 .font(.system(size: 12, weight: .semibold))
                 .foregroundStyle(Palette.inkSoft)
-            ForEach(AngryMove.allCases.filter { ![.sound, .chase, .sitOnWindow].contains($0) }) { move in
+            ForEach(AngryMove.allCases.filter { ![.sound, .chase, .sitOnWindow, .glance].contains($0) }) { move in
                 HStack(alignment: .center, spacing: 10) {
                     Toggle(isOn: Binding(
                         get: { prefs.allows(move) },

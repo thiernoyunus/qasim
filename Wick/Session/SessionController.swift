@@ -153,8 +153,6 @@ final class SessionController {
             || prefs.allows(.sitOnWindow, previewing: previewMove)),
                   distractedFor >= t.nudge {
             escalation = .nudge
-        } else if prefs.allows(.glance, previewing: previewMove), distractedFor >= t.glance {
-            escalation = .glance
         } else {
             escalation = .calm
         }

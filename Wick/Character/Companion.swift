@@ -88,7 +88,7 @@ enum AngryMove: String, CaseIterable, Identifiable, Codable {
     var title: String {
         switch self {
         case .glance: "Look over"
-        case .talk: "Talk back"
+        case .talk: "Comment while distracted"
         case .lights: "Flip the lights"
         case .fire: "Set the window on fire"
         case .notes: "Cover it in notes"
@@ -101,7 +101,7 @@ enum AngryMove: String, CaseIterable, Identifiable, Codable {
     var blurb: String {
         switch self {
         case .glance: "Turns and stares when you wander."
-        case .talk: "Short sentences. Judgmental."
+        case .talk: "Says something out loud whenever it escalates \u{2014} not just when it flips the lights or sets a fire, but any time it notices you\u{2019}ve wandered off."
         case .lights: "White flash, then the room goes dark."
         case .fire: "Cartoon flames on the off-task window."
         case .notes: "Sticky notes all over what you shouldn’t be doing."

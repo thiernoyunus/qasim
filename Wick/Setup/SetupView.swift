@@ -254,7 +254,8 @@ struct SetupView: View {
     }
 
     private func durationStepView(session: SessionController) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
+        @Bindable var prefs = model.prefs
+        return VStack(alignment: .leading, spacing: 12) {
             Text("Focus session")
                 .font(Typeface.display(22))
             let options = [5, 10, 15, 20, 25, 30, 45, 50, 60, 90, 0]
@@ -274,9 +275,16 @@ struct SetupView: View {
                     .buttonStyle(.plain)
                 }
             }
-            Text("Wick hops around while you work. Wander off and it starts with a look, then the lights, then fire.")
-                .font(.system(size: 12))
+
+            Text("Break length")
+                .font(.system(size: 12, weight: .semibold))
                 .foregroundStyle(Palette.inkSoft)
+                .padding(.top, 6)
+            Stepper(value: $prefs.breakMinutes, in: 1...30) {
+                Text("\(prefs.breakMinutes) minute\(prefs.breakMinutes == 1 ? "" : "s")")
+                    .foregroundStyle(Palette.ink)
+            }
+            .onChange(of: prefs.breakMinutes) { _, _ in prefs.save() }
         }
     }
 
@@ -361,7 +369,7 @@ struct SetupView: View {
     }
 
     private func appList(session: SessionController) -> some View {
-        let matches = model.catalog.search(query).prefix(12)
+        let matches = model.catalog.search(query).prefix(query.isEmpty ? 30 : 60)
         return VStack(spacing: 0) {
             ForEach(Array(matches)) { app in
                 Button {

@@ -892,9 +892,10 @@ final class AppModel {
             defer: false
         )
         panel.title = title
-        panel.isFloatingPanel = true
-        panel.level = .floating
-        panel.hidesOnDeactivate = false
+        // Normal window level (not floating): clicking into another app sends this
+        // panel behind it, same as any regular window. A floating panel would stay
+        // pinned above everything else on the Mac, including full-screen apps,
+        // with no way to click past it short of minimizing.
         panel.collectionBehavior = [.moveToActiveSpace, .fullScreenAuxiliary]
         panel.isReleasedWhenClosed = false
         panel.titlebarAppearsTransparent = true
