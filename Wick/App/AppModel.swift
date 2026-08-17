@@ -113,14 +113,25 @@ final class AppModel {
         if setupPanel == nil {
             setupPanel = makeCardPanel(title: "Wick", size: NSSize(width: 480, height: 720))
         }
-        // Onboarding (first launch) is a separate panel from the regular new-session
-        // flow. SetupView handles name -> character -> actions; NewSessionView
-        // handles task -> mode -> apps -> duration. Two panels, two UIs.
         let view: AnyView = if prefs.hasCompletedSetup {
-            AnyView(NewSessionView().environment(self))
+            // Onboarding is a one-time wizard (3 steps). What users see every time
+            // after that is the home dashboard with a NEW button — the new-session
+            // config sheet is reached from there.
+            AnyView(HomeView().environment(self))
         } else {
             AnyView(SetupView().environment(self))
         }
+        setupPanel?.contentView = NSHostingView(rootView: view)
+        present(setupPanel)
+    }
+
+    /// Opens the detailed new-session config sheet (task -> mode -> apps -> duration).
+    /// Reached from the home dashboard's NEW button, or from the menu bar.
+    func openNewSessionConfig() {
+        if setupPanel == nil {
+            setupPanel = makeCardPanel(title: "Wick", size: NSSize(width: 480, height: 720))
+        }
+        let view = NewSessionView().environment(self)
         setupPanel?.contentView = NSHostingView(rootView: view)
         present(setupPanel)
     }

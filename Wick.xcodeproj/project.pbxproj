@@ -10,6 +10,7 @@
 		0175A6C127BAFB90C68A40A2 /* qasim-switch-up.png in Resources */ = {isa = PBXBuildFile; fileRef = C80BC336F4A09F34FCA9FA80 /* qasim-switch-up.png */; };
 		043FE59DFFA13328716B8301 /* fire-crackle.wav in Resources */ = {isa = PBXBuildFile; fileRef = C41D7C606C8EC227FA72B715 /* fire-crackle.wav */; };
 		04C29902AB51061818AF9D4C /* qasim-qiyam.png in Resources */ = {isa = PBXBuildFile; fileRef = E805D35D5FBB0FE09C74459E /* qasim-qiyam.png */; };
+		0CAF3D04894B61035B2126E8 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D2F65F77A627F480D5C6761 /* HomeView.swift */; };
 		0CB45AF0EE68F480E69D7E59 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A319E0B73D468AC01B6AAACA /* Assets.xcassets */; };
 		0CB62B0E8A495AED9C5D9F31 /* nur-idle.png in Resources */ = {isa = PBXBuildFile; fileRef = 468F0D186C76A2BD63473C04 /* nur-idle.png */; };
 		1186CE3DB26BAB13A9428B14 /* qasim-idle.png in Resources */ = {isa = PBXBuildFile; fileRef = 5456B44CD9BC3757B135ED27 /* qasim-idle.png */; };
@@ -84,6 +85,7 @@
 		1845B6F6E24D54E4FA1CFF2B /* hana-qiyam.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hana-qiyam.png"; sourceTree = "<group>"; };
 		1965DCA93B9DC42FE26C4F64 /* InstalledAppCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstalledAppCatalog.swift; sourceTree = "<group>"; };
 		1AD3A66FDF0400747C6E3C7A /* ProgressStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressStore.swift; sourceTree = "<group>"; };
+		2D2F65F77A627F480D5C6761 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		31BA1D9CD76EF54D96B6410C /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		380D03C74D6A201A6516239B /* DistractionMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistractionMonitor.swift; sourceTree = "<group>"; };
 		3841FCD9027FF7CBFAEA265E /* qasim-ruku.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "qasim-ruku.png"; sourceTree = "<group>"; };
@@ -289,6 +291,7 @@
 		91BD737DA846B4E53A3070BA /* Setup */ = {
 			isa = PBXGroup;
 			children = (
+				2D2F65F77A627F480D5C6761 /* HomeView.swift */,
 				E3A426975D4922F21806EBBF /* NewSessionView.swift */,
 				8175762352AC2409AB2A2C0B /* SetupView.swift */,
 			);
@@ -509,6 +512,7 @@
 				787D9EA352049C15F361E66C /* Companion.swift in Sources */,
 				7DD334E72C9101342C12FE65 /* DistractionMonitor.swift in Sources */,
 				E2426EFC14E242624E739A07 /* Effects.swift in Sources */,
+				0CAF3D04894B61035B2126E8 /* HomeView.swift in Sources */,
 				12884742238A7CB4E79DC515 /* InstalledAppCatalog.swift in Sources */,
 				4344C7B2724FA8091B7D7E4C /* LocationFix.swift in Sources */,
 				D131D2BAF7B3D41CA1DA0E26 /* MenuBarView.swift in Sources */,
