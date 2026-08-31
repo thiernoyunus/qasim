@@ -17,7 +17,7 @@ Prayer cycles `qiyam → ruku → sujud` every 2.4 seconds while the prayer mat 
 
 All three selectable companions have matching files in both locations:
 
-- `Wick/Resources/Art/<companion>-<pose>.png`
-- `Wick/Resources/Assets.xcassets/<companion>-<pose>.imageset/<companion>-<pose>.png`
+- `Qasim/Resources/Art/<companion>-<pose>.png`
+- `Qasim/Resources/Assets.xcassets/<companion>-<pose>.imageset/<companion>-<pose>.png`
 
-Wick, Pip, and Moss were removed from the selectable set. Their old source art is retained only as unused rollback material; it is no longer reachable from the app or its companion enum.
+Qasim, Pip, and Moss were removed from the selectable set. Their old source art is retained only as unused rollback material; it is no longer reachable from the app or its companion enum.

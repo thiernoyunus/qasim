@@ -22,9 +22,9 @@ from pathlib import Path
 import numpy as np
 from PIL import Image
 
-REPO = Path("/Users/thiernodiallo/Coding/productivity app/Wick")
-ART = REPO / "Wick" / "Resources" / "Art"
-ASSETS = REPO / "Wick" / "Resources" / "Assets.xcassets"
+REPO = Path("/Users/thiernodiallo/Coding/productivity app/Qasim")
+ART = REPO / "Qasim" / "Resources" / "Art"
+ASSETS = REPO / "Qasim" / "Resources" / "Assets.xcassets"
 
 TARGET_PREFIXES = ("qasim-", "hana-", "nur-")
 DARK_MATTE_PREFIXES = ("qasim-", "hana-", "nur-")

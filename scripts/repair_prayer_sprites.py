@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Extract and normalize a three-pose prayer strip into Wick assets."""
+"""Extract and normalize a three-pose prayer strip into Qasim assets."""
 
 from __future__ import annotations
 
@@ -111,8 +111,8 @@ def extract(strip: Path, character: str, output_root: Path, poses: tuple[str, ..
         x1 = round((index + 1) * width / len(poses))
         image = trim_and_resize(keep_main_components(arr[:, x0:x1]))
         name = f"{character}-{pose}.png"
-        art_path = output_root / "Wick" / "Resources" / "Art" / name
-        catalog_path = output_root / "Wick" / "Resources" / "Assets.xcassets" / f"{character}-{pose}.imageset" / name
+        art_path = output_root / "Qasim" / "Resources" / "Art" / name
+        catalog_path = output_root / "Qasim" / "Resources" / "Assets.xcassets" / f"{character}-{pose}.imageset" / name
         art_path.parent.mkdir(parents=True, exist_ok=True)
         catalog_path.parent.mkdir(parents=True, exist_ok=True)
         image.save(art_path, "PNG", optimize=True)

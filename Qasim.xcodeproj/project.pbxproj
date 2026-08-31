@@ -1,0 +1,919 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0156E3862074E11C1A755936 /* idle-to-typing-004.png in Resources */ = {isa = PBXBuildFile; fileRef = DC2167BC60208FD8CC2D158E /* idle-to-typing-004.png */; };
+		01797473BAFA17608D0D10B2 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C5071EF2CBDA7E4C820BECD /* AppModel.swift */; };
+		03D3D9259A97C6CB50110B04 /* hana-idle.png in Resources */ = {isa = PBXBuildFile; fileRef = 5985A604AC895F84B79957F7 /* hana-idle.png */; };
+		051B64E13C155095172A51AA /* qasim-session-complete-005.png in Resources */ = {isa = PBXBuildFile; fileRef = B747411CEC63CF912B2E3DE0 /* qasim-session-complete-005.png */; };
+		0552330BB231ADEC997141D1 /* nur-qiyam.png in Resources */ = {isa = PBXBuildFile; fileRef = 001471D0F33C5CF57B0B12ED /* nur-qiyam.png */; };
+		0737D4BC6EB13E8C71E05C28 /* qasim-angry-jump-004.png in Resources */ = {isa = PBXBuildFile; fileRef = CFA0C4144904A81EB27C8966 /* qasim-angry-jump-004.png */; };
+		09F6D52B366825C589CDF70A /* hana-typing.png in Resources */ = {isa = PBXBuildFile; fileRef = CA4008F4FC8BA1FD5E9FFC27 /* hana-typing.png */; };
+		0AA0606C1C95A8129DF8903D /* qasim-session-complete-004.png in Resources */ = {isa = PBXBuildFile; fileRef = E08759E5BC58A5B63226A612 /* qasim-session-complete-004.png */; };
+		0AEDF9FB3239EA5FAAEA6FAD /* spray-tiovanlley.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = F137770FE4137081344FB5D2 /* spray-tiovanlley.mp3 */; };
+		0D0C93912E9F44E86AEC88EA /* typing-loop-000.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D8D0552CC03E28C5DC4E946 /* typing-loop-000.png */; };
+		0F50E2527D4ED4A3B84D7F4F /* qasim-sujud.png in Resources */ = {isa = PBXBuildFile; fileRef = 28B8A440F34F37684E676D30 /* qasim-sujud.png */; };
+		11A35FEAA74AF324B671D298 /* LocationFix.swift in Sources */ = {isa = PBXBuildFile; fileRef = D18390804D85F67FC22F7079 /* LocationFix.swift */; };
+		15837600E144304D68BB7254 /* hana-ruku.png in Resources */ = {isa = PBXBuildFile; fileRef = 3E4569877D565E01A9476A6C /* hana-ruku.png */; };
+		16CD7F0E00FCF4174C150C4B /* nur-angry.png in Resources */ = {isa = PBXBuildFile; fileRef = A2EB2397E5019DE4A7AA2C9D /* nur-angry.png */; };
+		1C32A7322DB8009429C35532 /* qasim-typing.png in Resources */ = {isa = PBXBuildFile; fileRef = 763721D57C23F852CDAA7C79 /* qasim-typing.png */; };
+		1D12560D3F994001E9C82472 /* PrayerTimes.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBF50A37800F347165833B9A /* PrayerTimes.swift */; };
+		1E10C2D4BF3CBE90B210B08A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AC717E0AEE0F879FD50C8A02 /* Assets.xcassets */; };
+		1F6E3C2C8E30530B7DCA524A /* fire-crackle.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7629DCEED6BA19FA77DD7C0C /* fire-crackle.wav */; };
+		2110219658D156E3B88AF58C /* BrowserInspector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79F8058E3A9EECAC0D1899EC /* BrowserInspector.swift */; };
+		22059EAE03C15BE4EA9D58BC /* qasim-angry.png in Resources */ = {isa = PBXBuildFile; fileRef = FAAC808D116310E08B208045 /* qasim-angry.png */; };
+		222DA709A86461A71C4AFB68 /* qasim-session-complete-002.png in Resources */ = {isa = PBXBuildFile; fileRef = 410DB2C1241F43B9D02DAF34 /* qasim-session-complete-002.png */; };
+		227690A8DDE69D30E16CBBA9 /* ProgressStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 816C4D6B72EA675C1123C977 /* ProgressStore.swift */; };
+		229EB712F0F2F82E3109CA11 /* nur-typing.png in Resources */ = {isa = PBXBuildFile; fileRef = 1B7C0C5A24C0DD9F46A215E6 /* nur-typing.png */; };
+		25DE0CCE72B0BB3086537373 /* SessionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE633F9C501241BE45D1720 /* SessionController.swift */; };
+		25EBA3819454D8190B25BB7F /* qasim-angry-jump-001.png in Resources */ = {isa = PBXBuildFile; fileRef = 1E7F30FF48023B33D359112D /* qasim-angry-jump-001.png */; };
+		2B015D05F3E4047BC8070238 /* qasim-session-complete-007.png in Resources */ = {isa = PBXBuildFile; fileRef = 8F2FCC816F39397366A51212 /* qasim-session-complete-007.png */; };
+		2E6104350BE058A1A69611D8 /* qasim-angry-jump-000.png in Resources */ = {isa = PBXBuildFile; fileRef = 66043C96F3F41870CF2C32B0 /* qasim-angry-jump-000.png */; };
+		2E6E10799B9067742E2ADB96 /* SoundBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E9C5B865CB8452D5C4434A /* SoundBoard.swift */; };
+		315C3247D922D84E224D48A0 /* qasim-angry-jump-005.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BE54676B3B9C2709FBF6B2E /* qasim-angry-jump-005.png */; };
+		36394C1A83FC0415D29A8557 /* StatsBoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169854CFF311FB39FD45EF65 /* StatsBoardView.swift */; };
+		3707848F69BD5E6C7116957F /* qasim-idle.png in Resources */ = {isa = PBXBuildFile; fileRef = 2B57730087B78D26577528AC /* qasim-idle.png */; };
+		3B2E463B595F1E71C00DCC3E /* qasim-session-complete-001.png in Resources */ = {isa = PBXBuildFile; fileRef = EBA1CA31078A251D9E485D99 /* qasim-session-complete-001.png */; };
+		3E6C8DE00B3301988B9791E2 /* hana-sleep.png in Resources */ = {isa = PBXBuildFile; fileRef = D0E9A2E7F980F278814139AB /* hana-sleep.png */; };
+		3EA37ECAEFC672EA041EC5F7 /* PoseTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE289B54DE74ED940EA7EBD9 /* PoseTransition.swift */; };
+		4879136E2BDF8D1A438EF645 /* CharacterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11468B4DDDB1D40727AD6D1A /* CharacterView.swift */; };
+		49608989A2D41A1CAADF6346 /* idle-to-typing-001.png in Resources */ = {isa = PBXBuildFile; fileRef = 083AB6C484120BE0D9908C9A /* idle-to-typing-001.png */; };
+		55C119A4AF34DABBDDE61134 /* Effects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DA5ED7D8201687EF75FE3FB /* Effects.swift */; };
+		56517A9D91CDBE2E22E16275 /* typing-loop-001.png in Resources */ = {isa = PBXBuildFile; fileRef = D56D62D46C5D2BE422E4D836 /* typing-loop-001.png */; };
+		5AE7C5AADC7748A23F73CE79 /* qasim-ruku.png in Resources */ = {isa = PBXBuildFile; fileRef = D49DAA7B6E75D1F03C8B65EA /* qasim-ruku.png */; };
+		5CF6A7922EE7F1DFE6700CC7 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDA3D9004D4DD22916402797 /* SettingsView.swift */; };
+		5D3DE1E642E3938DA6C3188D /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 9F1A8B46308B038C4DFF6DE7 /* Sparkle */; };
+		68D3C2A1299D030C50743A6E /* nur-switch.png in Resources */ = {isa = PBXBuildFile; fileRef = 8683736AE22ABB670E3F5668 /* nur-switch.png */; };
+		6A7B0CA1611AC0D8CBEEF13D /* PrayerAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4422C3C7761F41352BE1F2F /* PrayerAPI.swift */; };
+		6BAC3D97DE9375151DFDDA02 /* InstalledAppCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED3C23FDF2DCAFA7ABCCFE10 /* InstalledAppCatalog.swift */; };
+		6C642F7C0C383AEF372F76C1 /* ProgressBoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABB343AEC2BD64757EAEA7BF /* ProgressBoardView.swift */; };
+		6D2008E5582E3B7ACE9F23FB /* hana-qiyam.png in Resources */ = {isa = PBXBuildFile; fileRef = F2E6FB24A4958362198C2D2A /* hana-qiyam.png */; };
+		6DA013E3BACE1948E60E637D /* idle-to-typing-000.png in Resources */ = {isa = PBXBuildFile; fileRef = BB8EFA936F3E69E101E044D3 /* idle-to-typing-000.png */; };
+		70333BC9CB71A34535273C98 /* BreakView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2C207C9F7C95B35FEA5A9F2 /* BreakView.swift */; };
+		76A7E5012EA7BFD56332CDC5 /* qasim-session-complete-003.png in Resources */ = {isa = PBXBuildFile; fileRef = 96F83F44AD77BCE5EF1F6435 /* qasim-session-complete-003.png */; };
+		78AAF39DD2F739F16EE80AF9 /* app-icon-1024.png in Resources */ = {isa = PBXBuildFile; fileRef = 14126BB037F69115698C161B /* app-icon-1024.png */; };
+		793E2F1909B90B6E2B8C402A /* idle-to-typing-002.png in Resources */ = {isa = PBXBuildFile; fileRef = 5403692F3AFB3821A49E33E3 /* idle-to-typing-002.png */; };
+		799CAF462D09174DB9F6F40F /* idle-to-typing-005.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C8230D2B37C8C615BE42085 /* idle-to-typing-005.png */; };
+		7ADA4EF5308600C8AA34207F /* switch-click.wav in Resources */ = {isa = PBXBuildFile; fileRef = 86986B5D155C2402A2EB1A45 /* switch-click.wav */; };
+		7E7DC0F31294083BBC6053FD /* salah-chime.wav in Resources */ = {isa = PBXBuildFile; fileRef = 32D48A3FC9BCD7892EC0B4C0 /* salah-chime.wav */; };
+		805F562DDAB70D0BEB0615CD /* nur-idle.png in Resources */ = {isa = PBXBuildFile; fileRef = 8A362C12877DA55A606F6B0C /* nur-idle.png */; };
+		80B6EE24A053CB77F4E64C7E /* NewSessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BA1ABFF18887CC15521DE31 /* NewSessionView.swift */; };
+		82E9ADF80771E027D9790F8F /* qasim-session-complete-000.png in Resources */ = {isa = PBXBuildFile; fileRef = 1E40CC8D896975A3C1198350 /* qasim-session-complete-000.png */; };
+		847172DE34C0FB73CCD2B1B9 /* qasim-switch-up.png in Resources */ = {isa = PBXBuildFile; fileRef = FE23A1F9B347BDAC19593DFC /* qasim-switch-up.png */; };
+		84CE27CA5E1B21958AA630F5 /* scold-blip.wav in Resources */ = {isa = PBXBuildFile; fileRef = 3981E8D9F74D802DDD356EDA /* scold-blip.wav */; };
+		867F4321A05BDF23B8FF46DE /* qasim-tasbih-a.png in Resources */ = {isa = PBXBuildFile; fileRef = 93E74C39261F693409BEE998 /* qasim-tasbih-a.png */; };
+		88575A7C2026F22CB1827D8B /* qasim-qiyam.png in Resources */ = {isa = PBXBuildFile; fileRef = 9D361874F6840823C8022BA2 /* qasim-qiyam.png */; };
+		8F95F0F96D13E23660E2BDA5 /* typing-loop-004.png in Resources */ = {isa = PBXBuildFile; fileRef = 44F131A3D7B93097F185FAF5 /* typing-loop-004.png */; };
+		8FBC2E27EEB7D437CD3935FA /* Companion.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60AC7C093D3DA0ECCD5D9F4 /* Companion.swift */; };
+		914455DBDACA7BDBC06F8AEF /* nur-ruku.png in Resources */ = {isa = PBXBuildFile; fileRef = 6080E05E4FD45BF68259A326 /* nur-ruku.png */; };
+		93B68BD932EF568255D743EC /* OverlayWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE9481CCF08AF8ACD6EC290 /* OverlayWindow.swift */; };
+		9BCC80E2A098E6031023D741 /* SalahWatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96670B8BC6964885BD66471A /* SalahWatch.swift */; };
+		A25FF2F39B92E21C0190C73D /* nur-sleep.png in Resources */ = {isa = PBXBuildFile; fileRef = 89E7D1CD3E1AD2B01D3E74AC /* nur-sleep.png */; };
+		A41D36C1BE932AF347188C4C /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B5D64ACF56E8668EDF91253 /* MenuBarView.swift */; };
+		A702E322FDE12B7C26289BE0 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3B9056880351664564798DF /* Preferences.swift */; };
+		ABCBB3C780E48D94AE0E789B /* typing-loop-002.png in Resources */ = {isa = PBXBuildFile; fileRef = 6997DFC7BF97424BA570906D /* typing-loop-002.png */; };
+		B3E95CDC72D55F097E212456 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AB298380F5FF97FE7CBEEF1 /* Models.swift */; };
+		B481E902E48167CAEC939D25 /* fire-maxhammarback.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1B3A83C537155459845FAD1A /* fire-maxhammarback.mp3 */; };
+		B52097DE346B923217306806 /* DistractionMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE1CFC5749AC79C3FD41DF64 /* DistractionMonitor.swift */; };
+		B7AC1D603D38AC0E35CBD756 /* qasim-session-complete-sheet.png in Resources */ = {isa = PBXBuildFile; fileRef = AA42BC83E35A565EADEC1134 /* qasim-session-complete-sheet.png */; };
+		B8C2238803504FA72EB213CF /* qasim-session-complete-006.png in Resources */ = {isa = PBXBuildFile; fileRef = E529E8B5E497531EEC9E6862 /* qasim-session-complete-006.png */; };
+		B96717BE9A384E94B86AF396 /* paper-notes.wav in Resources */ = {isa = PBXBuildFile; fileRef = BAD57F15EE5A0EC7B4349DCC /* paper-notes.wav */; };
+		BA5D626031023F7E5FBEE2C7 /* TimerChipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2ABB2139B063463C9908C69 /* TimerChipView.swift */; };
+		BFF0DE2F4213F62748A61A8C /* SpeechLines.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A17D5C9ACEB5220C859E73 /* SpeechLines.swift */; };
+		C0B0B1B8BCC4E53A9EB68B2C /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4120EB11C81D468FAD8F4BCA /* HomeView.swift */; };
+		C0B16CF67F8C2C297D911EC4 /* qasim-angry-jump-003.png in Resources */ = {isa = PBXBuildFile; fileRef = 44633B07EA684772CE75C264 /* qasim-angry-jump-003.png */; };
+		C61AF8E60E32A3A907355D57 /* Palette.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32C9B99D6CD539583D26D06A /* Palette.swift */; };
+		CA200A8B9A56B7908D0CC862 /* qasim-tasbih-b.png in Resources */ = {isa = PBXBuildFile; fileRef = CC4F1271F033287A47CEDF4F /* qasim-tasbih-b.png */; };
+		CBBA24709BDF085601872AC3 /* qasim-quran.png in Resources */ = {isa = PBXBuildFile; fileRef = B6A3DDC76D816FFB0EF17C0B /* qasim-quran.png */; };
+		CBBFA805A0889045BE93E2E6 /* CharacterBrain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 961EA60B9024D2F679C01644 /* CharacterBrain.swift */; };
+		D6BC05FE773878C82C4DC7D6 /* BreakActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D914C8E09DA32B69AB8333A /* BreakActivity.swift */; };
+		D98617D7BA187376C54B1406 /* SalahNotifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 817F3E7C80AF20DA9E14230C /* SalahNotifier.swift */; };
+		DDCF40EAA1B71BF7AED3DB38 /* light-switch-dragon.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = E3E2033C67177FF48C9C6D3B /* light-switch-dragon.mp3 */; };
+		DFD6B2343A8659C2E5201EC0 /* hana-sujud.png in Resources */ = {isa = PBXBuildFile; fileRef = 3CE8714A6D22C0F2AFAF7065 /* hana-sujud.png */; };
+		E01339D3D8794A3B9A993CDE /* SetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38EE2C40D05B325486190BCF /* SetupView.swift */; };
+		E7C7179AD63BB0BD483C88D7 /* nur-sujud.png in Resources */ = {isa = PBXBuildFile; fileRef = 1F580756D85857DFB97C808A /* nur-sujud.png */; };
+		EAA4DD7D6D4A4FC18E90D999 /* hana-angry.png in Resources */ = {isa = PBXBuildFile; fileRef = A5E180AB5422E8E5AF58CD82 /* hana-angry.png */; };
+		EF11B012502313BB0322FDF8 /* qasim-angry-jump-002.png in Resources */ = {isa = PBXBuildFile; fileRef = 4AF9F8625FAD26234799114B /* qasim-angry-jump-002.png */; };
+		F09DDC49D2482F40D391D576 /* OverlayRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA6DDD1DBCEBF27DDFF58B8F /* OverlayRootView.swift */; };
+		F1C7A57F2055CB3DEDA60B76 /* typing-loop-003.png in Resources */ = {isa = PBXBuildFile; fileRef = DDC20DEEDEB286E14F22FDB2 /* typing-loop-003.png */; };
+		F20E8B4650C43C77C0FA6544 /* UpdaterController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370B2A828428CBA339E85EB6 /* UpdaterController.swift */; };
+		F3E5AA1626130B9BE9D8C755 /* idle-to-typing-003.png in Resources */ = {isa = PBXBuildFile; fileRef = 8755ABB7178F1A6EB71451B5 /* idle-to-typing-003.png */; };
+		F522672F4915379592983475 /* QasimApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D18A67FB57FA310954DB6E0A /* QasimApp.swift */; };
+		F7835F907FFBD49095768C60 /* qasim-switch-down.png in Resources */ = {isa = PBXBuildFile; fileRef = BF0FA3F9E6650E7E3240E7F2 /* qasim-switch-down.png */; };
+		FFDE584821C9CB327EF35367 /* hana-switch.png in Resources */ = {isa = PBXBuildFile; fileRef = A9549C434A0421EFE2352510 /* hana-switch.png */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		001471D0F33C5CF57B0B12ED /* nur-qiyam.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nur-qiyam.png"; sourceTree = "<group>"; };
+		083AB6C484120BE0D9908C9A /* idle-to-typing-001.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "idle-to-typing-001.png"; sourceTree = "<group>"; };
+		0B5D64ACF56E8668EDF91253 /* MenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarView.swift; sourceTree = "<group>"; };
+		0C8230D2B37C8C615BE42085 /* idle-to-typing-005.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "idle-to-typing-005.png"; sourceTree = "<group>"; };
+		0D914C8E09DA32B69AB8333A /* BreakActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreakActivity.swift; sourceTree = "<group>"; };
+		0DE519D5F9644F526CBF7C12 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		11468B4DDDB1D40727AD6D1A /* CharacterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterView.swift; sourceTree = "<group>"; };
+		14126BB037F69115698C161B /* app-icon-1024.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "app-icon-1024.png"; sourceTree = "<group>"; };
+		169854CFF311FB39FD45EF65 /* StatsBoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsBoardView.swift; sourceTree = "<group>"; };
+		1B3A83C537155459845FAD1A /* fire-maxhammarback.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "fire-maxhammarback.mp3"; sourceTree = "<group>"; };
+		1B7C0C5A24C0DD9F46A215E6 /* nur-typing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nur-typing.png"; sourceTree = "<group>"; };
+		1C5071EF2CBDA7E4C820BECD /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
+		1E40CC8D896975A3C1198350 /* qasim-session-complete-000.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "qasim-session-complete-000.png"; sourceTree = "<group>"; };
+		1E7F30FF48023B33D359112D /* qasim-angry-jump-001.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "qasim-angry-jump-001.png"; sourceTree = "<group>"; };
+		1F580756D85857DFB97C808A /* nur-sujud.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nur-sujud.png"; sourceTree = "<group>"; };
+		28B8A440F34F37684E676D30 /* qasim-sujud.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "qasim-sujud.png"; sourceTree = "<group>"; };
+		2B57730087B78D26577528AC /* qasim-idle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "qasim-idle.png"; sourceTree = "<group>"; };
+		2EE633F9C501241BE45D1720 /* SessionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionController.swift; sourceTree = "<group>"; };
+		32C9B99D6CD539583D26D06A /* Palette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Palette.swift; sourceTree = "<group>"; };
+		32D48A3FC9BCD7892EC0B4C0 /* salah-chime.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "salah-chime.wav"; sourceTree = "<group>"; };
+		370B2A828428CBA339E85EB6 /* UpdaterController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdaterController.swift; sourceTree = "<group>"; };
+		38E9C5B865CB8452D5C4434A /* SoundBoard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundBoard.swift; sourceTree = "<group>"; };
+		38EE2C40D05B325486190BCF /* SetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupView.swift; sourceTree = "<group>"; };
+		3981E8D9F74D802DDD356EDA /* scold-blip.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "scold-blip.wav"; sourceTree = "<group>"; };
+		3CE8714A6D22C0F2AFAF7065 /* hana-sujud.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hana-sujud.png"; sourceTree = "<group>"; };
+		3CE9481CCF08AF8ACD6EC290 /* OverlayWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayWindow.swift; sourceTree = "<group>"; };
+		3D8D0552CC03E28C5DC4E946 /* typing-loop-000.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "typing-loop-000.png"; sourceTree = "<group>"; };
+		3E4569877D565E01A9476A6C /* hana-ruku.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hana-ruku.png"; sourceTree = "<group>"; };
+		410DB2C1241F43B9D02DAF34 /* qasim-session-complete-002.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "qasim-session-complete-002.png"; sourceTree = "<group>"; };
+		4120EB11C81D468FAD8F4BCA /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		44633B07EA684772CE75C264 /* qasim-angry-jump-003.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "qasim-angry-jump-003.png"; sourceTree = "<group>"; };
+		44F131A3D7B93097F185FAF5 /* typing-loop-004.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "typing-loop-004.png"; sourceTree = "<group>"; };
+		4AF9F8625FAD26234799114B /* qasim-angry-jump-002.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "qasim-angry-jump-002.png"; sourceTree = "<group>"; };
+		5403692F3AFB3821A49E33E3 /* idle-to-typing-002.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "idle-to-typing-002.png"; sourceTree = "<group>"; };
+		5985A604AC895F84B79957F7 /* hana-idle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hana-idle.png"; sourceTree = "<group>"; };
+		5BA1ABFF18887CC15521DE31 /* NewSessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewSessionView.swift; sourceTree = "<group>"; };
+		5BE54676B3B9C2709FBF6B2E /* qasim-angry-jump-005.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "qasim-angry-jump-005.png"; sourceTree = "<group>"; };
+		6080E05E4FD45BF68259A326 /* nur-ruku.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nur-ruku.png"; sourceTree = "<group>"; };
+		66043C96F3F41870CF2C32B0 /* qasim-angry-jump-000.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "qasim-angry-jump-000.png"; sourceTree = "<group>"; };
+		6997DFC7BF97424BA570906D /* typing-loop-002.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "typing-loop-002.png"; sourceTree = "<group>"; };
+		6AB298380F5FF97FE7CBEEF1 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		7629DCEED6BA19FA77DD7C0C /* fire-crackle.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "fire-crackle.wav"; sourceTree = "<group>"; };
+		763721D57C23F852CDAA7C79 /* qasim-typing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "qasim-typing.png"; sourceTree = "<group>"; };
+		79F8058E3A9EECAC0D1899EC /* BrowserInspector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserInspector.swift; sourceTree = "<group>"; };
+		816C4D6B72EA675C1123C977 /* ProgressStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressStore.swift; sourceTree = "<group>"; };
+		817F3E7C80AF20DA9E14230C /* SalahNotifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SalahNotifier.swift; sourceTree = "<group>"; };
+		8683736AE22ABB670E3F5668 /* nur-switch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nur-switch.png"; sourceTree = "<group>"; };
+		86986B5D155C2402A2EB1A45 /* switch-click.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "switch-click.wav"; sourceTree = "<group>"; };
+		8755ABB7178F1A6EB71451B5 /* idle-to-typing-003.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "idle-to-typing-003.png"; sourceTree = "<group>"; };
+		89E7D1CD3E1AD2B01D3E74AC /* nur-sleep.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nur-sleep.png"; sourceTree = "<group>"; };
+		8A362C12877DA55A606F6B0C /* nur-idle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nur-idle.png"; sourceTree = "<group>"; };
+		8DA5ED7D8201687EF75FE3FB /* Effects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Effects.swift; sourceTree = "<group>"; };
+		8F2FCC816F39397366A51212 /* qasim-session-complete-007.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "qasim-session-complete-007.png"; sourceTree = "<group>"; };
+		9046A1E866AE52EFD3959FE0 /* Qasim.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Qasim.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		93E74C39261F693409BEE998 /* qasim-tasbih-a.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "qasim-tasbih-a.png"; sourceTree = "<group>"; };
+		961EA60B9024D2F679C01644 /* CharacterBrain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterBrain.swift; sourceTree = "<group>"; };
+		96670B8BC6964885BD66471A /* SalahWatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SalahWatch.swift; sourceTree = "<group>"; };
+		96F83F44AD77BCE5EF1F6435 /* qasim-session-complete-003.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "qasim-session-complete-003.png"; sourceTree = "<group>"; };
+		9D361874F6840823C8022BA2 /* qasim-qiyam.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "qasim-qiyam.png"; sourceTree = "<group>"; };
+		A2EB2397E5019DE4A7AA2C9D /* nur-angry.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nur-angry.png"; sourceTree = "<group>"; };
+		A5E180AB5422E8E5AF58CD82 /* hana-angry.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hana-angry.png"; sourceTree = "<group>"; };
+		A9549C434A0421EFE2352510 /* hana-switch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hana-switch.png"; sourceTree = "<group>"; };
+		AA42BC83E35A565EADEC1134 /* qasim-session-complete-sheet.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "qasim-session-complete-sheet.png"; sourceTree = "<group>"; };
+		AA6DDD1DBCEBF27DDFF58B8F /* OverlayRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayRootView.swift; sourceTree = "<group>"; };
+		ABB343AEC2BD64757EAEA7BF /* ProgressBoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBoardView.swift; sourceTree = "<group>"; };
+		AC717E0AEE0F879FD50C8A02 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		B6A3DDC76D816FFB0EF17C0B /* qasim-quran.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "qasim-quran.png"; sourceTree = "<group>"; };
+		B747411CEC63CF912B2E3DE0 /* qasim-session-complete-005.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "qasim-session-complete-005.png"; sourceTree = "<group>"; };
+		BAD57F15EE5A0EC7B4349DCC /* paper-notes.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "paper-notes.wav"; sourceTree = "<group>"; };
+		BB8EFA936F3E69E101E044D3 /* idle-to-typing-000.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "idle-to-typing-000.png"; sourceTree = "<group>"; };
+		BBF50A37800F347165833B9A /* PrayerTimes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerTimes.swift; sourceTree = "<group>"; };
+		BF0FA3F9E6650E7E3240E7F2 /* qasim-switch-down.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "qasim-switch-down.png"; sourceTree = "<group>"; };
+		C2C207C9F7C95B35FEA5A9F2 /* BreakView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreakView.swift; sourceTree = "<group>"; };
+		C4422C3C7761F41352BE1F2F /* PrayerAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerAPI.swift; sourceTree = "<group>"; };
+		C9A17D5C9ACEB5220C859E73 /* SpeechLines.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechLines.swift; sourceTree = "<group>"; };
+		CA4008F4FC8BA1FD5E9FFC27 /* hana-typing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hana-typing.png"; sourceTree = "<group>"; };
+		CC4F1271F033287A47CEDF4F /* qasim-tasbih-b.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "qasim-tasbih-b.png"; sourceTree = "<group>"; };
+		CFA0C4144904A81EB27C8966 /* qasim-angry-jump-004.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "qasim-angry-jump-004.png"; sourceTree = "<group>"; };
+		D0E9A2E7F980F278814139AB /* hana-sleep.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hana-sleep.png"; sourceTree = "<group>"; };
+		D18390804D85F67FC22F7079 /* LocationFix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationFix.swift; sourceTree = "<group>"; };
+		D18A67FB57FA310954DB6E0A /* QasimApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QasimApp.swift; sourceTree = "<group>"; };
+		D49DAA7B6E75D1F03C8B65EA /* qasim-ruku.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "qasim-ruku.png"; sourceTree = "<group>"; };
+		D56D62D46C5D2BE422E4D836 /* typing-loop-001.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "typing-loop-001.png"; sourceTree = "<group>"; };
+		DC2167BC60208FD8CC2D158E /* idle-to-typing-004.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "idle-to-typing-004.png"; sourceTree = "<group>"; };
+		DDC20DEEDEB286E14F22FDB2 /* typing-loop-003.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "typing-loop-003.png"; sourceTree = "<group>"; };
+		E08759E5BC58A5B63226A612 /* qasim-session-complete-004.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "qasim-session-complete-004.png"; sourceTree = "<group>"; };
+		E2ABB2139B063463C9908C69 /* TimerChipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerChipView.swift; sourceTree = "<group>"; };
+		E3B9056880351664564798DF /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
+		E3E2033C67177FF48C9C6D3B /* light-switch-dragon.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "light-switch-dragon.mp3"; sourceTree = "<group>"; };
+		E529E8B5E497531EEC9E6862 /* qasim-session-complete-006.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "qasim-session-complete-006.png"; sourceTree = "<group>"; };
+		E60AC7C093D3DA0ECCD5D9F4 /* Companion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Companion.swift; sourceTree = "<group>"; };
+		EBA1CA31078A251D9E485D99 /* qasim-session-complete-001.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "qasim-session-complete-001.png"; sourceTree = "<group>"; };
+		ED3C23FDF2DCAFA7ABCCFE10 /* InstalledAppCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstalledAppCatalog.swift; sourceTree = "<group>"; };
+		EFE176C74B9C48FF104768F7 /* Qasim.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Qasim.entitlements; sourceTree = "<group>"; };
+		F137770FE4137081344FB5D2 /* spray-tiovanlley.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "spray-tiovanlley.mp3"; sourceTree = "<group>"; };
+		F2E6FB24A4958362198C2D2A /* hana-qiyam.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "hana-qiyam.png"; sourceTree = "<group>"; };
+		FAAC808D116310E08B208045 /* qasim-angry.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "qasim-angry.png"; sourceTree = "<group>"; };
+		FDA3D9004D4DD22916402797 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		FE1CFC5749AC79C3FD41DF64 /* DistractionMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistractionMonitor.swift; sourceTree = "<group>"; };
+		FE23A1F9B347BDAC19593DFC /* qasim-switch-up.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "qasim-switch-up.png"; sourceTree = "<group>"; };
+		FE289B54DE74ED940EA7EBD9 /* PoseTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoseTransition.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		DD8724FA9A797EDA5D9172E7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D3DE1E642E3938DA6C3188D /* Sparkle in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		02870BA37FB2DD1B32575F7D /* Art */ = {
+			isa = PBXGroup;
+			children = (
+				D884DDF1A4D260C613DDD9A5 /* Hana */,
+				E4E3CBD71D3BB2686A907D12 /* Nur */,
+				882D37B40A467CDCC08A75FC /* Qasim */,
+				14126BB037F69115698C161B /* app-icon-1024.png */,
+			);
+			path = Art;
+			sourceTree = "<group>";
+		};
+		07524E1F43DC5E481BCB8153 /* Sounds */ = {
+			isa = PBXGroup;
+			children = (
+				7629DCEED6BA19FA77DD7C0C /* fire-crackle.wav */,
+				1B3A83C537155459845FAD1A /* fire-maxhammarback.mp3 */,
+				E3E2033C67177FF48C9C6D3B /* light-switch-dragon.mp3 */,
+				BAD57F15EE5A0EC7B4349DCC /* paper-notes.wav */,
+				32D48A3FC9BCD7892EC0B4C0 /* salah-chime.wav */,
+				3981E8D9F74D802DDD356EDA /* scold-blip.wav */,
+				F137770FE4137081344FB5D2 /* spray-tiovanlley.mp3 */,
+				86986B5D155C2402A2EB1A45 /* switch-click.wav */,
+			);
+			path = Sounds;
+			sourceTree = "<group>";
+		};
+		0B56AC1503F3BE774AB743D1 /* Qasim */ = {
+			isa = PBXGroup;
+			children = (
+				EF85C72347728444F01D7881 /* App */,
+				13FA0AAAAB9EEF170123850C /* Audio */,
+				4B8E8DE881986AF51BE720EC /* Break */,
+				3A24988CDF573DD8F444EBF4 /* Character */,
+				B8B5CFDCCE116BE4F9ACD070 /* Menu */,
+				D6F00165A5B9FBD42B592AEE /* Overlay */,
+				C8629840E82FEB0EFD6F4BA3 /* Progress */,
+				0EFDE902C83728FBA58EC044 /* Resources */,
+				ADC0F536E0197B5FE79FF55C /* Salah */,
+				FFDF34ECCF710ABF11A2E5A4 /* Session */,
+				97E4CC0F393429556A8CE7F9 /* Settings */,
+				0E08E42CDF5D61725F42D18F /* Setup */,
+				879AA6F83ED5FCBBB883600A /* Theme */,
+				0DE519D5F9644F526CBF7C12 /* Info.plist */,
+				EFE176C74B9C48FF104768F7 /* Qasim.entitlements */,
+				D18A67FB57FA310954DB6E0A /* QasimApp.swift */,
+			);
+			path = Qasim;
+			sourceTree = "<group>";
+		};
+		0E08E42CDF5D61725F42D18F /* Setup */ = {
+			isa = PBXGroup;
+			children = (
+				4120EB11C81D468FAD8F4BCA /* HomeView.swift */,
+				5BA1ABFF18887CC15521DE31 /* NewSessionView.swift */,
+				38EE2C40D05B325486190BCF /* SetupView.swift */,
+			);
+			path = Setup;
+			sourceTree = "<group>";
+		};
+		0EFDE902C83728FBA58EC044 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				02870BA37FB2DD1B32575F7D /* Art */,
+				07524E1F43DC5E481BCB8153 /* Sounds */,
+				AC717E0AEE0F879FD50C8A02 /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		13FA0AAAAB9EEF170123850C /* Audio */ = {
+			isa = PBXGroup;
+			children = (
+				38E9C5B865CB8452D5C4434A /* SoundBoard.swift */,
+			);
+			path = Audio;
+			sourceTree = "<group>";
+		};
+		337D1D883A6D0DC01E9F5D2D = {
+			isa = PBXGroup;
+			children = (
+				0B56AC1503F3BE774AB743D1 /* Qasim */,
+				B88D8949FD3EDD9E293EDDBB /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		3A24988CDF573DD8F444EBF4 /* Character */ = {
+			isa = PBXGroup;
+			children = (
+				0D914C8E09DA32B69AB8333A /* BreakActivity.swift */,
+				961EA60B9024D2F679C01644 /* CharacterBrain.swift */,
+				11468B4DDDB1D40727AD6D1A /* CharacterView.swift */,
+				E60AC7C093D3DA0ECCD5D9F4 /* Companion.swift */,
+				FE289B54DE74ED940EA7EBD9 /* PoseTransition.swift */,
+				C9A17D5C9ACEB5220C859E73 /* SpeechLines.swift */,
+			);
+			path = Character;
+			sourceTree = "<group>";
+		};
+		4B8E8DE881986AF51BE720EC /* Break */ = {
+			isa = PBXGroup;
+			children = (
+				C2C207C9F7C95B35FEA5A9F2 /* BreakView.swift */,
+			);
+			path = Break;
+			sourceTree = "<group>";
+		};
+		709148479B732DC4262B50B0 /* angry-jump */ = {
+			isa = PBXGroup;
+			children = (
+				66043C96F3F41870CF2C32B0 /* qasim-angry-jump-000.png */,
+				1E7F30FF48023B33D359112D /* qasim-angry-jump-001.png */,
+				4AF9F8625FAD26234799114B /* qasim-angry-jump-002.png */,
+				44633B07EA684772CE75C264 /* qasim-angry-jump-003.png */,
+				CFA0C4144904A81EB27C8966 /* qasim-angry-jump-004.png */,
+				5BE54676B3B9C2709FBF6B2E /* qasim-angry-jump-005.png */,
+			);
+			path = "angry-jump";
+			sourceTree = "<group>";
+		};
+		80E6DA67F1F0089DE7B19836 /* typing-loop */ = {
+			isa = PBXGroup;
+			children = (
+				3D8D0552CC03E28C5DC4E946 /* typing-loop-000.png */,
+				D56D62D46C5D2BE422E4D836 /* typing-loop-001.png */,
+				6997DFC7BF97424BA570906D /* typing-loop-002.png */,
+				DDC20DEEDEB286E14F22FDB2 /* typing-loop-003.png */,
+				44F131A3D7B93097F185FAF5 /* typing-loop-004.png */,
+			);
+			path = "typing-loop";
+			sourceTree = "<group>";
+		};
+		879AA6F83ED5FCBBB883600A /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				32C9B99D6CD539583D26D06A /* Palette.swift */,
+			);
+			path = Theme;
+			sourceTree = "<group>";
+		};
+		882D37B40A467CDCC08A75FC /* Qasim */ = {
+			isa = PBXGroup;
+			children = (
+				AD12EE9D38CBF803D1110334 /* transitions */,
+				FAAC808D116310E08B208045 /* qasim-angry.png */,
+				2B57730087B78D26577528AC /* qasim-idle.png */,
+				9D361874F6840823C8022BA2 /* qasim-qiyam.png */,
+				B6A3DDC76D816FFB0EF17C0B /* qasim-quran.png */,
+				D49DAA7B6E75D1F03C8B65EA /* qasim-ruku.png */,
+				28B8A440F34F37684E676D30 /* qasim-sujud.png */,
+				BF0FA3F9E6650E7E3240E7F2 /* qasim-switch-down.png */,
+				FE23A1F9B347BDAC19593DFC /* qasim-switch-up.png */,
+				93E74C39261F693409BEE998 /* qasim-tasbih-a.png */,
+				CC4F1271F033287A47CEDF4F /* qasim-tasbih-b.png */,
+				763721D57C23F852CDAA7C79 /* qasim-typing.png */,
+			);
+			path = Qasim;
+			sourceTree = "<group>";
+		};
+		91C1AC4A75C6D9D79E313813 /* session-complete */ = {
+			isa = PBXGroup;
+			children = (
+				1E40CC8D896975A3C1198350 /* qasim-session-complete-000.png */,
+				EBA1CA31078A251D9E485D99 /* qasim-session-complete-001.png */,
+				410DB2C1241F43B9D02DAF34 /* qasim-session-complete-002.png */,
+				96F83F44AD77BCE5EF1F6435 /* qasim-session-complete-003.png */,
+				E08759E5BC58A5B63226A612 /* qasim-session-complete-004.png */,
+				B747411CEC63CF912B2E3DE0 /* qasim-session-complete-005.png */,
+				E529E8B5E497531EEC9E6862 /* qasim-session-complete-006.png */,
+				8F2FCC816F39397366A51212 /* qasim-session-complete-007.png */,
+				AA42BC83E35A565EADEC1134 /* qasim-session-complete-sheet.png */,
+			);
+			path = "session-complete";
+			sourceTree = "<group>";
+		};
+		97E4CC0F393429556A8CE7F9 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				FDA3D9004D4DD22916402797 /* SettingsView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		AD12EE9D38CBF803D1110334 /* transitions */ = {
+			isa = PBXGroup;
+			children = (
+				709148479B732DC4262B50B0 /* angry-jump */,
+				E0A321156732539228B60430 /* idle-to-typing */,
+				91C1AC4A75C6D9D79E313813 /* session-complete */,
+				80E6DA67F1F0089DE7B19836 /* typing-loop */,
+			);
+			path = transitions;
+			sourceTree = "<group>";
+		};
+		ADC0F536E0197B5FE79FF55C /* Salah */ = {
+			isa = PBXGroup;
+			children = (
+				D18390804D85F67FC22F7079 /* LocationFix.swift */,
+				C4422C3C7761F41352BE1F2F /* PrayerAPI.swift */,
+				BBF50A37800F347165833B9A /* PrayerTimes.swift */,
+				817F3E7C80AF20DA9E14230C /* SalahNotifier.swift */,
+				96670B8BC6964885BD66471A /* SalahWatch.swift */,
+			);
+			path = Salah;
+			sourceTree = "<group>";
+		};
+		B88D8949FD3EDD9E293EDDBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				9046A1E866AE52EFD3959FE0 /* Qasim.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		B8B5CFDCCE116BE4F9ACD070 /* Menu */ = {
+			isa = PBXGroup;
+			children = (
+				0B5D64ACF56E8668EDF91253 /* MenuBarView.swift */,
+			);
+			path = Menu;
+			sourceTree = "<group>";
+		};
+		C8629840E82FEB0EFD6F4BA3 /* Progress */ = {
+			isa = PBXGroup;
+			children = (
+				ABB343AEC2BD64757EAEA7BF /* ProgressBoardView.swift */,
+				169854CFF311FB39FD45EF65 /* StatsBoardView.swift */,
+			);
+			path = Progress;
+			sourceTree = "<group>";
+		};
+		D6F00165A5B9FBD42B592AEE /* Overlay */ = {
+			isa = PBXGroup;
+			children = (
+				8DA5ED7D8201687EF75FE3FB /* Effects.swift */,
+				AA6DDD1DBCEBF27DDFF58B8F /* OverlayRootView.swift */,
+				3CE9481CCF08AF8ACD6EC290 /* OverlayWindow.swift */,
+				E2ABB2139B063463C9908C69 /* TimerChipView.swift */,
+			);
+			path = Overlay;
+			sourceTree = "<group>";
+		};
+		D884DDF1A4D260C613DDD9A5 /* Hana */ = {
+			isa = PBXGroup;
+			children = (
+				A5E180AB5422E8E5AF58CD82 /* hana-angry.png */,
+				5985A604AC895F84B79957F7 /* hana-idle.png */,
+				F2E6FB24A4958362198C2D2A /* hana-qiyam.png */,
+				3E4569877D565E01A9476A6C /* hana-ruku.png */,
+				D0E9A2E7F980F278814139AB /* hana-sleep.png */,
+				3CE8714A6D22C0F2AFAF7065 /* hana-sujud.png */,
+				A9549C434A0421EFE2352510 /* hana-switch.png */,
+				CA4008F4FC8BA1FD5E9FFC27 /* hana-typing.png */,
+			);
+			path = Hana;
+			sourceTree = "<group>";
+		};
+		E0A321156732539228B60430 /* idle-to-typing */ = {
+			isa = PBXGroup;
+			children = (
+				BB8EFA936F3E69E101E044D3 /* idle-to-typing-000.png */,
+				083AB6C484120BE0D9908C9A /* idle-to-typing-001.png */,
+				5403692F3AFB3821A49E33E3 /* idle-to-typing-002.png */,
+				8755ABB7178F1A6EB71451B5 /* idle-to-typing-003.png */,
+				DC2167BC60208FD8CC2D158E /* idle-to-typing-004.png */,
+				0C8230D2B37C8C615BE42085 /* idle-to-typing-005.png */,
+			);
+			path = "idle-to-typing";
+			sourceTree = "<group>";
+		};
+		E4E3CBD71D3BB2686A907D12 /* Nur */ = {
+			isa = PBXGroup;
+			children = (
+				A2EB2397E5019DE4A7AA2C9D /* nur-angry.png */,
+				8A362C12877DA55A606F6B0C /* nur-idle.png */,
+				001471D0F33C5CF57B0B12ED /* nur-qiyam.png */,
+				6080E05E4FD45BF68259A326 /* nur-ruku.png */,
+				89E7D1CD3E1AD2B01D3E74AC /* nur-sleep.png */,
+				1F580756D85857DFB97C808A /* nur-sujud.png */,
+				8683736AE22ABB670E3F5668 /* nur-switch.png */,
+				1B7C0C5A24C0DD9F46A215E6 /* nur-typing.png */,
+			);
+			path = Nur;
+			sourceTree = "<group>";
+		};
+		EF85C72347728444F01D7881 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				1C5071EF2CBDA7E4C820BECD /* AppModel.swift */,
+				370B2A828428CBA339E85EB6 /* UpdaterController.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		FFDF34ECCF710ABF11A2E5A4 /* Session */ = {
+			isa = PBXGroup;
+			children = (
+				79F8058E3A9EECAC0D1899EC /* BrowserInspector.swift */,
+				FE1CFC5749AC79C3FD41DF64 /* DistractionMonitor.swift */,
+				ED3C23FDF2DCAFA7ABCCFE10 /* InstalledAppCatalog.swift */,
+				6AB298380F5FF97FE7CBEEF1 /* Models.swift */,
+				E3B9056880351664564798DF /* Preferences.swift */,
+				816C4D6B72EA675C1123C977 /* ProgressStore.swift */,
+				2EE633F9C501241BE45D1720 /* SessionController.swift */,
+			);
+			path = Session;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		357AD990A6A7E42C746624EE /* Qasim */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 569F794AF36B1E1070688C53 /* Build configuration list for PBXNativeTarget "Qasim" */;
+			buildPhases = (
+				24B948EFD826C01DD593DC8B /* Sources */,
+				DD6999D8883104FB275BA553 /* Resources */,
+				DD8724FA9A797EDA5D9172E7 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Qasim;
+			packageProductDependencies = (
+				9F1A8B46308B038C4DFF6DE7 /* Sparkle */,
+			);
+			productName = Qasim;
+			productReference = 9046A1E866AE52EFD3959FE0 /* Qasim.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		332E5BCCD988D0863D785CE0 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					357AD990A6A7E42C746624EE = {
+						DevelopmentTeam = 7756PBXM2X;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 2F95FBB64D59539FF4CDB996 /* Build configuration list for PBXProject "Qasim" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 337D1D883A6D0DC01E9F5D2D;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				E0DD4F54248C1A039E0F4125 /* XCRemoteSwiftPackageReference "Sparkle" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = B88D8949FD3EDD9E293EDDBB /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				357AD990A6A7E42C746624EE /* Qasim */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		DD6999D8883104FB275BA553 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1E10C2D4BF3CBE90B210B08A /* Assets.xcassets in Resources */,
+				78AAF39DD2F739F16EE80AF9 /* app-icon-1024.png in Resources */,
+				1F6E3C2C8E30530B7DCA524A /* fire-crackle.wav in Resources */,
+				B481E902E48167CAEC939D25 /* fire-maxhammarback.mp3 in Resources */,
+				EAA4DD7D6D4A4FC18E90D999 /* hana-angry.png in Resources */,
+				03D3D9259A97C6CB50110B04 /* hana-idle.png in Resources */,
+				6D2008E5582E3B7ACE9F23FB /* hana-qiyam.png in Resources */,
+				15837600E144304D68BB7254 /* hana-ruku.png in Resources */,
+				3E6C8DE00B3301988B9791E2 /* hana-sleep.png in Resources */,
+				DFD6B2343A8659C2E5201EC0 /* hana-sujud.png in Resources */,
+				FFDE584821C9CB327EF35367 /* hana-switch.png in Resources */,
+				09F6D52B366825C589CDF70A /* hana-typing.png in Resources */,
+				6DA013E3BACE1948E60E637D /* idle-to-typing-000.png in Resources */,
+				49608989A2D41A1CAADF6346 /* idle-to-typing-001.png in Resources */,
+				793E2F1909B90B6E2B8C402A /* idle-to-typing-002.png in Resources */,
+				F3E5AA1626130B9BE9D8C755 /* idle-to-typing-003.png in Resources */,
+				0156E3862074E11C1A755936 /* idle-to-typing-004.png in Resources */,
+				799CAF462D09174DB9F6F40F /* idle-to-typing-005.png in Resources */,
+				DDCF40EAA1B71BF7AED3DB38 /* light-switch-dragon.mp3 in Resources */,
+				16CD7F0E00FCF4174C150C4B /* nur-angry.png in Resources */,
+				805F562DDAB70D0BEB0615CD /* nur-idle.png in Resources */,
+				0552330BB231ADEC997141D1 /* nur-qiyam.png in Resources */,
+				914455DBDACA7BDBC06F8AEF /* nur-ruku.png in Resources */,
+				A25FF2F39B92E21C0190C73D /* nur-sleep.png in Resources */,
+				E7C7179AD63BB0BD483C88D7 /* nur-sujud.png in Resources */,
+				68D3C2A1299D030C50743A6E /* nur-switch.png in Resources */,
+				229EB712F0F2F82E3109CA11 /* nur-typing.png in Resources */,
+				B96717BE9A384E94B86AF396 /* paper-notes.wav in Resources */,
+				2E6104350BE058A1A69611D8 /* qasim-angry-jump-000.png in Resources */,
+				25EBA3819454D8190B25BB7F /* qasim-angry-jump-001.png in Resources */,
+				EF11B012502313BB0322FDF8 /* qasim-angry-jump-002.png in Resources */,
+				C0B16CF67F8C2C297D911EC4 /* qasim-angry-jump-003.png in Resources */,
+				0737D4BC6EB13E8C71E05C28 /* qasim-angry-jump-004.png in Resources */,
+				315C3247D922D84E224D48A0 /* qasim-angry-jump-005.png in Resources */,
+				22059EAE03C15BE4EA9D58BC /* qasim-angry.png in Resources */,
+				3707848F69BD5E6C7116957F /* qasim-idle.png in Resources */,
+				88575A7C2026F22CB1827D8B /* qasim-qiyam.png in Resources */,
+				CBBA24709BDF085601872AC3 /* qasim-quran.png in Resources */,
+				5AE7C5AADC7748A23F73CE79 /* qasim-ruku.png in Resources */,
+				82E9ADF80771E027D9790F8F /* qasim-session-complete-000.png in Resources */,
+				3B2E463B595F1E71C00DCC3E /* qasim-session-complete-001.png in Resources */,
+				222DA709A86461A71C4AFB68 /* qasim-session-complete-002.png in Resources */,
+				76A7E5012EA7BFD56332CDC5 /* qasim-session-complete-003.png in Resources */,
+				0AA0606C1C95A8129DF8903D /* qasim-session-complete-004.png in Resources */,
+				051B64E13C155095172A51AA /* qasim-session-complete-005.png in Resources */,
+				B8C2238803504FA72EB213CF /* qasim-session-complete-006.png in Resources */,
+				2B015D05F3E4047BC8070238 /* qasim-session-complete-007.png in Resources */,
+				B7AC1D603D38AC0E35CBD756 /* qasim-session-complete-sheet.png in Resources */,
+				0F50E2527D4ED4A3B84D7F4F /* qasim-sujud.png in Resources */,
+				F7835F907FFBD49095768C60 /* qasim-switch-down.png in Resources */,
+				847172DE34C0FB73CCD2B1B9 /* qasim-switch-up.png in Resources */,
+				867F4321A05BDF23B8FF46DE /* qasim-tasbih-a.png in Resources */,
+				CA200A8B9A56B7908D0CC862 /* qasim-tasbih-b.png in Resources */,
+				1C32A7322DB8009429C35532 /* qasim-typing.png in Resources */,
+				7E7DC0F31294083BBC6053FD /* salah-chime.wav in Resources */,
+				84CE27CA5E1B21958AA630F5 /* scold-blip.wav in Resources */,
+				0AEDF9FB3239EA5FAAEA6FAD /* spray-tiovanlley.mp3 in Resources */,
+				7ADA4EF5308600C8AA34207F /* switch-click.wav in Resources */,
+				0D0C93912E9F44E86AEC88EA /* typing-loop-000.png in Resources */,
+				56517A9D91CDBE2E22E16275 /* typing-loop-001.png in Resources */,
+				ABCBB3C780E48D94AE0E789B /* typing-loop-002.png in Resources */,
+				F1C7A57F2055CB3DEDA60B76 /* typing-loop-003.png in Resources */,
+				8F95F0F96D13E23660E2BDA5 /* typing-loop-004.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		24B948EFD826C01DD593DC8B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				01797473BAFA17608D0D10B2 /* AppModel.swift in Sources */,
+				D6BC05FE773878C82C4DC7D6 /* BreakActivity.swift in Sources */,
+				70333BC9CB71A34535273C98 /* BreakView.swift in Sources */,
+				2110219658D156E3B88AF58C /* BrowserInspector.swift in Sources */,
+				CBBFA805A0889045BE93E2E6 /* CharacterBrain.swift in Sources */,
+				4879136E2BDF8D1A438EF645 /* CharacterView.swift in Sources */,
+				8FBC2E27EEB7D437CD3935FA /* Companion.swift in Sources */,
+				B52097DE346B923217306806 /* DistractionMonitor.swift in Sources */,
+				55C119A4AF34DABBDDE61134 /* Effects.swift in Sources */,
+				C0B0B1B8BCC4E53A9EB68B2C /* HomeView.swift in Sources */,
+				6BAC3D97DE9375151DFDDA02 /* InstalledAppCatalog.swift in Sources */,
+				11A35FEAA74AF324B671D298 /* LocationFix.swift in Sources */,
+				A41D36C1BE932AF347188C4C /* MenuBarView.swift in Sources */,
+				B3E95CDC72D55F097E212456 /* Models.swift in Sources */,
+				80B6EE24A053CB77F4E64C7E /* NewSessionView.swift in Sources */,
+				F09DDC49D2482F40D391D576 /* OverlayRootView.swift in Sources */,
+				93B68BD932EF568255D743EC /* OverlayWindow.swift in Sources */,
+				C61AF8E60E32A3A907355D57 /* Palette.swift in Sources */,
+				3EA37ECAEFC672EA041EC5F7 /* PoseTransition.swift in Sources */,
+				6A7B0CA1611AC0D8CBEEF13D /* PrayerAPI.swift in Sources */,
+				1D12560D3F994001E9C82472 /* PrayerTimes.swift in Sources */,
+				A702E322FDE12B7C26289BE0 /* Preferences.swift in Sources */,
+				6C642F7C0C383AEF372F76C1 /* ProgressBoardView.swift in Sources */,
+				227690A8DDE69D30E16CBBA9 /* ProgressStore.swift in Sources */,
+				F522672F4915379592983475 /* QasimApp.swift in Sources */,
+				D98617D7BA187376C54B1406 /* SalahNotifier.swift in Sources */,
+				9BCC80E2A098E6031023D741 /* SalahWatch.swift in Sources */,
+				25DE0CCE72B0BB3086537373 /* SessionController.swift in Sources */,
+				5CF6A7922EE7F1DFE6700CC7 /* SettingsView.swift in Sources */,
+				E01339D3D8794A3B9A993CDE /* SetupView.swift in Sources */,
+				2E6E10799B9067742E2ADB96 /* SoundBoard.swift in Sources */,
+				BFF0DE2F4213F62748A61A8C /* SpeechLines.swift in Sources */,
+				36394C1A83FC0415D29A8557 /* StatsBoardView.swift in Sources */,
+				BA5D626031023F7E5FBEE2C7 /* TimerChipView.swift in Sources */,
+				F20E8B4650C43C77C0FA6544 /* UpdaterController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		33DD130D9FFB62AC4C73FE33 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_STRICT_CONCURRENCY = targeted;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		489B87A35C7E07534DAC4DDA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Qasim/Qasim.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 7756PBXM2X;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Qasim/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = computer.qasim.app;
+				PRODUCT_NAME = Qasim;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		BAF9AFF1ACE8D1F434F97D24 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_STRICT_CONCURRENCY = targeted;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		CD1FE848F6F6A94BB7A282FE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Qasim/Qasim.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 7756PBXM2X;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Qasim/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = computer.qasim.app;
+				PRODUCT_NAME = Qasim;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2F95FBB64D59539FF4CDB996 /* Build configuration list for PBXProject "Qasim" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BAF9AFF1ACE8D1F434F97D24 /* Debug */,
+				33DD130D9FFB62AC4C73FE33 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		569F794AF36B1E1070688C53 /* Build configuration list for PBXNativeTarget "Qasim" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CD1FE848F6F6A94BB7A282FE /* Debug */,
+				489B87A35C7E07534DAC4DDA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		E0DD4F54248C1A039E0F4125 /* XCRemoteSwiftPackageReference "Sparkle" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sparkle-project/Sparkle";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.9.5;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		9F1A8B46308B038C4DFF6DE7 /* Sparkle */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E0DD4F54248C1A039E0F4125 /* XCRemoteSwiftPackageReference "Sparkle" */;
+			productName = Sparkle;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 332E5BCCD988D0863D785CE0 /* Project object */;
+}
