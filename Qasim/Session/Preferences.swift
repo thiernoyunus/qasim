@@ -142,7 +142,7 @@ final class Preferences {
         lastBlockedSites = box.lastBlockedSites ?? []
         lastAllowedSites = box.lastAllowedSites ?? []
         userName = box.userName ?? ""
-        companion = box.companion
+        companion = box.companion.isAvailable ? box.companion : .qasim
         voice = box.voice
         perch = box.perch
         characterScale = min(1.6, max(0.7, box.characterScale))

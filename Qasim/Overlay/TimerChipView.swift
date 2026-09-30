@@ -126,7 +126,7 @@ struct TimerChipView: View {
             Button {
                 onToggleExpanded?()
             } label: {
-                Image(systemName: expanded ? "chevron.up" : "pencil")
+                Image(systemName: expanded ? "chevron.up" : "ellipsis")
                     .font(.system(size: 11, weight: .bold))
                     .foregroundStyle(Palette.ink)
                     .frame(width: 22, height: 22)

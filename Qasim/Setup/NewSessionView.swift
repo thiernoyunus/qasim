@@ -2,8 +2,8 @@ import AppKit
 import SwiftUI
 
 /// The "regular" new-session flow shown after onboarding is complete.
-/// task -> mode -> apps/sites -> duration+break. No Back button: there's nothing
-/// behind it. The onboarding wizard is a separate panel (SetupView).
+/// task -> mode -> apps/sites -> duration+break. The onboarding wizard is a
+/// separate panel (SetupView).
 struct NewSessionView: View {
     @Environment(AppModel.self) private var model
     @State private var step: Int = 0
@@ -15,6 +15,16 @@ struct NewSessionView: View {
 
     private let totalSteps = 4
     private let appsStep = 2
+    private let presetMinutes = [5, 10, 15, 20, 25, 30, 45, 50, 60, 90]
+
+    /// Allow mode with an empty list would count every app as a distraction the
+    /// moment the session starts.
+    private var needsAllowedItems: Bool {
+        let session = model.session
+        return session.strategy == .allow
+            && session.allowedApps.isEmpty
+            && session.allowedSites.isEmpty
+    }
 
     var body: some View {
         @Bindable var session = model.session
@@ -168,12 +178,19 @@ struct NewSessionView: View {
             if session.strategy == .company {
                 Text("No list needed.")
                     .font(Typeface.display(22))
-                Text("Qasim will just sit with you and live its little life.")
+                Text("\(model.prefs.companion.displayName) will just sit with you and keep time.")
                     .foregroundStyle(Palette.inkSoft)
             } else {
                 Text(session.strategy == .allow ? "What do you actually need?" : "What\u{2019}s off limits?")
                     .font(Typeface.display(22))
                     .foregroundStyle(Palette.ink)
+
+                Text(session.strategy == .allow
+                    ? "Everything you don\u{2019}t pick here counts as a distraction."
+                    : "Anything you pick here counts as a distraction. Everything else is fine.")
+                    .font(.system(size: 13))
+                    .foregroundStyle(Palette.inkSoft)
+                    .fixedSize(horizontal: false, vertical: true)
 
                 chipRow(session: session)
 
@@ -206,33 +223,34 @@ struct NewSessionView: View {
 
     private func durationStepView(session: SessionController) -> some View {
         @Bindable var prefs = model.prefs
+        let isCustom = showCustomInput
+            || (session.durationMinutes > 0 && !presetMinutes.contains(session.durationMinutes))
         return VStack(alignment: .leading, spacing: 12) {
-            Text("Focus session")
+            Text("How long?")
                 .font(Typeface.display(22))
-            let options = [5, 10, 15, 20, 25, 30, 45, 50, 60, 90, 0]
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 88), spacing: 8)], spacing: 8) {
-                ForEach(options, id: \.self) { minutes in
-                    Button {
+                ForEach(presetMinutes, id: \.self) { minutes in
+                    durationChip(
+                        "\(minutes)m",
+                        selected: !isCustom && session.durationMinutes == minutes
+                    ) {
                         session.durationMinutes = minutes
-                        if minutes == 0 {
-                            showCustomInput = true
-                            if customMinutes.isEmpty { customMinutes = "25" }
-                        } else {
-                            showCustomInput = false
-                        }
-                    } label: {
-                        Text(minutes == 0 ? "Custom" : "\(minutes)m")
-                            .font(.system(size: 14, weight: .semibold))
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 10)
-                            .background(session.durationMinutes == minutes ? Palette.ink : Palette.cream)
-                            .foregroundStyle(session.durationMinutes == minutes ? Palette.cream : Palette.ink)
-                            .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                        showCustomInput = false
                     }
-                    .buttonStyle(.plain)
+                }
+                durationChip("Stopwatch", selected: !isCustom && session.isStopwatch) {
+                    session.durationMinutes = 0
+                    showCustomInput = false
+                }
+                durationChip("Custom", selected: isCustom) {
+                    showCustomInput = true
+                    if session.durationMinutes <= 0 {
+                        session.durationMinutes = 25
+                    }
+                    customMinutes = "\(session.durationMinutes)"
                 }
             }
-            if showCustomInput {
+            if isCustom {
                 HStack(spacing: 8) {
                     TextField("Minutes", text: $customMinutes)
                         .textFieldStyle(.plain)
@@ -249,15 +267,15 @@ struct NewSessionView: View {
                                 session.durationMinutes = mins
                             }
                         }
-                    Button("Stopwatch") {
-                        session.durationMinutes = 0
-                        customMinutes = ""
-                        showCustomInput = false
-                    }
-                    .buttonStyle(.plain)
-                    .font(.system(size: 12, weight: .semibold))
-                    .foregroundStyle(Palette.inkSoft)
+                    Text("minutes (1\u{2013}600)")
+                        .font(.system(size: 12))
+                        .foregroundStyle(Palette.inkSoft)
                 }
+            }
+            if session.isStopwatch {
+                Text("Counts up until you end it.")
+                    .font(.system(size: 12))
+                    .foregroundStyle(Palette.inkSoft)
             }
 
             Text("Break length")
@@ -270,15 +288,52 @@ struct NewSessionView: View {
             }
             .onChange(of: prefs.breakMinutes) { _, _ in prefs.save() }
         }
+        .onAppear {
+            if session.durationMinutes > 0, !presetMinutes.contains(session.durationMinutes) {
+                showCustomInput = true
+                customMinutes = "\(session.durationMinutes)"
+            }
+        }
+    }
+
+    private func durationChip(_ title: String, selected: Bool, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Text(title)
+                .font(.system(size: 14, weight: .semibold))
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 10)
+                .background(selected ? Palette.ink : Palette.cream)
+                .foregroundStyle(selected ? Palette.cream : Palette.ink)
+                .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                        .stroke(Palette.ink.opacity(selected ? 0 : 0.12), lineWidth: 1)
+                )
+        }
+        .buttonStyle(.plain)
+        .accessibilityAddTraits(selected ? .isSelected : [])
     }
 
     private func footer(session: SessionController) -> some View {
-        HStack {
-            // No Back button: this is the regular flow, not the onboarding wizard.
-            // Hiding it makes the panel feel finished, not partial.
+        let nextTitle = step == appsStep && session.strategy == .company ? "Skip" : "Next"
+        let blockedByEmptyAllowList = step >= appsStep && needsAllowedItems
+        return HStack(spacing: 12) {
+            if step > 0 {
+                Button("Back") { step -= 1 }
+                    .buttonStyle(.plain)
+                    .foregroundStyle(Palette.inkSoft)
+                    .accessibilityLabel("Back")
+            }
             Spacer()
+            if blockedByEmptyAllowList {
+                Text("Pick at least one app or site")
+                    .font(.system(size: 12))
+                    .foregroundStyle(Palette.inkSoft)
+            }
             if step < totalSteps - 1 {
-                Button(step == appsStep && session.strategy == .company ? "Skip" : "Next") {
+                Button(nextTitle) {
                     if step == 0 && session.taskTitle.trimmingCharacters(in: .whitespaces).isEmpty {
                         session.taskTitle = "The one thing"
                     }
@@ -286,18 +341,25 @@ struct NewSessionView: View {
                 }
                 .buttonStyle(InkButtonStyle())
                 .keyboardShortcut(.defaultAction)
-                .accessibilityLabel(step == appsStep && session.strategy == .company ? "Skip" : "Next")
+                .disabled(blockedByEmptyAllowList)
+                .opacity(blockedByEmptyAllowList ? 0.4 : 1)
+                .accessibilityLabel(nextTitle)
             } else {
-                Button(model.isEditingSession ? "Save changes" : "Start") {
+                let startTitle = model.isEditingSession ? "Save changes" : "Start"
+                let cannotStart = session.taskTitle.trimmingCharacters(in: .whitespaces).isEmpty
+                    || blockedByEmptyAllowList
+                Button(startTitle) {
                     if model.isEditingSession {
                         model.saveSessionEdits()
                     } else {
                         model.beginSession()
                     }
                 }
-                .disabled(session.taskTitle.trimmingCharacters(in: .whitespaces).isEmpty)
+                .buttonStyle(InkButtonStyle())
+                .disabled(cannotStart)
+                .opacity(cannotStart ? 0.4 : 1)
                 .keyboardShortcut(.defaultAction)
-                .accessibilityLabel(model.isEditingSession ? "Save changes" : "Start")
+                .accessibilityLabel(startTitle)
             }
         }
         .padding(18)
@@ -352,7 +414,13 @@ struct NewSessionView: View {
 
     private func appList(session: SessionController) -> some View {
         let matches = model.catalog.search(query).prefix(query.isEmpty ? 30 : 60)
-        return VStack(spacing: 0) {
+        return VStack(alignment: .leading, spacing: 0) {
+            if matches.isEmpty {
+                Text(model.catalog.isLoading ? "Loading your apps\u{2026}" : "No apps match \u{201C}\(query)\u{201D}.")
+                    .font(.system(size: 12))
+                    .foregroundStyle(Palette.inkSoft)
+                    .padding(.vertical, 6)
+            }
             ForEach(Array(matches)) { app in
                 Button {
                     toggle(app, session: session)

@@ -28,6 +28,10 @@ enum CompanionID: String, CaseIterable, Identifiable, Codable {
         }
     }
 
+    /// Only Qasim has a full pose set today. Hana and Nur stay visible in the
+    /// pickers as "Coming soon" until their art is finished.
+    var isAvailable: Bool { self == .qasim }
+
     var groupTitle: String {
         "In thobe, hijab, niqab"
     }

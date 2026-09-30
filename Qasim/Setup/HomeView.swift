@@ -1,16 +1,17 @@
 import AppKit
 import SwiftUI
 
-/// The home dashboard shown after onboarding. Mirrors the Kiki pattern the user
-/// wants: today's focus progress, a recent sessions list, and a single big
-/// "NEW" button. The detailed new-session config (task/mode/apps/duration) is
-/// reached by tapping NEW and opens in a separate panel.
+/// The home dashboard shown after onboarding: today's focus progress, a recent
+/// sessions list, and a single big "New session" button. The detailed
+/// new-session config (task/mode/apps/duration) opens from that button.
 struct HomeView: View {
     @Environment(AppModel.self) private var model
 
-    var body: some View {
-        @Bindable var prefs = model.prefs
+    private var sessionActive: Bool {
+        model.session.phase == .running || model.session.phase == .paused
+    }
 
+    var body: some View {
         VStack(spacing: 0) {
             header
             Divider().opacity(0.15)
@@ -85,7 +86,7 @@ struct HomeView: View {
                 .progressViewStyle(.linear)
                 .tint(Palette.ember)
                 .frame(height: 8)
-            Text("Focus Goal")
+            Text(goalMinutes > 0 && todayMinutes >= goalMinutes ? "Daily goal reached" : "Daily focus goal")
                 .font(.system(size: 11, weight: .semibold))
                 .foregroundStyle(Palette.inkSoft)
         }
@@ -105,7 +106,7 @@ struct HomeView: View {
                 .font(Typeface.display(20))
                 .foregroundStyle(Palette.ink)
             if sessions.isEmpty {
-                Text("No sessions today. Tap NEW to start one.")
+                Text("No sessions yet today. Start one below.")
                     .font(.system(size: 12))
                     .foregroundStyle(Palette.inkSoft)
                     .padding(.vertical, 8)
@@ -131,21 +132,23 @@ struct HomeView: View {
                     .foregroundStyle(Palette.inkSoft)
             }
             Spacer()
-            Button {
-                model.restartSession(record)
-            } label: {
-                Text("Restart")
-                    .font(.system(size: 11, weight: .semibold))
-                    .foregroundStyle(Palette.cream)
-                    .padding(.horizontal, 10)
-                    .padding(.vertical, 6)
-                    .background(
-                        RoundedRectangle(cornerRadius: 6, style: .continuous)
-                            .fill(Palette.ink)
-                    )
+            if !sessionActive {
+                Button {
+                    model.restartSession(record)
+                } label: {
+                    Text("Restart")
+                        .font(.system(size: 11, weight: .semibold))
+                        .foregroundStyle(Palette.cream)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 6)
+                        .background(
+                            RoundedRectangle(cornerRadius: 6, style: .continuous)
+                                .fill(Palette.ink)
+                        )
+                }
+                .buttonStyle(.plain)
+                .help("Start a new session with the same task and settings")
             }
-            .buttonStyle(.plain)
-            .help("Start a new session with the same task and settings")
         }
         .padding(10)
         .background(
@@ -176,14 +179,22 @@ struct HomeView: View {
     private var newSessionBar: some View {
         VStack(spacing: 8) {
             Button {
-                model.openNewSessionConfig()
+                if sessionActive {
+                    model.openSessionEditor()
+                } else {
+                    model.openNewSessionConfig()
+                }
             } label: {
-                Text("NEW")
+                Label(
+                    sessionActive ? "Edit current session" : "New session",
+                    systemImage: sessionActive ? "pencil" : "plus"
+                )
                     .font(.system(size: 16, weight: .bold))
                     .foregroundStyle(Palette.cream)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 14)
                     .background(Palette.ink, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                    .contentShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
             }
             .buttonStyle(.plain)
             .keyboardShortcut(.defaultAction)

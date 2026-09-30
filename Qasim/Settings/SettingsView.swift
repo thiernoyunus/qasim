@@ -51,7 +51,7 @@ struct SettingsView: View {
                 }
 
                 section("Salah") {
-                    Text("A ping 10 minutes before, and another when it’s time. Nothing stays on the desktop.")
+                    Text("A ping \(TimePhrase.minutesOnly(prefs.salahLeadMinutes)) before, and another when it’s time. Nothing stays on the desktop.")
                         .font(.system(size: 12))
                         .foregroundStyle(Palette.inkSoft)
                     toggle("Remind me about salah", $prefs.salahReminders)
@@ -295,29 +295,6 @@ struct SettingsView: View {
             .foregroundStyle(Palette.ink)
             .onChange(of: value.wrappedValue) { _, _ in model.prefs.save() }
     }
-
-    private func actionPreviewRow(
-        title: String,
-        blurb: String,
-        isPreviewing: Bool,
-        action: @escaping () -> Void
-    ) -> some View {
-        HStack(alignment: .center, spacing: 10) {
-            VStack(alignment: .leading, spacing: 2) {
-                Text(title)
-                    .font(.system(size: 14, weight: .semibold))
-                    .foregroundStyle(Palette.ink)
-                Text(blurb)
-                    .font(.system(size: 11))
-                    .foregroundStyle(Palette.inkSoft)
-            }
-            Spacer(minLength: 4)
-            Button(isPreviewing ? "Stop" : "Preview", action: action)
-                .buttonStyle(.plain)
-                .font(.system(size: 11, weight: .semibold))
-                .foregroundStyle(Palette.ember)
-        }
-    }
 }
 
 struct CharacterCard: View {
@@ -332,15 +309,26 @@ struct CharacterCard: View {
                     .resizable()
                     .scaledToFit()
                     .frame(height: 78)
+                    .saturation(companion.isAvailable ? 1 : 0)
+                    .opacity(companion.isAvailable ? 1 : 0.45)
                 Text(companion.displayName)
                     .font(.system(size: 13, weight: .semibold))
                     .foregroundStyle(Palette.ink)
-                Text(companion.blurb)
-                    .font(.system(size: 10))
-                    .foregroundStyle(Palette.inkSoft)
-                    .multilineTextAlignment(.center)
-                    .lineLimit(3)
-                    .fixedSize(horizontal: false, vertical: true)
+                if companion.isAvailable {
+                    Text(companion.blurb)
+                        .font(.system(size: 10))
+                        .foregroundStyle(Palette.inkSoft)
+                        .multilineTextAlignment(.center)
+                        .lineLimit(3)
+                        .fixedSize(horizontal: false, vertical: true)
+                } else {
+                    Text("Coming soon")
+                        .font(.system(size: 10, weight: .semibold))
+                        .foregroundStyle(Palette.inkSoft)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 3)
+                        .background(Palette.ink.opacity(0.06), in: Capsule())
+                }
             }
             .padding(10)
             .frame(maxWidth: .infinity, minHeight: 168)
@@ -351,7 +339,8 @@ struct CharacterCard: View {
             )
         }
         .buttonStyle(.plain)
-        .accessibilityLabel(companion.displayName)
+        .disabled(!companion.isAvailable)
+        .accessibilityLabel(companion.isAvailable ? companion.displayName : "\(companion.displayName), coming soon")
     }
 }
 
@@ -363,7 +352,7 @@ struct CharacterPickerStrip: View {
             Text("Who sits with you?")
                 .font(Typeface.display(22))
                 .foregroundStyle(Palette.ink)
-            Text("Three companions, each with the same movement set.")
+            Text("Qasim is ready now. Hana and Nur are on their way.")
                 .font(.system(size: 13))
                 .foregroundStyle(Palette.inkSoft)
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 108), spacing: 8)], spacing: 8) {
