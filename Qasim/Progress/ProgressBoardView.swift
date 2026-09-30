@@ -287,6 +287,21 @@ private struct AnalyticsActivityLogo: View {
         }?.icon
     }
 
+    /// The site's own favicon, fetched from the site itself. The user has
+    /// already visited it, so no third-party icon service learns their history.
+    private var websiteLogoURL: URL? {
+        guard activity.kind == .website, let host = websiteHost else { return nil }
+        return URL(string: "https://\(host)/favicon.ico")
+    }
+
+    private var websiteHost: String? {
+        let value = (activity.sourceIdentifier ?? activity.name)
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .lowercased()
+        guard value.contains(".") else { return nil }
+        return value
+    }
+
     var body: some View {
         Group {
             if activity.kind == .application, let appIcon {
@@ -294,6 +309,17 @@ private struct AnalyticsActivityLogo: View {
                     .resizable()
                     .scaledToFit()
                     .padding(3)
+            } else if let websiteLogoURL {
+                AsyncImage(url: websiteLogoURL) { phase in
+                    if case .success(let image) = phase {
+                        image
+                            .resizable()
+                            .scaledToFit()
+                            .padding(4)
+                    } else {
+                        fallbackLogo
+                    }
+                }
             } else {
                 fallbackLogo
             }
@@ -307,8 +333,7 @@ private struct AnalyticsActivityLogo: View {
         .accessibilityHidden(true)
     }
 
-    /// Websites get a local monogram rather than a fetched favicon: loading
-    /// icons from a web service would send every visited host off this Mac.
+    /// Shown while a favicon loads, or when a site has none.
     private var fallbackLogo: some View {
         Text(activity.kind == .website
             ? String(activity.name.first ?? "?").uppercased()
