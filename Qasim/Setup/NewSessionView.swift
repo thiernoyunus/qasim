@@ -81,7 +81,7 @@ struct NewSessionView: View {
             }
             .buttonStyle(.plain)
             .font(.system(size: 12, weight: .semibold))
-            .foregroundStyle(Palette.ember)
+            .foregroundStyle(Palette.emberText)
             .accessibilityLabel(model.isPreviewing ? "Stop preview" : "Preview")
         }
         .padding(.horizontal, 22)

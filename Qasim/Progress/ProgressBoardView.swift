@@ -106,9 +106,9 @@ struct AnalyticsSummaryStrip: View {
     var body: some View {
         HStack(alignment: .top, spacing: 10) {
             AnalyticsMetric(label: "Focus score", value: score, color: Palette.ink)
-            AnalyticsMetric(label: "Productive", value: Self.duration(productive), color: Palette.good)
-            AnalyticsMetric(label: "Distracted", value: Self.duration(distracted), color: Palette.ember)
-            AnalyticsMetric(label: "Sessions", value: "\(sessions)", color: Palette.wax)
+            AnalyticsMetric(label: "Productive", value: Self.duration(productive), color: Palette.goodText)
+            AnalyticsMetric(label: "Distracted", value: Self.duration(distracted), color: Palette.emberText)
+            AnalyticsMetric(label: "Sessions", value: "\(sessions)", color: Palette.waxText)
         }
     }
 
@@ -212,7 +212,7 @@ struct AnalyticsActivityBreakdown: View {
 
     private func activityRow(_ activity: ActivityStat) -> some View {
         let share = totalSeconds > 0 ? min(1, activity.totalSeconds / totalSeconds) : 0
-        let focusColor = activity.focusPercent >= 50 ? Palette.good : Palette.ember
+        let focusedShare = activity.totalSeconds > 0 ? activity.focusedSeconds / activity.totalSeconds : 0
 
         return VStack(alignment: .leading, spacing: 5) {
             HStack(spacing: 8) {
@@ -220,31 +220,53 @@ struct AnalyticsActivityBreakdown: View {
                 Text(activity.name)
                     .font(.system(size: 13, weight: .semibold))
                     .lineLimit(1)
+                    .truncationMode(.middle)
                 Spacer(minLength: 8)
                 Text(AnalyticsSummaryStrip.duration(activity.totalSeconds))
                     .font(.system(size: 12, weight: .bold, design: .rounded))
                     .foregroundStyle(Palette.ink)
             }
 
+            // Bar length is this row's share of all tracked time; inside it the
+            // dark green part is focused time and the orange part distracted.
+            // The two differ in lightness as well as hue, and the caption below
+            // spells out both numbers, so color is never the only signal.
             GeometryReader { proxy in
+                let barWidth = max(6, proxy.size.width * share)
                 ZStack(alignment: .leading) {
                     Capsule().fill(Palette.ink.opacity(0.08))
-                    Capsule()
-                        .fill(focusColor.opacity(0.82))
-                        .frame(width: max(6, proxy.size.width * share))
+                    HStack(spacing: 0) {
+                        Rectangle()
+                            .fill(Palette.goodText)
+                            .frame(width: barWidth * focusedShare)
+                        Rectangle()
+                            .fill(Palette.ember)
+                    }
+                    .frame(width: barWidth)
+                    .clipShape(Capsule())
                 }
             }
             .frame(height: 6)
+            .accessibilityHidden(true)
 
             HStack {
-                Text("\(Int((share * 100).rounded()))% of time")
+                Text("\(AnalyticsSummaryStrip.duration(activity.focusedSeconds)) focused")
+                    .foregroundStyle(Palette.goodText)
+                Text("\(AnalyticsSummaryStrip.duration(activity.distractedSeconds)) distracted")
+                    .foregroundStyle(activity.distractedSeconds > 0 ? Palette.emberText : Palette.inkSoft)
                 Spacer()
-                Text("\(Int(activity.focusPercent.rounded()))% focused")
+                Text("\(Int((share * 100).rounded()))% of time")
+                    .foregroundStyle(Palette.inkSoft)
             }
             .font(.system(size: 10, weight: .medium))
-            .foregroundStyle(Palette.inkSoft)
         }
         .padding(.vertical, 9)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(
+            "\(activity.name), \(AnalyticsSummaryStrip.duration(activity.totalSeconds)) total, "
+            + "\(AnalyticsSummaryStrip.duration(activity.focusedSeconds)) focused, "
+            + "\(AnalyticsSummaryStrip.duration(activity.distractedSeconds)) distracted"
+        )
     }
 }
 
@@ -265,39 +287,9 @@ private struct AnalyticsActivityLogo: View {
         }?.icon
     }
 
-    private var websiteLogoURL: URL? {
-        guard activity.kind == .website, let host = websiteHost else { return nil }
-        return URL(string: "https://icons.duckduckgo.com/ip3/\(host).ico")
-    }
-
-    private var websiteHost: String? {
-        let value = (activity.sourceIdentifier ?? activity.name)
-            .trimmingCharacters(in: .whitespacesAndNewlines)
-            .lowercased()
-        guard value.contains(".") else { return nil }
-        return value
-    }
-
     var body: some View {
         Group {
             if activity.kind == .application, let appIcon {
-                Image(nsImage: appIcon)
-                    .resizable()
-                    .scaledToFit()
-                    .padding(3)
-            } else if activity.kind == .website, let websiteLogoURL {
-                AsyncImage(url: websiteLogoURL) { phase in
-                    if case .success(let image) = phase {
-                        image
-                            .resizable()
-                            .scaledToFit()
-                            .padding(3)
-                    } else {
-                        fallbackLogo
-                    }
-                }
-            } else if let appIcon {
-                // Legacy rows may have an app name but no stable identifier yet.
                 Image(nsImage: appIcon)
                     .resizable()
                     .scaledToFit()
@@ -312,15 +304,17 @@ private struct AnalyticsActivityLogo: View {
             RoundedRectangle(cornerRadius: 8, style: .continuous)
                 .stroke(Palette.ink.opacity(0.08), lineWidth: 1)
         )
-        .accessibilityLabel(activity.name)
+        .accessibilityHidden(true)
     }
 
+    /// Websites get a local monogram rather than a fetched favicon: loading
+    /// icons from a web service would send every visited host off this Mac.
     private var fallbackLogo: some View {
         Text(activity.kind == .website
             ? String(activity.name.first ?? "?").uppercased()
             : String(activity.name.prefix(2)).uppercased())
-            .font(.system(size: 9, weight: .bold, design: .rounded))
-            .foregroundStyle(activity.kind == .website ? Palette.ember : Palette.inkSoft)
+            .font(.system(size: activity.kind == .website ? 12 : 9, weight: .bold, design: .rounded))
+            .foregroundStyle(activity.kind == .website ? Palette.emberText : Palette.inkSoft)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
@@ -437,7 +431,7 @@ struct ProgressBoardView: View {
                 VStack(alignment: .trailing, spacing: 10) {
                     Text(day.totalSeconds > 0 ? "\(Int(day.focusPercent.rounded()))% focused" : "Ready when you are")
                         .font(.system(size: 12, weight: .semibold))
-                        .foregroundStyle(day.totalSeconds > 0 ? Palette.good : Palette.inkSoft)
+                        .foregroundStyle(day.totalSeconds > 0 ? Palette.goodText : Palette.inkSoft)
                     if goalMinutes > 0 {
                         ProgressView(value: progress)
                             .progressViewStyle(.linear)
@@ -468,19 +462,9 @@ struct ProgressBoardView: View {
                         }
                         .buttonStyle(.plain)
                         .font(.system(size: 12, weight: .semibold))
-                        .foregroundStyle(Palette.ember)
-                        Button {
-                            month = Calendar.current.date(byAdding: .month, value: -1, to: month) ?? month
-                        } label: {
-                            Image(systemName: "chevron.left")
-                        }
-                        .buttonStyle(.plain)
-                        Button {
-                            month = Calendar.current.date(byAdding: .month, value: 1, to: month) ?? month
-                        } label: {
-                            Image(systemName: "chevron.right")
-                        }
-                        .buttonStyle(.plain)
+                        .foregroundStyle(Palette.emberText)
+                        monthButton("chevron.left", label: "Previous month", offset: -1)
+                        monthButton("chevron.right", label: "Next month", offset: 1)
                     }
                     calendarGrid
                 }
@@ -489,6 +473,21 @@ struct ProgressBoardView: View {
             }
             .padding(24)
         }
+    }
+
+    private func monthButton(_ icon: String, label: String, offset: Int) -> some View {
+        Button {
+            month = Calendar.current.date(byAdding: .month, value: offset, to: month) ?? month
+        } label: {
+            Image(systemName: icon)
+                .font(.system(size: 12, weight: .semibold))
+                .foregroundStyle(Palette.ink)
+                .frame(width: 28, height: 28)
+                .background(Palette.ink.opacity(0.06), in: Circle())
+                .contentShape(Circle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(label)
     }
 
     private var calendarGrid: some View {
@@ -525,8 +524,9 @@ struct ProgressBoardView: View {
                         .font(.system(size: 12, weight: selected ? .bold : .medium))
                         .foregroundStyle(Palette.ink)
                     Text(hasData ? AnalyticsSummaryStrip.duration(cell.focusedSeconds) : " ")
-                        .font(.system(size: 9, weight: .medium))
-                        .foregroundStyle(Palette.inkSoft)
+                        .font(.system(size: 9, weight: .semibold))
+                        // Full ink: the soft ink drops below 4.5:1 on the darker greens.
+                        .foregroundStyle(Palette.ink)
                 }
                 .frame(maxWidth: .infinity)
                 .frame(height: 46)
@@ -540,6 +540,11 @@ struct ProgressBoardView: View {
                 )
             }
             .buttonStyle(.plain)
+            .accessibilityLabel(
+                "\(date.formatted(date: .complete, time: .omitted)), "
+                + (hasData ? "\(AnalyticsSummaryStrip.duration(cell.focusedSeconds)) focused" : "no focus time")
+            )
+            .accessibilityAddTraits(selected ? .isSelected : [])
         )
     }
 
@@ -603,11 +608,17 @@ struct ProgressBoardView: View {
             Spacer()
             Text(scoreLabel(record.focusPercent, hasData: record.totalSeconds > 0))
                 .font(.system(size: 13, weight: .semibold, design: .rounded))
-                .foregroundStyle(record.focusPercent >= 50 ? Palette.good : Palette.ember)
-            Button("Restart") { model.restartSession(record) }
-                .font(.system(size: 11, weight: .semibold))
-                .buttonStyle(.plain)
-                .foregroundStyle(Palette.ink)
+                .foregroundStyle(record.focusPercent >= 50 ? Palette.goodText : Palette.emberText)
+            if model.session.phase != .running && model.session.phase != .paused {
+                Button("Restart") { model.restartSession(record) }
+                    .font(.system(size: 11, weight: .semibold))
+                    .buttonStyle(.plain)
+                    .foregroundStyle(Palette.ink)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 5)
+                    .overlay(Capsule().stroke(Palette.ink.opacity(0.3), lineWidth: 1))
+                    .help("Start a new session with the same task and settings")
+            }
         }
         .padding(.vertical, 3)
     }

@@ -101,7 +101,7 @@ struct SettingsView: View {
                         }
                         .buttonStyle(.plain)
                         .font(.system(size: 12, weight: .semibold))
-                        .foregroundStyle(Palette.ember)
+                        .foregroundStyle(Palette.emberText)
                     }
 
                     if prefs.salahSource == .city || (prefs.salahSource == .location && model.salah.locator.denied) {
@@ -420,7 +420,7 @@ struct ActionsCustomizeSection: View {
                     }
                     .buttonStyle(.plain)
                     .font(.system(size: 11, weight: .semibold))
-                    .foregroundStyle(Palette.ember)
+                    .foregroundStyle(Palette.emberText)
                     .accessibilityLabel(model.previewingMove == move ? "Stop preview for \(move.title)" : "Preview \(move.title)")
                 }
             }
@@ -470,7 +470,7 @@ struct ActionsCustomizeSection: View {
             Button(isPreviewing ? "Stop" : "Preview", action: action)
                 .buttonStyle(.plain)
                 .font(.system(size: 11, weight: .semibold))
-                .foregroundStyle(Palette.ember)
+                .foregroundStyle(Palette.emberText)
         }
     }
 }
@@ -510,7 +510,7 @@ struct SalahLocationSection: View {
                 }
                 .buttonStyle(.plain)
                 .font(.system(size: 12, weight: .semibold))
-                .foregroundStyle(Palette.ember)
+                .foregroundStyle(Palette.emberText)
             }
 
             if prefs.salahSource == .city || (prefs.salahSource == .location && model.salah.locator.denied) {

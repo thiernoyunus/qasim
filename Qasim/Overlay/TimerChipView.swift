@@ -333,7 +333,7 @@ private struct EndChoiceButtonStyle: ButtonStyle {
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .foregroundStyle(filled ? Palette.cream : destructive ? Palette.ember : Palette.ink)
+            .foregroundStyle(filled ? Palette.cream : destructive ? Palette.emberText : Palette.ink)
             .background(
                 RoundedRectangle(cornerRadius: 10, style: .continuous)
                     .fill(filled ? Palette.ink : destructive ? Palette.ember.opacity(0.10) : Palette.cream)

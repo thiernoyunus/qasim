@@ -49,6 +49,10 @@ final class AppModel {
     }
     var showPet: Bool {
         if prefs.isHiddenNow { return false }
+        // A prayer nudge must be seen. It overrides the break panel and the
+        // "only when you wander" setting, which would otherwise hide him (and
+        // the nudge with him) for the whole time you stay on task.
+        if salah.ask != nil || salah.matVisible { return true }
         if breakState != .none { return false }
         if session.phase == .running, session.isOnTask, !prefs.showWhileFocused {
             return false
@@ -745,7 +749,8 @@ final class AppModel {
                 ? [.qiyam, .ruku, .sujud][Int(actionPreviewAge / 2.4) % 3]
                 : salah.salahPose
         }
-        overlay?.alphaValue = (prefs.alwaysOnDesktop || session.phase != .idle) ? 1 : 0
+        let prayerOnScreen = salah.ask != nil || salah.matVisible
+        overlay?.alphaValue = (prefs.alwaysOnDesktop || session.phase != .idle || prayerOnScreen) ? 1 : 0
         updateTimerPanel()
         updateClickThrough()
     }

@@ -31,7 +31,7 @@ private struct ChartTooltip: View {
                 .font(.system(size: 12, weight: .semibold))
                 .foregroundStyle(Palette.ink)
 
-            row(color: Palette.good, text: "\(minutes(day.productiveMinutes)) productive")
+            row(color: Palette.goodText, text: "\(minutes(day.productiveMinutes)) productive")
             row(color: Palette.ember, text: "\(minutes(day.distractedMinutes)) distracting")
 
             Divider().opacity(0.25)
@@ -42,7 +42,7 @@ private struct ChartTooltip: View {
                     .foregroundStyle(Palette.inkSoft)
                 Text(day.hasData ? "\(Int(day.score.rounded()))%" : "—")
                     .font(.system(size: 11, weight: .bold))
-                    .foregroundStyle(Palette.wax)
+                    .foregroundStyle(Palette.waxText)
             }
         }
         .padding(10)
@@ -195,7 +195,7 @@ struct StatsBoardView: View {
             AnalyticsSummaryStrip(
                 productive: productiveSeconds,
                 distracted: distractedSeconds,
-                sessions: sessions.count
+                sessions: sessions.filter(\.finished).count
             )
         }
     }
@@ -209,7 +209,7 @@ struct StatsBoardView: View {
                 emptyChart("Complete a session to see your daily split.")
             } else {
                 HStack(spacing: 14) {
-                    legend(color: Palette.good, text: "productive")
+                    legend(color: Palette.goodText, text: "productive")
                     legend(color: Palette.ember, text: "distracting")
                 }
                 .font(.system(size: 11))
@@ -221,15 +221,19 @@ struct StatsBoardView: View {
                         y: .value("Minutes", day.productiveMinutes),
                         width: .fixed(barWidth)
                     )
-                    .foregroundStyle(Palette.good.opacity(hoveredTimeID == nil || hoveredTimeID == day.id ? 0.9 : 0.35))
+                    .foregroundStyle(Palette.goodText.opacity(hoveredTimeID == nil || hoveredTimeID == day.id ? 1 : 0.35))
                     .cornerRadius(3)
+                    .accessibilityLabel(day.date.formatted(date: .abbreviated, time: .omitted))
+                    .accessibilityValue("\(minuteLabel(day.productiveMinutes)) productive")
                     BarMark(
                         x: .value("Day", day.id),
                         y: .value("Minutes", day.distractedMinutes),
                         width: .fixed(barWidth)
                     )
-                    .foregroundStyle(Palette.ember.opacity(hoveredTimeID == nil || hoveredTimeID == day.id ? 0.75 : 0.3))
+                    .foregroundStyle(Palette.ember.opacity(hoveredTimeID == nil || hoveredTimeID == day.id ? 0.9 : 0.3))
                     .cornerRadius(3)
+                    .accessibilityLabel(day.date.formatted(date: .abbreviated, time: .omitted))
+                    .accessibilityValue("\(minuteLabel(day.distractedMinutes)) distracting")
                 }
                 .chartXAxis { indexAxis }
                 .chartXScale(domain: -0.7...(Double(series.count) - 0.3))

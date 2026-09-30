@@ -193,13 +193,22 @@ enum SpeechLines {
 
     /// The nudge that waits for an answer. Gets shorter and firmer each snooze.
     static func salahAsk(_ ask: SalahAsk, now: Date = Date()) -> String {
-        let wait = TimePhrase.remaining(until: ask.due, from: now)
+        let title = ask.name.title
+        // The nudge can outlive the adhan (a borrowed minute, a late wake), so
+        // it must not keep counting down to a time that has already come.
+        let started = ask.due <= now
+        let when = started
+            ? "\(title) has started"
+            : "\(title) in \(TimePhrase.remaining(until: ask.due, from: now))"
         switch ask.snoozes {
-        case 0: return "\(ask.name.title) is in \(wait). Getting up?"
+        case 0:
+            return started
+                ? "It's time for \(title). Getting up?"
+                : "\(title) is in \(TimePhrase.remaining(until: ask.due, from: now)). Getting up?"
         // Once he's standing in the middle of the screen he uses the words of the
         // adhan rather than a countdown.
-        case 1: return "Hayya 'ala-s-salah.\nCome to prayer. \(ask.name.title) in \(wait)."
-        default: return "Hayya 'ala-l-falah.\nCome to success. \(ask.name.title) in \(wait)."
+        case 1: return "Hayya 'ala-s-salah.\nCome to prayer. \(when)."
+        default: return "Hayya 'ala-l-falah.\nCome to success. \(when)."
         }
     }
 
@@ -237,7 +246,7 @@ enum TimePhrase {
         let hours = minutes / 60
         let leftover = minutes % 60
         if hours == 0 {
-            return leftover == 1 ? "1 minute" : "\(max(leftover, 1)) minutes"
+            return leftover <= 1 ? "1 minute" : "\(leftover) minutes"
         }
         let hourBit = hours == 1 ? "1 hour" : "\(hours) hours"
         if leftover == 0 { return hourBit }
