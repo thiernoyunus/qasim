@@ -363,7 +363,7 @@ struct CharacterPickerStrip: View {
             Text("Who sits with you?")
                 .font(Typeface.display(22))
                 .foregroundStyle(Palette.ink)
-            Text("Three companions, each with the same movement set.")
+            Text("Five companions, each with the same movement set.")
                 .font(.system(size: 13))
                 .foregroundStyle(Palette.inkSoft)
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 108), spacing: 8)], spacing: 8) {

@@ -4,6 +4,8 @@ enum CompanionID: String, CaseIterable, Identifiable, Codable {
     case qasim
     case hana
     case nur
+    case ahmed
+    case safa
 
     init(from decoder: Decoder) throws {
         let raw = try decoder.singleValueContainer().decode(String.self)
@@ -17,6 +19,8 @@ enum CompanionID: String, CaseIterable, Identifiable, Codable {
         case .qasim: "Qasim"
         case .hana: "Hana"
         case .nur: "Nur"
+        case .ahmed: "Ahmed"
+        case .safa: "Safa"
         }
     }
 
@@ -25,6 +29,8 @@ enum CompanionID: String, CaseIterable, Identifiable, Codable {
         case .qasim: "Thobe, kufi, and a look that says go back to work."
         case .hana: "Hijab, warm eyes, zero patience for scrolling."
         case .nur: "Niqab. You only see the eyes. That’s enough."
+        case .ahmed: "Kufi, crisp thobe. No face needed to judge you."
+        case .safa: "Blue niqab and abaya. Calm, until you start scrolling."
         }
     }
 
@@ -36,8 +42,11 @@ enum CompanionID: String, CaseIterable, Identifiable, Codable {
 
     var remembersSalah: Bool { isPixelCompanion }
 
-    func assetName(for pose: QasimPose) -> String {
-        "\(rawValue)-\(pose.rawValue == "flipSwitch" ? "switch" : pose.rawValue)"
+    func assetName(for pose: QasimPose, lightsOff: Bool = false, switchPressed: Bool = false) -> String {
+        if pose == .flipSwitch {
+            return "\(rawValue)-switch-\((lightsOff || switchPressed) ? "down" : "up")"
+        }
+        return "\(rawValue)-\(pose.rawValue)"
     }
 }
 

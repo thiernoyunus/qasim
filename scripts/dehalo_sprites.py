@@ -9,7 +9,7 @@ Rules (per task brief):
      Then contract 1px of semi-transparent fringe. Snap alpha < 24 to 0, alpha > 230 to 255.
   3. Never key dark pixels (Nur's niqab). Only key light/cream/white fringe.
   4. Trim to alpha bbox + 12px pad, then scale height to 520 preserving aspect.
-  5. Write back to Art/*.png AND matching Assets.xcassets/<name>.imageset/<name>.png.
+  5. Write back to Art/<Companion>/*.png AND matching Assets.xcassets/<name>.imageset/<name>.png.
 """
 
 from __future__ import annotations
@@ -23,7 +23,7 @@ import numpy as np
 from PIL import Image
 
 REPO = Path("/Users/thiernodiallo/Coding/productivity app/Qasim")
-ART = REPO / "Qasim" / "Resources" / "Art"
+ART = REPO / "Art"
 ASSETS = REPO / "Qasim" / "Resources" / "Assets.xcassets"
 
 TARGET_PREFIXES = ("qasim-", "hana-", "nur-")
@@ -150,7 +150,7 @@ def find_targets() -> list[Path]:
     if not ART.is_dir():
         raise SystemExit(f"Art dir missing: {ART}")
     out: list[Path] = []
-    for p in sorted(ART.glob("*.png")):
+    for p in sorted(ART.glob("*/*.png")):
         if p.stem.startswith(TARGET_PREFIXES):
             out.append(p)
     return out
