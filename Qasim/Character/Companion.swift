@@ -29,8 +29,8 @@ enum CompanionID: String, CaseIterable, Identifiable, Codable {
         case .qasim: "Thobe, kufi, and a look that says go back to work."
         case .hana: "Hijab, warm eyes, zero patience for scrolling."
         case .nur: "Niqab. You only see the eyes. That’s enough."
-        case .ahmed: "Pale skin, a white thobe, and a featureless face."
-        case .safa: "A blue niqab and abaya, with a blank eye opening."
+        case .ahmed: "Kufi, crisp thobe. No face needed to judge you."
+        case .safa: "Blue niqab and abaya. Calm, until you start scrolling."
         }
     }
 

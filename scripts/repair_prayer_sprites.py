@@ -111,7 +111,7 @@ def extract(strip: Path, character: str, output_root: Path, poses: tuple[str, ..
         x1 = round((index + 1) * width / len(poses))
         image = trim_and_resize(keep_main_components(arr[:, x0:x1]))
         name = f"{character}-{pose}.png"
-        art_path = output_root / "Qasim" / "Resources" / "Art" / name
+        art_path = output_root / "Art" / character.capitalize() / name
         catalog_path = output_root / "Qasim" / "Resources" / "Assets.xcassets" / f"{character}-{pose}.imageset" / name
         art_path.parent.mkdir(parents=True, exist_ok=True)
         catalog_path.parent.mkdir(parents=True, exist_ok=True)
