@@ -62,6 +62,10 @@ enum SpeechLines {
             ["Cute tab. Wrong tab.", "That scroll was very productive. For \(place).", "You chose focus, remember?"]
         case .nur:
             ["…\(place). Bold.", "The eyes saw that.", "Interesting definition of focus."]
+        case .ahmed:
+            ["\(place) again?", "The task is still waiting.", "You opened that on purpose?"]
+        case .safa:
+            ["\(place) can wait.", "Back to your work, please.", "A very curious choice."]
         }
         let pressure: [String] = switch escalation {
         case .calm: []
@@ -101,6 +105,10 @@ enum SpeechLines {
             personal = ["excuse you.", "don't poke the hijab.", "that tickles!", "I am not a button."]
         case .nur:
             personal = ["…the eyes said don't.", "don't press me.", "that tickles. somehow.", "bold of you."]
+        case .ahmed:
+            personal = ["careful with the kufi.", "don't press me.", "that tickles, actually.", "I saw that."]
+        case .safa:
+            personal = ["careful with the niqab.", "don't press me.", "that tickles. somehow.", "bold of you."]
         }
         let flavor: [String]
         switch voice {
@@ -116,6 +124,8 @@ enum SpeechLines {
         case .qasim: "this is the look. click Stop preview if you've seen enough."
         case .hana: "don't say I didn't warn you. click Stop preview to leave."
         case .nur: "watch. click Stop preview when you're done staring."
+        case .ahmed: "this is the look. click Stop preview when you're done."
+        case .safa: "watch. click Stop preview when you're done."
         }
     }
 
@@ -124,6 +134,8 @@ enum SpeechLines {
         case .qasim: "show's over. go on."
         case .hana: "enough of that. I'm here."
         case .nur: "that's enough."
+        case .ahmed: "show's over. go on."
+        case .safa: "that's enough."
         }
     }
 

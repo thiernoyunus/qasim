@@ -309,26 +309,15 @@ struct CharacterCard: View {
                     .resizable()
                     .scaledToFit()
                     .frame(height: 78)
-                    .saturation(companion.isAvailable ? 1 : 0)
-                    .opacity(companion.isAvailable ? 1 : 0.45)
                 Text(companion.displayName)
                     .font(.system(size: 13, weight: .semibold))
                     .foregroundStyle(Palette.ink)
-                if companion.isAvailable {
-                    Text(companion.blurb)
-                        .font(.system(size: 10))
-                        .foregroundStyle(Palette.inkSoft)
-                        .multilineTextAlignment(.center)
-                        .lineLimit(3)
-                        .fixedSize(horizontal: false, vertical: true)
-                } else {
-                    Text("Coming soon")
-                        .font(.system(size: 10, weight: .semibold))
-                        .foregroundStyle(Palette.inkSoft)
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 3)
-                        .background(Palette.ink.opacity(0.06), in: Capsule())
-                }
+                Text(companion.blurb)
+                    .font(.system(size: 10))
+                    .foregroundStyle(Palette.inkSoft)
+                    .multilineTextAlignment(.center)
+                    .lineLimit(3)
+                    .fixedSize(horizontal: false, vertical: true)
             }
             .padding(10)
             .frame(maxWidth: .infinity, minHeight: 168)
@@ -339,8 +328,7 @@ struct CharacterCard: View {
             )
         }
         .buttonStyle(.plain)
-        .disabled(!companion.isAvailable)
-        .accessibilityLabel(companion.isAvailable ? companion.displayName : "\(companion.displayName), coming soon")
+        .accessibilityLabel(companion.displayName)
     }
 }
 
@@ -352,7 +340,7 @@ struct CharacterPickerStrip: View {
             Text("Who sits with you?")
                 .font(Typeface.display(22))
                 .foregroundStyle(Palette.ink)
-            Text("Qasim is ready now. Hana and Nur are on their way.")
+            Text("Five companions, each with the same movement set.")
                 .font(.system(size: 13))
                 .foregroundStyle(Palette.inkSoft)
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 108), spacing: 8)], spacing: 8) {
