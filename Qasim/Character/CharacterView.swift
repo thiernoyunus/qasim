@@ -224,10 +224,8 @@ struct CharacterView: View {
         let named: String
         if breakActivity == .quran, companion == .qasim {
             named = "qasim-quran"
-        } else if pose == .flipSwitch, companion == .qasim {
-            named = lightsOff || switchPressed ? "qasim-switch-down" : "qasim-switch-up"
         } else {
-            named = companion.assetName(for: pose)
+            named = companion.assetName(for: pose, lightsOff: lightsOff, switchPressed: switchPressed)
         }
         if NSImage(named: named) != nil { return named }
 #if DEBUG
