@@ -212,19 +212,6 @@ struct InkButtonStyle: ButtonStyle {
     }
 }
 
-struct FlowWrap<Item: Identifiable, Content: View>: View {
-    var items: [Item]
-    @ViewBuilder var content: (Item) -> Content
-
-    var body: some View {
-        FlexibleStack {
-            ForEach(items) { item in
-                content(item)
-            }
-        }
-    }
-}
-
 /// Wraps a handful of chips onto the next line when the setup card gets narrow.
 struct FlexibleStack<Content: View>: View {
     @ViewBuilder var content: Content

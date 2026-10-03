@@ -118,6 +118,7 @@ final class AppModel {
         BrowserInspector.selfCheck()
         ProgressStore.selfCheck()
         SiteRule.selfCheck()
+        SiteBrand.selfCheck()
         SpeechLines.selfCheck()
 #endif
         session.blockedApps = prefs.lastBlockedApps
@@ -170,7 +171,16 @@ final class AppModel {
         openNewSessionConfig()
     }
 
-    /// Opens the detailed new-session config sheet (task -> mode -> apps -> duration).
+    /// Dock-icon click: bring back whatever screen is already open instead of resetting to Home.
+    func reopen() {
+        if breakState == .none, let panel = setupPanel, panel.isVisible {
+            present(panel)
+        } else {
+            openSetup()
+        }
+    }
+
+    /// Opens the one-screen new-session config (task, mode, list, duration).
     /// Reached from the home dashboard's New session button, or from the menu bar.
     func openNewSessionConfig() {
         if breakState != .none {
@@ -354,7 +364,7 @@ final class AppModel {
         let ctx = session.monitor.context
         guard canQuickToggleCurrentApp else { return nil }
         if let host = ctx.host {
-            guard let rule = SiteRule.normalize(host).map(SiteRule.init) else { return nil }
+            guard let rule = SiteRule.normalize(host).map({ SiteRule(host: $0) }) else { return nil }
             let already = session.strategy == .block
                 ? session.blockedSites.contains(rule)
                 : session.allowedSites.contains(rule)
@@ -457,7 +467,7 @@ final class AppModel {
         let ctx = session.monitor.context
         guard canQuickToggleCurrentApp else { return }
         if let host = ctx.host {
-            guard let rule = SiteRule.normalize(host).map(SiteRule.init) else { return }
+            guard let rule = SiteRule.normalize(host).map({ SiteRule(host: $0) }) else { return }
             if session.strategy == .block, !session.blockedSites.contains(rule) {
                 session.blockedSites.append(rule)
             } else if session.strategy == .allow, !session.allowedSites.contains(rule) {
@@ -1089,7 +1099,9 @@ final class AppModel {
     private func present(_ panel: NSPanel?, activate: Bool = true) {
         guard let panel else { return }
         panel.level = .normal
-        panel.hidesOnDeactivate = true
+        // Stay put when another app (or the screenshot drag thumbnail) takes focus;
+        // at normal level the card already sits behind whatever the user switches to.
+        panel.hidesOnDeactivate = false
         panel.isFloatingPanel = false
         panel.appearance = NSAppearance(named: .aqua)
         if activate {

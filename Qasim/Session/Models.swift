@@ -86,8 +86,11 @@ struct AppIdentity: Identifiable, Hashable, Codable, Sendable {
 
 struct SiteRule: Identifiable, Hashable, Codable, Sendable {
     var host: String
+    /// Set for a "single page" rule: only URLs starting with this path (and query) count.
+    var path: String? = nil
 
-    var id: String { host }
+    /// Also the display text: "youtube.com" or "youtube.com/watch?v=abc".
+    var id: String { host + (path ?? "") }
 
     static func normalize(_ raw: String) -> String? {
         let value = raw.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -107,10 +110,77 @@ struct SiteRule: Identifiable, Hashable, Codable, Sendable {
     }
 #endif
 
-    func matches(_ host: String) -> Bool {
+    /// `path` is the page's path + query, when known. A whole-site rule also covers
+    /// the brand's other addresses (youtube.com also covers youtu.be).
+    func matches(_ host: String, path: String? = nil) -> Bool {
         let h = host.lowercased()
-        return h == self.host || h.hasSuffix("." + self.host)
+        if let rulePath = self.path {
+            // ponytail: prefix match, so "/watch?v=abc" also matches "?v=abcd"; parse query items if that bites.
+            return h == self.host && path?.hasPrefix(rulePath) == true
+        }
+        let hosts = [self.host] + (SiteBrand.forHost(self.host)?.hosts ?? [])
+        return hosts.contains { h == $0 || h.hasSuffix("." + $0) }
     }
+}
+
+/// Popular sites that live at more than one address. Typing the brand name
+/// suggests the site, and a rule for any of its hosts covers all of them.
+struct SiteBrand {
+    let name: String
+    let hosts: [String]
+
+    static let all: [SiteBrand] = [
+        SiteBrand(name: "YouTube", hosts: ["youtube.com", "youtu.be"]),
+        SiteBrand(name: "X (Twitter)", hosts: ["x.com", "twitter.com"]),
+        SiteBrand(name: "Instagram", hosts: ["instagram.com", "instagr.am"]),
+        SiteBrand(name: "Facebook", hosts: ["facebook.com", "fb.com", "messenger.com"]),
+        SiteBrand(name: "Reddit", hosts: ["reddit.com", "redd.it"]),
+        SiteBrand(name: "TikTok", hosts: ["tiktok.com"]),
+        SiteBrand(name: "Netflix", hosts: ["netflix.com"]),
+        SiteBrand(name: "Twitch", hosts: ["twitch.tv"]),
+        SiteBrand(name: "LinkedIn", hosts: ["linkedin.com", "lnkd.in"]),
+        SiteBrand(name: "Discord", hosts: ["discord.com", "discord.gg"]),
+        SiteBrand(name: "Pinterest", hosts: ["pinterest.com", "pin.it"]),
+        SiteBrand(name: "Snapchat", hosts: ["snapchat.com"]),
+        SiteBrand(name: "WhatsApp", hosts: ["whatsapp.com", "wa.me"]),
+        SiteBrand(name: "Amazon", hosts: ["amazon.com", "amzn.to"]),
+        SiteBrand(name: "Hacker News", hosts: ["news.ycombinator.com"]),
+        SiteBrand(name: "Gmail", hosts: ["mail.google.com"]),
+        SiteBrand(name: "ChatGPT", hosts: ["chatgpt.com", "chat.openai.com"]),
+        SiteBrand(name: "Claude", hosts: ["claude.ai"]),
+        SiteBrand(name: "Spotify", hosts: ["spotify.com"]),
+        SiteBrand(name: "Threads", hosts: ["threads.net", "threads.com"]),
+        SiteBrand(name: "Bluesky", hosts: ["bsky.app"]),
+    ]
+
+    static func forHost(_ host: String) -> SiteBrand? {
+        all.first { $0.hosts.contains(host) }
+    }
+
+    /// Brands whose name or address starts with the typed text.
+    static func matching(_ query: String) -> [SiteBrand] {
+        let q = query.lowercased().replacingOccurrences(of: " ", with: "")
+        guard q.count >= 2 else { return [] }
+        return all.filter { brand in
+            brand.name.lowercased().replacingOccurrences(of: " ", with: "").hasPrefix(q)
+                || brand.hosts.contains { $0.hasPrefix(q) }
+        }
+    }
+
+#if DEBUG
+    static func selfCheck() {
+        let youtube = SiteRule(host: "youtube.com")
+        assert(youtube.matches("youtu.be"))
+        assert(youtube.matches("m.youtube.com"))
+        assert(!youtube.matches("notyoutube.com"))
+        let page = SiteRule(host: "youtube.com", path: "/watch?v=abc")
+        assert(page.matches("youtube.com", path: "/watch?v=abc&t=30"))
+        assert(!page.matches("youtube.com", path: "/watch?v=xyz"))
+        assert(!page.matches("youtube.com"))
+        assert(matching("yout").first?.name == "YouTube")
+        assert(matching("y").isEmpty)
+    }
+#endif
 }
 
 enum QasimIdentity {

@@ -5,6 +5,7 @@ struct FrontContext: Equatable {
     var bundleID: String
     var appName: String
     var host: String?
+    var path: String?
     var windowFrame: CGRect
 }
 
@@ -15,11 +16,12 @@ final class DistractionMonitor {
         bundleID: "",
         appName: "",
         host: nil,
+        path: nil,
         windowFrame: .zero
     )
 
     private var lastBrowserCheck: Date = .distantPast
-    private var lastHost: String?
+    private var lastPage: (host: String, path: String)?
     private var lastPoll: Date = .distantPast
 
     func poll() {
@@ -31,23 +33,23 @@ final class DistractionMonitor {
         let app = NSWorkspace.shared.frontmostApplication
         let bundleID = app?.bundleIdentifier ?? ""
         let name = app?.localizedName ?? "Something"
-        var host = lastHost
+        var page = lastPage
 
         if let kind = BrowserKind.identify(bundleID) {
             _ = kind
             // Check tab changes quickly without running AppleScript every frame.
             if now.timeIntervalSince(lastBrowserCheck) > 0.4 {
                 lastBrowserCheck = now
-                lastHost = BrowserInspector.currentHost(bundleID: bundleID)
-                host = lastHost
+                lastPage = BrowserInspector.currentPage(bundleID: bundleID)
+                page = lastPage
             }
         } else {
-            lastHost = nil
-            host = nil
+            lastPage = nil
+            page = nil
         }
 
         let frame = Self.frontWindowFrame(excluding: QasimIdentity.bundleID) ?? .zero
-        context = FrontContext(bundleID: bundleID, appName: name, host: host, windowFrame: frame)
+        context = FrontContext(bundleID: bundleID, appName: name, host: page?.host, path: page?.path, windowFrame: frame)
     }
 
     func isOnTask(
@@ -67,14 +69,14 @@ final class DistractionMonitor {
             return true
         case .allow:
             if let host = context.host, !allowedSites.isEmpty {
-                if allowedSites.contains(where: { $0.matches(host) }) { return true }
+                if allowedSites.contains(where: { $0.matches(host, path: context.path) }) { return true }
                 // Allowed site list is in play — being on some other page is off-task,
                 // even if the browser itself is on the allow list.
                 return false
             }
             return allowedApps.contains(bundleID)
         case .block:
-            if let host = context.host, blockedSites.contains(where: { $0.matches(host) }) {
+            if let host = context.host, blockedSites.contains(where: { $0.matches(host, path: context.path) }) {
                 return false
             }
             return !blockedApps.contains(bundleID)

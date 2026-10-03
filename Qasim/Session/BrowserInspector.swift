@@ -70,10 +70,20 @@ enum BrowserKind: String {
 }
 
 enum BrowserInspector {
-    static func currentHost(bundleID: String) -> String? {
+    /// The front tab's site and its path + query (for single-page rules).
+    static func currentPage(bundleID: String) -> (host: String, path: String)? {
         guard let kind = BrowserKind.identify(bundleID) else { return nil }
         guard let urlString = run(kind.script), !urlString.isEmpty else { return nil }
-        return host(from: urlString)
+        return page(from: urlString)
+    }
+
+    static func page(from urlString: String) -> (host: String, path: String)? {
+        guard let host = host(from: urlString) else { return nil }
+        let raw = urlString.trimmingCharacters(in: .whitespacesAndNewlines)
+        let parts = URLComponents(string: raw.contains("://") ? raw : "https://\(raw)")
+        var path = parts?.percentEncodedPath ?? ""
+        if let query = parts?.percentEncodedQuery { path += "?" + query }
+        return (host, path)
     }
 
     static func host(from urlString: String) -> String? {
@@ -92,6 +102,8 @@ enum BrowserInspector {
         assert(host(from: "https://www.example.com/path") == "example.com")
         assert(host(from: "about:blank") == nil)
         assert(host(from: "chrome://newtab/") == nil)
+        assert(page(from: "https://www.youtube.com/watch?v=abc#t")?.path == "/watch?v=abc")
+        assert(page(from: "youtube.com/watch?v=abc")?.path == "/watch?v=abc")
     }
 
     private static func run(_ source: String) -> String? {
