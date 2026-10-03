@@ -4,8 +4,9 @@ import SwiftUI
 struct SetupView: View {
     @Environment(AppModel.self) private var model
     @State private var step: Int = 0
+    @FocusState private var nameFieldFocused: Bool
 
-    private let totalSteps = 3
+    private let totalSteps = 4
 
     var body: some View {
         @Bindable var session = model.session
@@ -21,7 +22,8 @@ struct SetupView: View {
                     switch step {
                     case 0: nameStep(prefs: prefs)
                     case 1: CharacterPickerStrip()
-                    default: actionsStep()
+                    case 2: actionsStep()
+                    default: salahStep()
                     }
                 }
                 .padding(22)
@@ -49,19 +51,12 @@ struct SetupView: View {
                     .foregroundStyle(Palette.inkSoft)
             }
             Spacer()
-            Button("Customize") {
-                model.openSettings()
-            }
-            .buttonStyle(.plain)
-            .font(.system(size: 12, weight: .semibold))
-            .foregroundStyle(Palette.inkSoft)
-            .accessibilityLabel("Customize")
             Button(model.isPreviewing ? "Stop preview" : "Preview") {
                 model.togglePreview()
             }
             .buttonStyle(.plain)
             .font(.system(size: 12, weight: .semibold))
-            .foregroundStyle(Palette.ember)
+            .foregroundStyle(Palette.emberText)
             .accessibilityLabel(model.isPreviewing ? "Stop preview" : "Preview")
         }
         .padding(.horizontal, 22)
@@ -89,6 +84,11 @@ struct SetupView: View {
                 .font(.system(size: 13))
                 .foregroundStyle(Palette.inkSoft)
             TextField("Your name", text: Bindable(model.prefs).userName)
+                .focused($nameFieldFocused)
+                .onAppear {
+                    // The panel becomes key just after SwiftUI appears.
+                    DispatchQueue.main.async { nameFieldFocused = true }
+                }
                 .textFieldStyle(.plain)
                 .font(Typeface.display(20))
                 .padding(14)
@@ -109,6 +109,30 @@ struct SetupView: View {
         }
     }
 
+    private func salahStep() -> some View {
+        @Bindable var prefs = model.prefs
+        return VStack(alignment: .leading, spacing: 10) {
+            Text("Salah reminders")
+                .font(Typeface.display(22))
+                .foregroundStyle(Palette.ink)
+            Text("\(model.prefs.companion.displayName) can tell you when a prayer is coming, then pray on your desktop when it's time.")
+                .font(.system(size: 13))
+                .foregroundStyle(Palette.inkSoft)
+                .fixedSize(horizontal: false, vertical: true)
+            Toggle("Remind me about salah", isOn: $prefs.salahReminders)
+                .tint(Palette.ember)
+                .foregroundStyle(Palette.ink)
+                .onChange(of: prefs.salahReminders) { _, _ in prefs.save() }
+            if prefs.salahReminders {
+                SalahLocationSection()
+                Text("macOS will ask to send notifications, and to use your location if you chose that.")
+                    .font(.system(size: 11))
+                    .foregroundStyle(Palette.inkSoft)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+    }
+
     private func footer() -> some View {
         HStack {
             if step > 0 {
@@ -118,20 +142,20 @@ struct SetupView: View {
                     .accessibilityLabel("Back")
             }
             Spacer()
-            // Onboarding is just name -> character -> actions. Done finishes
-            // onboarding and hands off to the regular new-session UI.
-            if step < 2 {
+            // Onboarding is name -> character -> actions -> salah. Finishing it
+            // goes straight into setting up the first session.
+            if step < totalSteps - 1 {
                 Button("Next") { step += 1 }
                     .buttonStyle(InkButtonStyle())
+                    .keyboardShortcut(.defaultAction)
                     .accessibilityLabel("Next")
             } else {
-                Button("Done") {
-                    model.prefs.hasCompletedSetup = true
-                    model.prefs.save()
-                    model.openSetup()
+                Button("Set up my first session") {
+                    model.finishOnboarding()
                 }
                 .buttonStyle(InkButtonStyle())
-                .accessibilityLabel("Done")
+                .keyboardShortcut(.defaultAction)
+                .accessibilityLabel("Set up my first session")
             }
         }
         .padding(18)
@@ -185,19 +209,6 @@ struct InkButtonStyle: ButtonStyle {
             .background(Palette.ink, in: Capsule())
             .foregroundStyle(Palette.cream)
             .opacity(configuration.isPressed ? 0.8 : 1)
-    }
-}
-
-struct FlowWrap<Item: Identifiable, Content: View>: View {
-    var items: [Item]
-    @ViewBuilder var content: (Item) -> Content
-
-    var body: some View {
-        FlexibleStack {
-            ForEach(items) { item in
-                content(item)
-            }
-        }
     }
 }
 

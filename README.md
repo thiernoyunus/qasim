@@ -28,4 +28,4 @@ The script expects a Developer ID Application certificate, GitHub CLI access to 
 
 ## Privacy
 
-Focus activity and exact location stay on the Mac. “My location” prayer times are calculated locally. City mode sends only the selected city and country to `api.aladhan.com` to fetch prayer times.
+Focus activity and exact location stay on the Mac. “My location” prayer times are calculated locally. City mode sends only the selected city and country to `api.aladhan.com` to fetch prayer times. Website logos in Analytics and session setup are loaded straight from each site (for example `youtube.com/favicon.ico`), never from a third-party icon service.

@@ -139,7 +139,10 @@ final class SessionController {
             distractedFor += dt
         }
 
-        recordActivity(dt)
+        // A preview is pretend: keep it out of the per-app and per-hour stats.
+        if previewTheater == nil, previewMove == nil {
+            recordActivity(dt)
+        }
 
         if let preview = previewTheater {
             escalation = preview

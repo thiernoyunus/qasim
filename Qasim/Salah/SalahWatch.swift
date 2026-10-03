@@ -170,21 +170,42 @@ final class SalahWatch {
     /// The prayer nudge currently waiting on the user, if any.
     var ask: SalahAsk? { pendingAsk }
 
+    /// How long after the adhan the nudge keeps asking. Without this the ask
+    /// only existed in the warning window before the prayer, so a minute
+    /// borrowed near the adhan, or a Mac that woke after the warning window,
+    /// meant it never came back.
+    static let askGrace: TimeInterval = 20 * 60
+
     /// Raises the nudge once per prayer, then re-raises it after each snooze runs out.
     func refreshAsk(now: Date, prefs: Preferences) {
         guard prefs.salahReminders, prefs.salahAsk else {
             pendingAsk = nil
             return
         }
-        // An open nudge stays open until answered.
-        if pendingAsk != nil { return }
+        // An open nudge stays open until answered, but not forever: one nobody
+        // answered retires once the grace window after the adhan has passed.
+        if let open = pendingAsk {
+            if now.timeIntervalSince(open.due) > Self.askGrace {
+                pendingAsk = nil
+            }
+            return
+        }
 
-        guard case let .soon(name, due) = phase else { return }
-        let key = askKey(name, due)
+        guard let target = askTarget(now: now) else { return }
+        let key = askKey(target.name, target.due)
         guard !acknowledged.contains(key) else { return }
         // Snoozes re-arm through snoozeUntil; a fresh prayer starts at zero.
         if let until = snoozeUntil[key], now < until { return }
-        pendingAsk = SalahAsk(name: name, due: due, snoozes: snoozeCount[key] ?? 0)
+        pendingAsk = SalahAsk(name: target.name, due: target.due, snoozes: snoozeCount[key] ?? 0)
+    }
+
+    /// The prayer to ask about: the one coming up inside the warning window,
+    /// or one whose time began less than `askGrace` ago.
+    private func askTarget(now: Date) -> (name: PrayerName, due: Date)? {
+        if case let .soon(name, due) = phase { return (name, due) }
+        guard let current = today?.activeSalah(at: now),
+              now.timeIntervalSince(current.date) < Self.askGrace else { return nil }
+        return (current.name, current.date)
     }
 
     /// "I'm getting up." Clears the nudge for the rest of this prayer window.
@@ -303,7 +324,7 @@ final class SalahWatch {
                     method: prefs.salahMethod,
                     asr: prefs.asrSchool,
                     label: prefs.salahLocationLabel
-                ).applying(clocks: prefs.customSalah, on: day)
+                )
             }
             let place = prefs.salahPlace
             locationLabel = place.name
@@ -315,7 +336,7 @@ final class SalahWatch {
                 method: prefs.salahMethod,
                 asr: prefs.asrSchool,
                 label: place.name
-            ).applying(clocks: prefs.customSalah, on: day)
+            )
         }
     }
 
@@ -333,7 +354,7 @@ final class SalahWatch {
                 method: prefs.salahMethod,
                 asr: prefs.asrSchool
             )
-            return fetched.applying(clocks: prefs.customSalah, on: day)
+            return fetched
         } catch {
             return PrayerAPI.offline(
                 day: day,
@@ -342,7 +363,7 @@ final class SalahWatch {
                 method: prefs.salahMethod,
                 asr: prefs.asrSchool,
                 label: place.name
-            ).applying(clocks: prefs.customSalah, on: day)
+            )
         }
     }
 

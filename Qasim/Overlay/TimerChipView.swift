@@ -126,7 +126,7 @@ struct TimerChipView: View {
             Button {
                 onToggleExpanded?()
             } label: {
-                Image(systemName: expanded ? "chevron.up" : "pencil")
+                Image(systemName: expanded ? "chevron.up" : "ellipsis")
                     .font(.system(size: 11, weight: .bold))
                     .foregroundStyle(Palette.ink)
                     .frame(width: 22, height: 22)
@@ -333,7 +333,7 @@ private struct EndChoiceButtonStyle: ButtonStyle {
 
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .foregroundStyle(filled ? Palette.cream : destructive ? Palette.ember : Palette.ink)
+            .foregroundStyle(filled ? Palette.cream : destructive ? Palette.emberText : Palette.ink)
             .background(
                 RoundedRectangle(cornerRadius: 10, style: .continuous)
                     .fill(filled ? Palette.ink : destructive ? Palette.ember.opacity(0.10) : Palette.cream)

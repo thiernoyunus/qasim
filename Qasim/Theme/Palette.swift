@@ -11,6 +11,13 @@ enum Palette {
     static let soot = Color(red: 0.145, green: 0.122, blue: 0.098)
     static let cream = Color(red: 0.980, green: 0.953, blue: 0.890)
     static let good = Color(red: 0.290, green: 0.620, blue: 0.380)
+
+    // Text-safe variants of the accent colors. The bright versions above are
+    // for fills and large shapes; these reach at least 4.5:1 on paper, cream
+    // and the footer tint (WCAG AA for body text).
+    static let goodText = Color(red: 0.197, green: 0.422, blue: 0.258)
+    static let emberText = Color(red: 0.692, green: 0.211, blue: 0.068)
+    static let waxText = Color(red: 0.530, green: 0.333, blue: 0.133)
 }
 
 enum Typeface {

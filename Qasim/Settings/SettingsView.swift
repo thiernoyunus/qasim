@@ -51,7 +51,7 @@ struct SettingsView: View {
                 }
 
                 section("Salah") {
-                    Text("A ping 10 minutes before, and another when it’s time. Nothing stays on the desktop.")
+                    Text("A ping \(TimePhrase.minutesOnly(prefs.salahLeadMinutes)) before, and another when it’s time. Nothing stays on the desktop.")
                         .font(.system(size: 12))
                         .foregroundStyle(Palette.inkSoft)
                     toggle("Remind me about salah", $prefs.salahReminders)
@@ -101,7 +101,7 @@ struct SettingsView: View {
                         }
                         .buttonStyle(.plain)
                         .font(.system(size: 12, weight: .semibold))
-                        .foregroundStyle(Palette.ember)
+                        .foregroundStyle(Palette.emberText)
                     }
 
                     if prefs.salahSource == .city || (prefs.salahSource == .location && model.salah.locator.denied) {
@@ -295,29 +295,6 @@ struct SettingsView: View {
             .foregroundStyle(Palette.ink)
             .onChange(of: value.wrappedValue) { _, _ in model.prefs.save() }
     }
-
-    private func actionPreviewRow(
-        title: String,
-        blurb: String,
-        isPreviewing: Bool,
-        action: @escaping () -> Void
-    ) -> some View {
-        HStack(alignment: .center, spacing: 10) {
-            VStack(alignment: .leading, spacing: 2) {
-                Text(title)
-                    .font(.system(size: 14, weight: .semibold))
-                    .foregroundStyle(Palette.ink)
-                Text(blurb)
-                    .font(.system(size: 11))
-                    .foregroundStyle(Palette.inkSoft)
-            }
-            Spacer(minLength: 4)
-            Button(isPreviewing ? "Stop" : "Preview", action: action)
-                .buttonStyle(.plain)
-                .font(.system(size: 11, weight: .semibold))
-                .foregroundStyle(Palette.ember)
-        }
-    }
 }
 
 struct CharacterCard: View {
@@ -431,7 +408,7 @@ struct ActionsCustomizeSection: View {
                     }
                     .buttonStyle(.plain)
                     .font(.system(size: 11, weight: .semibold))
-                    .foregroundStyle(Palette.ember)
+                    .foregroundStyle(Palette.emberText)
                     .accessibilityLabel(model.previewingMove == move ? "Stop preview for \(move.title)" : "Preview \(move.title)")
                 }
             }
@@ -481,7 +458,7 @@ struct ActionsCustomizeSection: View {
             Button(isPreviewing ? "Stop" : "Preview", action: action)
                 .buttonStyle(.plain)
                 .font(.system(size: 11, weight: .semibold))
-                .foregroundStyle(Palette.ember)
+                .foregroundStyle(Palette.emberText)
         }
     }
 }
@@ -521,7 +498,7 @@ struct SalahLocationSection: View {
                 }
                 .buttonStyle(.plain)
                 .font(.system(size: 12, weight: .semibold))
-                .foregroundStyle(Palette.ember)
+                .foregroundStyle(Palette.emberText)
             }
 
             if prefs.salahSource == .city || (prefs.salahSource == .location && model.salah.locator.denied) {

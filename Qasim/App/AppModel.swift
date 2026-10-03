@@ -49,6 +49,10 @@ final class AppModel {
     }
     var showPet: Bool {
         if prefs.isHiddenNow { return false }
+        // A prayer nudge must be seen. It overrides the break panel and the
+        // "only when you wander" setting, which would otherwise hide him (and
+        // the nudge with him) for the whole time you stay on task.
+        if salah.ask != nil || salah.matVisible { return true }
         if breakState != .none { return false }
         if session.phase == .running, session.isOnTask, !prefs.showWhileFocused {
             return false
@@ -85,7 +89,16 @@ final class AppModel {
     }
     private var screen: NSScreen = NSScreen.main ?? NSScreen.screens[0]
     private var previewTask: Task<Void, Never>?
-    private var previewStartedSession = false
+    /// When a preview borrows a session that isn't running (idle, paused, or
+    /// finished), what to put back once it ends.
+    private var previewSnapshot: PreviewSnapshot?
+
+    private struct PreviewSnapshot {
+        var phase: SessionPhase
+        var remaining: TimeInterval
+        var elapsedFocused: TimeInterval
+        var elapsedDistracted: TimeInterval
+    }
     private var lightShowTask: Task<Void, Never>?
 
     var isPreviewing: Bool { session.previewTheater != nil || actionPreview != nil }
@@ -105,6 +118,7 @@ final class AppModel {
         BrowserInspector.selfCheck()
         ProgressStore.selfCheck()
         SiteRule.selfCheck()
+        SiteBrand.selfCheck()
         SpeechLines.selfCheck()
 #endif
         session.blockedApps = prefs.lastBlockedApps
@@ -113,7 +127,11 @@ final class AppModel {
         session.allowedSites = prefs.lastAllowedSites
         showOverlay()
         startTicking()
-        salah.start(prefs: prefs)
+        // Salah asks for notification and location access. On first run that
+        // waits until onboarding has explained why.
+        if prefs.hasCompletedSetup {
+            salah.start(prefs: prefs)
+        }
         openSetup()
         installHotkeys()
     }
@@ -147,9 +165,29 @@ final class AppModel {
         present(setupPanel)
     }
 
-    /// Opens the detailed new-session config sheet (task -> mode -> apps -> duration).
-    /// Reached from the home dashboard's NEW button, or from the menu bar.
+    func finishOnboarding() {
+        prefs.hasCompletedSetup = true
+        prefs.save()
+        openNewSessionConfig()
+    }
+
+    /// Dock-icon click: bring back whatever screen is already open instead of resetting to Home.
+    func reopen() {
+        if breakState == .none, let panel = setupPanel, panel.isVisible {
+            present(panel)
+        } else {
+            openSetup()
+        }
+    }
+
+    /// Opens the one-screen new-session config (task, mode, list, duration).
+    /// Reached from the home dashboard's New session button, or from the menu bar.
     func openNewSessionConfig() {
+        if breakState != .none {
+            presentBreakPanel()
+            return
+        }
+        isEditingSession = false
         if setupPanel == nil {
             setupPanel = makeCardPanel(title: "Qasim", size: NSSize(width: 480, height: 720))
         }
@@ -197,11 +235,20 @@ final class AppModel {
         session.taskTitle = record.taskTitle
         session.durationMinutes = record.durationMinutes
         session.strategy = record.strategy
+        if record.strategy == .allow, session.allowedApps.isEmpty, session.allowedSites.isEmpty {
+            // Nothing to allow yet: let them pick before everything counts as a distraction.
+            openNewSessionConfig()
+            return
+        }
         beginSession()
     }
 
     func beginSession() {
         stopPreview(spoken: false)
+        // Starting over mid-session still logs the time already spent.
+        if session.phase == .running || session.phase == .paused {
+            recordSession(finished: false)
+        }
         clearBreakFlow()
         setupPanel?.orderOut(nil)
         settingsPanel?.orderOut(nil)
@@ -230,26 +277,13 @@ final class AppModel {
     }
 
     func stopSession(finished: Bool) {
-        if session.phase == .running || session.phase == .paused || session.phase == .finished {
-            progress.record(
-                focused: session.elapsedFocused,
-                distracted: session.elapsedDistracted,
-                finishedSession: finished,
-                taskTitle: session.taskTitle,
-                durationMinutes: session.durationMinutes,
-                strategy: session.strategy,
-                activities: session.activityStats,
-                hourlyFocusedSeconds: session.hourlyFocusedSeconds,
-                hourlyDistractedSeconds: session.hourlyDistractedSeconds
-            )
+        // A preview may be borrowing an idle or paused session. Put the real one
+        // back first so a preview is never logged as a session of its own.
+        if previewSnapshot != nil {
+            stopPreview(spoken: false)
         }
-        // Remember what the user blocked/allowed so the next session's setup starts
-        // pre-populated and they don't have to re-add the same sites.
-        prefs.lastBlockedApps = session.blockedApps
-        prefs.lastAllowedApps = session.allowedApps
-        prefs.lastBlockedSites = session.blockedSites
-        prefs.lastAllowedSites = session.allowedSites
-        prefs.save()
+        guard session.phase == .running || session.phase == .paused else { return }
+        recordSession(finished: finished)
         session.end(finished: finished)
         isEditingSession = false
         timerExpanded = false
@@ -262,6 +296,27 @@ final class AppModel {
         theater = .none
         stopLightShow()
         sounds.stopAll()
+    }
+
+    private func recordSession(finished: Bool) {
+        progress.record(
+            focused: session.elapsedFocused,
+            distracted: session.elapsedDistracted,
+            finishedSession: finished,
+            taskTitle: session.taskTitle,
+            durationMinutes: session.durationMinutes,
+            strategy: session.strategy,
+            activities: session.activityStats,
+            hourlyFocusedSeconds: session.hourlyFocusedSeconds,
+            hourlyDistractedSeconds: session.hourlyDistractedSeconds
+        )
+        // Remember what the user blocked/allowed so the next session's setup starts
+        // pre-populated and they don't have to re-add the same sites.
+        prefs.lastBlockedApps = session.blockedApps
+        prefs.lastAllowedApps = session.allowedApps
+        prefs.lastBlockedSites = session.blockedSites
+        prefs.lastAllowedSites = session.allowedSites
+        prefs.save()
     }
 
     func toggleTimerExpanded() {
@@ -292,15 +347,24 @@ final class AppModel {
             onResizeChanged: onResizeChanged,
             onResizeEnded: onResizeEnded,
             onQuickToggle: { [weak self] in self?.quickToggleCurrentApp() },
-            onSnooze: { [weak self] in self?.prefs.hide(for: 2 * 60) },
+            onSnooze: { [weak self] in self?.prefs.hide(for: 2 * 60) }
         )
+    }
+
+    /// Qasim itself and system surfaces (Dock, Spotlight, login) are never
+    /// judged, so offering to block or allow them would do nothing.
+    private var canQuickToggleCurrentApp: Bool {
+        let ctx = session.monitor.context
+        return session.strategy != .company
+            && !ctx.bundleID.isEmpty
+            && !QasimIdentity.alwaysAllowed.contains(ctx.bundleID)
     }
 
     func currentQuickToggleTitle() -> String? {
         let ctx = session.monitor.context
-        guard session.strategy != .company, !ctx.bundleID.isEmpty else { return nil }
+        guard canQuickToggleCurrentApp else { return nil }
         if let host = ctx.host {
-            guard let rule = SiteRule.normalize(host).map(SiteRule.init) else { return nil }
+            guard let rule = SiteRule.normalize(host).map({ SiteRule(host: $0) }) else { return nil }
             let already = session.strategy == .block
                 ? session.blockedSites.contains(rule)
                 : session.allowedSites.contains(rule)
@@ -401,9 +465,9 @@ final class AppModel {
 
     func quickToggleCurrentApp() {
         let ctx = session.monitor.context
-        guard session.strategy != .company, !ctx.bundleID.isEmpty else { return }
+        guard canQuickToggleCurrentApp else { return }
         if let host = ctx.host {
-            guard let rule = SiteRule.normalize(host).map(SiteRule.init) else { return }
+            guard let rule = SiteRule.normalize(host).map({ SiteRule(host: $0) }) else { return }
             if session.strategy == .block, !session.blockedSites.contains(rule) {
                 session.blockedSites.append(rule)
             } else if session.strategy == .allow, !session.allowedSites.contains(rule) {
@@ -452,11 +516,7 @@ final class AppModel {
         session.previewMove = nil
         session.previewTheater = .lights
         session.forceDistracted = true
-        previewStartedSession = session.phase != .running
-        if session.phase != .running {
-            session.phase = .running
-            session.remaining = 90
-        }
+        borrowSessionForPreview()
         brain.resetEscalationForPreview()
         brain.speak(SpeechLines.previewStartLine(companion: prefs.companion), seconds: 5, prefs: prefs)
         previewTask = Task { @MainActor in
@@ -476,11 +536,7 @@ final class AppModel {
         session.previewMove = move
         session.previewTheater = move.previewEscalation
         session.forceDistracted = true
-        previewStartedSession = session.phase != .running
-        if session.phase != .running {
-            session.phase = .running
-            session.remaining = 90
-        }
+        borrowSessionForPreview()
         brain.resetEscalationForPreview()
         brain.speak(SpeechLines.previewLine(for: move), seconds: 5, prefs: prefs)
         previewTask = Task { @MainActor in
@@ -488,6 +544,20 @@ final class AppModel {
             guard !Task.isCancelled else { return }
             stopPreview(spoken: true)
         }
+    }
+
+    private func borrowSessionForPreview() {
+        guard session.phase != .running else { return }
+        if previewSnapshot == nil {
+            previewSnapshot = PreviewSnapshot(
+                phase: session.phase,
+                remaining: session.remaining,
+                elapsedFocused: session.elapsedFocused,
+                elapsedDistracted: session.elapsedDistracted
+            )
+        }
+        session.phase = .running
+        session.remaining = 90
     }
 
     private func startTimedActionPreview() {
@@ -510,10 +580,19 @@ final class AppModel {
         theater = .none
         stopLightShow()
         sounds.stopAll()
-        if previewStartedSession {
-            session.resetToIdle()
+        if let snapshot = previewSnapshot {
+            if snapshot.phase == .idle {
+                session.resetToIdle()
+            } else {
+                session.phase = snapshot.phase
+                session.remaining = snapshot.remaining
+                session.elapsedFocused = snapshot.elapsedFocused
+                session.elapsedDistracted = snapshot.elapsedDistracted
+                session.distractedFor = 0
+                session.escalation = .calm
+            }
         }
-        previewStartedSession = false
+        previewSnapshot = nil
         if spoken, wasPreviewing {
             brain.speak(SpeechLines.previewStopLine(companion: prefs.companion), seconds: 2.4, prefs: prefs)
         }
@@ -604,17 +683,7 @@ final class AppModel {
         let wasRunning = session.phase == .running
         session.tick(dt, prefs: prefs)
         if wasRunning, session.phase == .finished {
-            progress.record(
-                focused: session.elapsedFocused,
-                distracted: session.elapsedDistracted,
-                finishedSession: true,
-                taskTitle: session.taskTitle,
-                durationMinutes: session.durationMinutes,
-                strategy: session.strategy,
-                activities: session.activityStats,
-                hourlyFocusedSeconds: session.hourlyFocusedSeconds,
-                hourlyDistractedSeconds: session.hourlyDistractedSeconds
-            )
+            recordSession(finished: true)
             brain.speak(SpeechLines.doneLine(voice: prefs.voice, name: prefs.userName), seconds: 4, prefs: prefs)
             showBreakChoice()
         }
@@ -625,12 +694,21 @@ final class AppModel {
             }
         }
         if actionPreview != nil { actionPreviewAge += dt }
+        if prefs.hasCompletedSetup {
+            stepSalah(dt: dt)
+        }
+        updateTheater(dt: dt)
+        finishStep(dt: dt)
+    }
+
+    private func stepSalah(dt: TimeInterval) {
         salah.refresh(now: Date(), dt: dt, prefs: prefs)
         // He finishes his prayer before he goes back to policing you.
         session.praying = salah.matVisible
         if wasPraying, !salah.matVisible {
+            let inSession = session.phase == .running || session.phase == .paused
             brain.speak(
-                SpeechLines.salahDone(voice: prefs.voice, task: session.taskTitle),
+                SpeechLines.salahDone(voice: prefs.voice, task: inSession ? session.taskTitle : ""),
                 seconds: 5,
                 prefs: prefs
             )
@@ -656,7 +734,9 @@ final class AppModel {
         if let name = salah.consumeNowAnnouncement() {
             brain.speak(SpeechLines.salahNow(name), seconds: 6, prefs: prefs)
         }
-        updateTheater(dt: dt)
+    }
+
+    private func finishStep(dt: TimeInterval) {
         if theater != lastTheater {
             effectAge = 0
             lastTheater = theater
@@ -679,13 +759,10 @@ final class AppModel {
                 ? [.qiyam, .ruku, .sujud][Int(actionPreviewAge / 2.4) % 3]
                 : salah.salahPose
         }
-        overlay?.alphaValue = (prefs.alwaysOnDesktop || session.phase != .idle) ? 1 : 0
+        let prayerOnScreen = salah.ask != nil || salah.matVisible
+        overlay?.alphaValue = (prefs.alwaysOnDesktop || session.phase != .idle || prayerOnScreen) ? 1 : 0
         updateTimerPanel()
         updateClickThrough()
-
-        if session.phase == .finished {
-            // linger so the user sees the done line, then settle
-        }
     }
 
     private func updateTheater(dt: TimeInterval) {
@@ -1022,7 +1099,9 @@ final class AppModel {
     private func present(_ panel: NSPanel?, activate: Bool = true) {
         guard let panel else { return }
         panel.level = .normal
-        panel.hidesOnDeactivate = true
+        // Stay put when another app (or the screenshot drag thumbnail) takes focus;
+        // at normal level the card already sits behind whatever the user switches to.
+        panel.hidesOnDeactivate = false
         panel.isFloatingPanel = false
         panel.appearance = NSAppearance(named: .aqua)
         if activate {

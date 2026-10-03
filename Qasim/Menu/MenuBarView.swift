@@ -37,8 +37,11 @@ struct MenuBarView: View {
         } else if model.session.phase == .finished {
             Text("Session finished")
             Button("Start another") { model.openSetup() }
+        } else if model.prefs.hasCompletedSetup {
+            Button("New focus session…") { model.openNewSessionConfig() }
+            Button("Open Qasim") { model.openSetup() }
         } else {
-            Button("New focus session") { model.openSetup() }
+            Button("Get started…") { model.openSetup() }
         }
 
         if model.prefs.isHiddenNow {

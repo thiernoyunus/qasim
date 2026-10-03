@@ -60,6 +60,9 @@ final class InstalledAppCatalog {
                 let name = (bundle?.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String)
                     ?? (bundle?.object(forInfoDictionaryKey: "CFBundleName") as? String)
                     ?? url.deletingPathExtension().lastPathComponent
+                // Skip helpers that never show a window (URL handlers, CLI wrappers).
+                if bundle?.object(forInfoDictionaryKey: "LSBackgroundOnly") as? Bool == true
+                    || bundle?.object(forInfoDictionaryKey: "LSUIElement") as? Bool == true { continue }
                 let key = bundleID.isEmpty ? url.path : bundleID
                 if seen.contains(key) { continue }
                 if name == "Qasim" { continue }
