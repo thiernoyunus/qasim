@@ -327,16 +327,6 @@ struct PrayerTimes: Sendable {
         return formatter.string(from: target)
     }
 
-    func applying(clocks: [String: SalahClock], on day: Date, calendar: Calendar = .current) -> PrayerTimes {
-        var next = times
-        for name in Self.salahOrder {
-            if let clock = clocks[name.rawValue], let date = clock.date(on: day, calendar: calendar) {
-                next[name] = date
-            }
-        }
-        return PrayerTimes(date: day, times: next)
-    }
-
     static func fromMasjid(clocks: [String: SalahClock], on day: Date, calendar: Calendar = .current) -> PrayerTimes {
         var times: [PrayerName: Date] = [:]
         for name in salahOrder {

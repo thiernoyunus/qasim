@@ -458,7 +458,7 @@ struct NewSessionView: View {
                     switch suggestion {
                     case .site(let rule, let kind):
                         suggestionRow(kind: kind, selected: sites(session).contains(rule), highlighted: index == highlighted) {
-                            SiteIcon(host: rule.host)
+                            SiteIcon(host: rule.host, fetchLogo: false)
                         } title: {
                             kind == "Website" ? (SiteBrand.forHost(rule.host)?.name).map { "\($0) \u{00B7} \(rule.host)" } ?? rule.host : rule.id
                         } action: {
@@ -611,11 +611,13 @@ struct NewSessionView: View {
 
 /// A website's logo, fetched from the site itself (no third-party icon service
 /// learns what the user blocks). Falls back to the first letter.
+/// Search suggestions pass `fetchLogo: false` so half-typed addresses are never contacted.
 struct SiteIcon: View {
     let host: String
+    var fetchLogo = true
 
     var body: some View {
-        AsyncImage(url: URL(string: "https://\(host)/favicon.ico")) { phase in
+        AsyncImage(url: fetchLogo ? URL(string: "https://\(host)/favicon.ico") : nil) { phase in
             if case .success(let image) = phase {
                 image.resizable().scaledToFit()
             } else {
