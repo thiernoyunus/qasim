@@ -1,165 +1,203 @@
 import AppKit
 import SwiftUI
 
+/// First-launch onboarding: name, companion, prayer reminders. Three short
+/// screens, one big Continue bar. Finishing goes straight into the first session.
 struct SetupView: View {
     @Environment(AppModel.self) private var model
     @State private var step: Int = 0
     @FocusState private var nameFieldFocused: Bool
 
-    private let totalSteps = 4
+    private let totalSteps = 3
 
     var body: some View {
-        @Bindable var session = model.session
-        @Bindable var prefs = model.prefs
-
         VStack(spacing: 0) {
-            header
-            stepDots
-            ScrollView {
-                VStack(alignment: .leading, spacing: 18) {
-                    CompanionVisibilityNotice()
+            ZStack {
+                stepDots
+                HStack {
+                    if step > 0 {
+                        IconButton(systemName: "arrow.left", label: "Back") { step -= 1 }
+                    }
+                    Spacer()
+                }
+            }
+            .frame(height: 52)
+            .padding(.horizontal, 12)
 
+            ScrollView {
+                VStack(spacing: 0) {
+                    CompanionVisibilityNotice()
                     switch step {
-                    case 0: nameStep(prefs: prefs)
-                    case 1: CharacterPickerStrip()
-                    case 2: actionsStep()
-                    default: salahStep()
+                    case 0: nameStep
+                    case 1: companionStep
+                    default: salahStep
                     }
                 }
-                .padding(22)
+                .padding(.horizontal, 28)
+                .padding(.bottom, 24)
+                .frame(maxWidth: 520)
+                .frame(maxWidth: .infinity)
             }
-            footer()
+
+            Group {
+                if step < totalSteps - 1 {
+                    Button("Continue") { step += 1 }
+                } else {
+                    Button("Start my first session") { model.finishOnboarding() }
+                }
+            }
+            .buttonStyle(BarButtonStyle())
+            .keyboardShortcut(.defaultAction)
         }
-        .background(Palette.paper)
+        .background(Palette.ground)
         .foregroundStyle(Palette.ink)
         .preferredColorScheme(.light)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-    }
-
-    private var header: some View {
-        HStack(alignment: .center, spacing: 12) {
-            Image(model.prefs.companion.assetName(for: .idle))
-                .resizable()
-                .scaledToFit()
-                .frame(width: 56, height: 56)
-            VStack(alignment: .leading, spacing: 2) {
-                Text(model.prefs.companion.displayName)
-                    .font(Typeface.display(28))
-                    .foregroundStyle(Palette.ink)
-                Text("One thing. Or the lights go out.")
-                    .font(.system(size: 12))
-                    .foregroundStyle(Palette.inkSoft)
-            }
-            Spacer()
-            Button(model.isPreviewing ? "Stop preview" : "Preview") {
-                model.togglePreview()
-            }
-            .buttonStyle(.plain)
-            .font(.system(size: 12, weight: .semibold))
-            .foregroundStyle(Palette.emberText)
-            .accessibilityLabel(model.isPreviewing ? "Stop preview" : "Preview")
-        }
-        .padding(.horizontal, 22)
-        .padding(.top, 18)
-        .padding(.bottom, 8)
     }
 
     private var stepDots: some View {
-        HStack(spacing: 8) {
+        HStack(spacing: 6) {
             ForEach(0..<totalSteps, id: \.self) { i in
                 Capsule()
-                    .fill(i == step ? Palette.ember : Palette.ink.opacity(0.15))
-                    .frame(width: i == step ? 22 : 8, height: 8)
+                    .fill(i == step ? Palette.ink : Palette.ink.opacity(0.25))
+                    .frame(width: i == step ? 22 : 6, height: 6)
             }
         }
-        .padding(.bottom, 4)
+        .accessibilityElement()
+        .accessibilityLabel("Step \(step + 1) of \(totalSteps)")
     }
 
-    private func nameStep(prefs: Preferences) -> some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Text("What's your name?")
-                .font(Typeface.display(22))
-                .foregroundStyle(Palette.ink)
-            Text("So they know who they're sitting with.")
-                .font(.system(size: 13))
-                .foregroundStyle(Palette.inkSoft)
-            TextField("Your name", text: Bindable(model.prefs).userName)
-                .focused($nameFieldFocused)
-                .onAppear {
-                    // The panel becomes key just after SwiftUI appears.
-                    DispatchQueue.main.async { nameFieldFocused = true }
-                }
-                .textFieldStyle(.plain)
-                .font(Typeface.display(20))
-                .padding(14)
-                .background(Palette.cream, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 12, style: .continuous)
-                        .stroke(Palette.ink, lineWidth: 2)
-                )
-        }
-    }
-
-    private func actionsStep() -> some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Text("What can they do?")
-                .font(Typeface.display(22))
-                .foregroundStyle(Palette.ink)
-            ActionsCustomizeSection()
-        }
-    }
-
-    private func salahStep() -> some View {
-        @Bindable var prefs = model.prefs
-        return VStack(alignment: .leading, spacing: 10) {
-            Text("Salah reminders")
-                .font(Typeface.display(22))
-                .foregroundStyle(Palette.ink)
-            Text("\(model.prefs.companion.displayName) can tell you when a prayer is coming, then pray on your desktop when it's time.")
-                .font(.system(size: 13))
-                .foregroundStyle(Palette.inkSoft)
+    private var nameStep: some View {
+        VStack(spacing: 0) {
+            Image(model.prefs.companion.assetName(for: .idle))
+                .resizable()
+                .scaledToFit()
+                .frame(height: 180)
+                .padding(.top, 20)
+                .padding(.bottom, 22)
+                .accessibilityLabel("\(model.prefs.companion.displayName) says hello")
+            Text("Assalamu alaikum.")
+                .font(.system(size: 26, weight: .bold))
+                .padding(.bottom, 8)
+            Text("I\u{2019}ll sit on your screen while you work, and speak up when you drift.")
+                .font(.system(size: 16))
+                .foregroundStyle(Palette.muted)
+                .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
-            Toggle("Remind me about salah", isOn: $prefs.salahReminders)
-                .tint(Palette.ember)
-                .foregroundStyle(Palette.ink)
-                .onChange(of: prefs.salahReminders) { _, _ in prefs.save() }
-            if prefs.salahReminders {
-                SalahLocationSection()
-                Text("macOS will ask to send notifications, and to use your location if you chose that.")
-                    .font(.system(size: 11))
-                    .foregroundStyle(Palette.inkSoft)
-                    .fixedSize(horizontal: false, vertical: true)
+                .padding(.bottom, 32)
+            VStack(alignment: .leading, spacing: 8) {
+                SectionLabel("What should I call you?")
+                TextField("Your name", text: Bindable(model.prefs).userName)
+                    .focused($nameFieldFocused)
+                    .onAppear {
+                        // The panel becomes key just after SwiftUI appears.
+                        DispatchQueue.main.async { nameFieldFocused = true }
+                    }
+                    .textFieldStyle(.plain)
+                    .font(.system(size: 16))
+                    .padding(.horizontal, 14)
+                    .frame(height: 50)
+                    .background(Palette.field, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                    .overlay(RoundedRectangle(cornerRadius: 12, style: .continuous).stroke(Palette.ink, lineWidth: 1.5))
+                    .onSubmit { step += 1 }
             }
         }
     }
 
-    private func footer() -> some View {
-        HStack {
-            if step > 0 {
-                Button("Back") { step -= 1 }
+    private var companionStep: some View {
+        let selected = model.prefs.companion
+        return VStack(spacing: 0) {
+            Text("Who keeps you company?")
+                .font(.system(size: 26, weight: .bold))
+                .padding(.top, 20)
+                .padding(.bottom, 6)
+            Text("You can switch anytime in Settings.")
+                .font(.system(size: 16))
+                .foregroundStyle(Palette.muted)
+                .padding(.bottom, 24)
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: 120), spacing: 12)], spacing: 12) {
+                ForEach(CompanionID.allCases) { companion in
+                    let isOn = companion == selected
+                    Button {
+                        model.prefs.companion = companion
+                        model.prefs.save()
+                    } label: {
+                        VStack(spacing: 8) {
+                            Image(companion.assetName(for: .idle))
+                                .resizable()
+                                .scaledToFit()
+                                .frame(height: 104)
+                            Text(companion.displayName)
+                                .font(.system(size: 15, weight: isOn ? .semibold : .regular))
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 14)
+                        .background(isOn ? Palette.field : .clear, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                                .stroke(isOn ? Palette.ink : Palette.ink.opacity(0.18), lineWidth: isOn ? 2 : 1.5)
+                        )
+                        .contentShape(Rectangle())
+                    }
                     .buttonStyle(.plain)
-                    .foregroundStyle(Palette.inkSoft)
-                    .accessibilityLabel("Back")
-            }
-            Spacer()
-            // Onboarding is name -> character -> actions -> salah. Finishing it
-            // goes straight into setting up the first session.
-            if step < totalSteps - 1 {
-                Button("Next") { step += 1 }
-                    .buttonStyle(InkButtonStyle())
-                    .keyboardShortcut(.defaultAction)
-                    .accessibilityLabel("Next")
-            } else {
-                Button("Set up my first session") {
-                    model.finishOnboarding()
+                    .accessibilityLabel(companion.displayName)
+                    .accessibilityAddTraits(isOn ? .isSelected : [])
                 }
-                .buttonStyle(InkButtonStyle())
-                .keyboardShortcut(.defaultAction)
-                .accessibilityLabel("Set up my first session")
             }
+            Text("\(selected.displayName): \(selected.blurb)")
+                .font(.system(size: 14))
+                .foregroundStyle(Palette.muted)
+                .multilineTextAlignment(.center)
+                .padding(.top, 20)
         }
-        .padding(18)
-        .background(Palette.paperDeep.opacity(0.5))
+    }
+
+    private var salahStep: some View {
+        @Bindable var prefs = model.prefs
+        let name = prefs.userName.trimmingCharacters(in: .whitespaces)
+        return VStack(spacing: 0) {
+            HStack(alignment: .top, spacing: 6) {
+                Image(prefs.companion.assetName(for: .idle))
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: 108)
+                    .padding(.top, 12)
+                    .accessibilityHidden(true)
+                Text(name.isEmpty ? "Asr is in 5 minutes. Getting up?" : "Asr is in 5 minutes, \(name). Getting up?")
+                    .font(.system(size: 15, weight: .medium))
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.horizontal, 14)
+                    .padding(.vertical, 10)
+                    .frame(maxWidth: 190, alignment: .leading)
+                    .background(Color.white, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+                    .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous).stroke(Palette.ink, lineWidth: 1.5))
+            }
+            .padding(.top, 8)
+            .padding(.bottom, 12)
+            Text("Prayer reminders")
+                .font(.system(size: 24, weight: .bold))
+                .padding(.bottom, 6)
+            Text("A nudge before each salah, and \(prefs.companion.displayName) prays on your desktop when it\u{2019}s time.")
+                .font(.system(size: 15))
+                .foregroundStyle(Palette.muted)
+                .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
+                .padding(.bottom, 18)
+            FieldBox {
+                SwitchRow(title: "Remind me about salah", isOn: $prefs.salahReminders)
+                    .onChange(of: prefs.salahReminders) { _, _ in prefs.save() }
+                if prefs.salahReminders {
+                    RowLine()
+                    SalahLocationSection()
+                        .padding(14)
+                }
+            }
+            Text("macOS will ask to send notifications, and to use your location if you chose that. You can change all of this in Settings.")
+                .font(.system(size: 13))
+                .foregroundStyle(Palette.muted)
+                .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
+                .padding(.top, 10)
+        }
     }
 }
 
@@ -209,71 +247,5 @@ struct InkButtonStyle: ButtonStyle {
             .background(Palette.ink, in: Capsule())
             .foregroundStyle(Palette.cream)
             .opacity(configuration.isPressed ? 0.8 : 1)
-    }
-}
-
-/// Wraps a handful of chips onto the next line when the setup card gets narrow.
-struct FlexibleStack<Content: View>: View {
-    @ViewBuilder var content: Content
-
-    var body: some View {
-        FlowLayout(spacing: 6) { content }
-    }
-}
-
-private struct FlowLayout: Layout {
-    var spacing: CGFloat
-
-    func sizeThatFits(
-        proposal: ProposedViewSize,
-        subviews: Subviews,
-        cache: inout ()
-    ) -> CGSize {
-        let width = proposal.width ?? subviews.reduce(0) { result, subview in
-            result + subview.sizeThatFits(.unspecified).width + spacing
-        }
-        return layout(width: max(width, 1), subviews: subviews).size
-    }
-
-    func placeSubviews(
-        in bounds: CGRect,
-        proposal: ProposedViewSize,
-        subviews: Subviews,
-        cache: inout ()
-    ) {
-        let result = layout(width: max(bounds.width, 1), subviews: subviews)
-        for (index, frame) in result.frames.enumerated() {
-            subviews[index].place(
-                at: CGPoint(x: bounds.minX + frame.minX, y: bounds.minY + frame.minY),
-                anchor: .topLeading,
-                proposal: ProposedViewSize(frame.size)
-            )
-        }
-    }
-
-    private func layout(width: CGFloat, subviews: Subviews) -> (size: CGSize, frames: [CGRect]) {
-        var frames: [CGRect] = []
-        var x: CGFloat = 0
-        var y: CGFloat = 0
-        var rowHeight: CGFloat = 0
-        var contentWidth: CGFloat = 0
-
-        for subview in subviews {
-            let size = subview.sizeThatFits(.unspecified)
-            if x > 0, x + size.width > width {
-                x = 0
-                y += rowHeight + spacing
-                rowHeight = 0
-            }
-            frames.append(CGRect(x: x, y: y, width: size.width, height: size.height))
-            x += size.width + spacing
-            rowHeight = max(rowHeight, size.height)
-            contentWidth = max(contentWidth, x - spacing)
-        }
-
-        return (
-            CGSize(width: min(width, contentWidth), height: y + rowHeight),
-            frames
-        )
     }
 }

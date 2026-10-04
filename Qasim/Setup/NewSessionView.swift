@@ -29,84 +29,47 @@ struct NewSessionView: View {
         let session = model.session
 
         VStack(spacing: 0) {
-            header
+            if editingList {
+                ScreenHeader(title: session.strategy == .allow ? "Allow list" : "Block list", back: { editingList = false })
+            } else {
+                ScreenHeader(back: { model.openSetup() }) {
+                    IconButton(systemName: "slider.horizontal.3", label: "Settings") { model.openSettings() }
+                }
+            }
             ScrollView {
-                VStack(alignment: .leading, spacing: 18) {
+                VStack(alignment: .leading, spacing: 22) {
                     CompanionVisibilityNotice()
                     if editingList {
                         listEditor(session: session)
                     } else {
+                        Image(model.prefs.companion.assetName(for: .idle))
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 132)
+                            .frame(maxWidth: .infinity)
+                            .accessibilityLabel("\(model.prefs.companion.displayName), your companion")
                         taskSection(session: session)
                         modeSection(session: session)
                         durationSection(session: session)
                     }
                 }
-                .padding(22)
+                .padding(.horizontal, 28)
+                .padding(.bottom, 24)
+                .frame(maxWidth: 520)
+                .frame(maxWidth: .infinity)
             }
             footer(session: session)
         }
-        .background(Palette.paper)
+        .background(Palette.ground)
         .foregroundStyle(Palette.ink)
         .preferredColorScheme(.light)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
-    private var header: some View {
-        HStack(alignment: .center, spacing: 12) {
-            Image(model.prefs.companion.assetName(for: .idle))
-                .resizable()
-                .scaledToFit()
-                .frame(width: 56, height: 56)
-            VStack(alignment: .leading, spacing: 2) {
-                Text(model.prefs.companion.displayName)
-                    .font(Typeface.display(28))
-                    .foregroundStyle(Palette.ink)
-                Text("One thing. Or the lights go out.")
-                    .font(.system(size: 12))
-                    .foregroundStyle(Palette.inkSoft)
-            }
-            Spacer()
-            Button("Customize") {
-                model.openSettings()
-            }
-            .buttonStyle(.plain)
-            .font(.system(size: 12, weight: .semibold))
-            .foregroundStyle(Palette.inkSoft)
-            .accessibilityLabel("Customize")
-            Button(model.isPreviewing ? "Stop preview" : "Preview") {
-                model.togglePreview()
-            }
-            .buttonStyle(.plain)
-            .font(.system(size: 12, weight: .semibold))
-            .foregroundStyle(Palette.emberText)
-            .accessibilityLabel(model.isPreviewing ? "Stop preview" : "Preview")
-        }
-        .padding(.horizontal, 22)
-        .padding(.top, 18)
-        .padding(.bottom, 8)
-    }
-
-    private func sectionLabel(_ text: String) -> some View {
-        Text(text.uppercased())
-            .font(.system(size: 11, weight: .semibold))
-            .tracking(0.6)
-            .foregroundStyle(Palette.inkSoft)
-    }
-
-    /// The bordered box every field on this screen sits in.
-    private func box<Content: View>(@ViewBuilder _ content: () -> Content) -> some View {
-        VStack(alignment: .leading, spacing: 0) { content() }
-            .background(Palette.cream, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
-            .overlay(
-                RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .stroke(Palette.ink, lineWidth: 1.5)
-            )
-    }
-
     private func taskSection(session: SessionController) -> some View {
         VStack(alignment: .leading, spacing: 8) {
-            sectionLabel("Task to complete")
-            box {
+            SectionLabel("Task to complete")
+            FieldBox {
                 TextField("Write chapter 2", text: Bindable(session).taskTitle)
                     .focused($taskFieldFocused)
                     .onAppear {
@@ -131,8 +94,8 @@ struct NewSessionView: View {
 
     private func modeSection(session: SessionController) -> some View {
         VStack(alignment: .leading, spacing: 8) {
-            sectionLabel("Mode")
-            box {
+            SectionLabel("Mode")
+            FieldBox {
                 Button {
                     withAnimation(.easeOut(duration: 0.15)) { showModes.toggle() }
                 } label: {
@@ -150,30 +113,18 @@ struct NewSessionView: View {
                 .accessibilityLabel("Mode: \(session.strategy.title)")
 
                 if showModes {
-                    Divider().overlay(Palette.ink.opacity(0.15))
+                    RowLine()
                     ForEach(FocusStrategy.allCases) { strategy in
                         modeOption(strategy, session: session)
                     }
                 }
 
                 if session.strategy != .company {
-                    Divider().overlay(Palette.ink.opacity(0.15))
+                    RowLine()
                     listRow(session: session)
                 }
             }
 
-            HStack {
-                Text("Temper")
-                    .font(.system(size: 12))
-                    .foregroundStyle(Palette.inkSoft)
-                Picker("Temper", selection: Bindable(session).temper) {
-                    ForEach(Temper.allCases) { temper in
-                        Text(temper.title).tag(temper)
-                    }
-                }
-                .pickerStyle(.segmented)
-                .labelsHidden()
-            }
         }
     }
 
@@ -189,13 +140,13 @@ struct NewSessionView: View {
                     Text(strategy.title).font(.system(size: 14, weight: .semibold))
                     Text(strategy.blurb)
                         .font(.system(size: 12))
-                        .foregroundStyle(Palette.inkSoft)
+                        .foregroundStyle(Palette.muted)
                         .fixedSize(horizontal: false, vertical: true)
                 }
                 Spacer()
                 Image(systemName: selected ? "checkmark.circle.fill" : "circle")
                     .font(.system(size: 18))
-                    .foregroundStyle(selected ? Palette.ink : Palette.inkSoft)
+                    .foregroundStyle(selected ? Palette.ink : Palette.muted)
             }
             .padding(12)
             .background(selected ? Palette.ink.opacity(0.05) : .clear)
@@ -218,7 +169,7 @@ struct NewSessionView: View {
                 if total == 0 {
                     Text(session.strategy == .allow ? "Add allowed apps and sites" : "Add blocked apps and sites")
                         .font(.system(size: 14))
-                        .foregroundStyle(Palette.inkSoft)
+                        .foregroundStyle(Palette.muted)
                 } else {
                     ForEach(apps.prefix(6)) { app in
                         Image(nsImage: model.catalog.icon(for: app)).resizable().frame(width: 20, height: 20)
@@ -247,7 +198,7 @@ struct NewSessionView: View {
     private func durationSection(session: SessionController) -> some View {
         @Bindable var prefs = model.prefs
         return VStack(alignment: .leading, spacing: 8) {
-            sectionLabel("Duration")
+            SectionLabel("Duration")
             Menu {
                 ForEach(presetMinutes, id: \.self) { minutes in
                     Button("\(minutes) minutes") {
@@ -266,7 +217,7 @@ struct NewSessionView: View {
                     customMinutes = "\(session.durationMinutes)"
                 }
             } label: {
-                box {
+                FieldBox {
                     HStack {
                         Text(durationLabel(session)).font(.system(size: 15))
                         Spacer()
@@ -287,7 +238,7 @@ struct NewSessionView: View {
                         .textFieldStyle(.plain)
                         .frame(maxWidth: 80)
                         .padding(10)
-                        .background(Palette.cream, in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+                        .background(Palette.field, in: RoundedRectangle(cornerRadius: 8, style: .continuous))
                         .overlay(
                             RoundedRectangle(cornerRadius: 8, style: .continuous)
                                 .stroke(Palette.ink.opacity(0.2), lineWidth: 1)
@@ -300,17 +251,10 @@ struct NewSessionView: View {
                         }
                     Text("minutes (1\u{2013}600)")
                         .font(.system(size: 12))
-                        .foregroundStyle(Palette.inkSoft)
+                        .foregroundStyle(Palette.muted)
                 }
             }
 
-            Stepper(value: $prefs.breakMinutes, in: 1...30) {
-                Text("Break: \(prefs.breakMinutes) minute\(prefs.breakMinutes == 1 ? "" : "s")")
-                    .font(.system(size: 12))
-                    .foregroundStyle(Palette.inkSoft)
-            }
-            .onChange(of: prefs.breakMinutes) { _, _ in prefs.save() }
-            .padding(.top, 4)
         }
         .onAppear {
             if session.durationMinutes > 0, !presetMinutes.contains(session.durationMinutes) {
@@ -322,26 +266,18 @@ struct NewSessionView: View {
 
     private func listEditor(session: SessionController) -> some View {
         VStack(alignment: .leading, spacing: 12) {
-            Button {
-                editingList = false
-            } label: {
-                Label("Back", systemImage: "arrow.left").font(.system(size: 13, weight: .semibold))
-            }
-            .buttonStyle(.plain)
-
-            Text(session.strategy == .allow ? "What do you actually need?" : "What\u{2019}s off limits?")
-                .font(Typeface.display(22))
-                .foregroundStyle(Palette.ink)
-
+            Text(session.strategy == .allow ? "What do you need for this?" : "What should count as a distraction?")
+                .font(.system(size: 18, weight: .semibold))
             Text(session.strategy == .allow
                 ? "Everything you don\u{2019}t pick here counts as a distraction."
                 : "Anything you pick here counts as a distraction. Everything else is fine.")
                 .font(.system(size: 13))
-                .foregroundStyle(Palette.inkSoft)
+                .foregroundStyle(Palette.muted)
                 .fixedSize(horizontal: false, vertical: true)
 
             TextField("Search apps or type a website", text: $query)
                 .textFieldStyle(.plain)
+                .font(.system(size: 16))
                 .onSubmit {
                     let list = suggestionList
                     if list.indices.contains(highlighted) { pick(list[highlighted], session: session) }
@@ -355,56 +291,45 @@ struct NewSessionView: View {
                     return .handled
                 }
                 .onChange(of: query) { _, _ in highlighted = 0 }
-                .padding(10)
-                .background(Palette.cream, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 10, style: .continuous)
-                        .stroke(Palette.ink.opacity(0.2), lineWidth: 1)
-                )
+                .padding(.horizontal, 14)
+                .frame(height: 50)
+                .background(Palette.field, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                .overlay(RoundedRectangle(cornerRadius: 12, style: .continuous).stroke(Palette.ink, lineWidth: 1.5))
 
             suggestions(session: session)
 
-            pickedChips(session: session)
+            pickedList(session: session)
         }
     }
 
     private func footer(session: SessionController) -> some View {
-        Group {
+        VStack(spacing: 0) {
             if editingList {
                 Button("Done") { editingList = false }
-                    .buttonStyle(InkButtonStyle())
-                    .keyboardShortcut(.cancelAction)
+                    .keyboardShortcut(.defaultAction)
             } else {
                 let startTitle = model.isEditingSession ? "Save changes" : "Start"
-                VStack(spacing: 6) {
-                    if needsAllowedItems {
-                        Text("Pick at least one app or site you need")
-                            .font(.system(size: 12))
-                            .foregroundStyle(Palette.inkSoft)
-                    }
-                    Button {
-                        if session.taskTitle.trimmingCharacters(in: .whitespaces).isEmpty {
-                            session.taskTitle = "The one thing"
-                        }
-                        if model.isEditingSession {
-                            model.saveSessionEdits()
-                        } else {
-                            model.beginSession()
-                        }
-                    } label: {
-                        Text(startTitle).frame(maxWidth: .infinity)
-                    }
-                    .buttonStyle(InkButtonStyle())
-                    .disabled(needsAllowedItems)
-                    .opacity(needsAllowedItems ? 0.4 : 1)
-                    .keyboardShortcut(.defaultAction)
-                    .accessibilityLabel(startTitle)
+                if needsAllowedItems {
+                    Text("Pick at least one app or site you need")
+                        .font(.system(size: 13))
+                        .foregroundStyle(Palette.muted)
+                        .padding(.bottom, 8)
                 }
+                Button(startTitle) {
+                    if session.taskTitle.trimmingCharacters(in: .whitespaces).isEmpty {
+                        session.taskTitle = "The one thing"
+                    }
+                    if model.isEditingSession {
+                        model.saveSessionEdits()
+                    } else {
+                        model.beginSession()
+                    }
+                }
+                .disabled(needsAllowedItems)
+                .keyboardShortcut(.defaultAction)
             }
         }
-        .frame(maxWidth: .infinity)
-        .padding(18)
-        .background(Palette.paperDeep.opacity(0.5))
+        .buttonStyle(BarButtonStyle())
     }
 
     private enum Suggestion: Identifiable {
@@ -479,12 +404,12 @@ struct NewSessionView: View {
                         ? "Loading your apps\u{2026}"
                         : "No apps match. For a website, type the full address, like youtube.com.")
                         .font(.system(size: 12))
-                        .foregroundStyle(Palette.inkSoft)
+                        .foregroundStyle(Palette.muted)
                         .padding(10)
                 }
             }
             .padding(4)
-            .background(Palette.cream, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+            .background(Palette.field, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
             .overlay(
                 RoundedRectangle(cornerRadius: 10, style: .continuous)
                     .stroke(Palette.ink.opacity(0.12), lineWidth: 1)
@@ -514,7 +439,7 @@ struct NewSessionView: View {
                 }
                 Text(kind)
                     .font(.system(size: 12))
-                    .foregroundStyle(Palette.inkSoft)
+                    .foregroundStyle(Palette.muted)
             }
             .padding(.horizontal, 8)
             .padding(.vertical, 7)
@@ -525,50 +450,63 @@ struct NewSessionView: View {
     }
 
     /// Everything picked so far, apps and websites together, each with its logo.
-    private func pickedChips(session: SessionController) -> some View {
+    @ViewBuilder
+    private func pickedList(session: SessionController) -> some View {
         let apps = session.strategy == .allow ? session.allowedApps : session.blockedApps
-        return FlexibleStack {
-            ForEach(apps) { app in
-                pickedChip(app.name) {
-                    Image(nsImage: model.catalog.icon(for: app)).resizable()
-                } remove: {
-                    remove(app, session: session)
+        let picked = sites(session)
+        if apps.count + picked.count > 0 {
+            VStack(alignment: .leading, spacing: 8) {
+                SectionLabel("\(session.strategy == .allow ? "Allowed" : "Blocked") \u{00B7} \(apps.count + picked.count)")
+                VStack(spacing: 0) {
+                    ForEach(apps) { app in
+                        pickedRow(app.name, kind: "App") {
+                            Image(nsImage: model.catalog.icon(for: app)).resizable()
+                        } remove: {
+                            remove(app, session: session)
+                        }
+                    }
+                    ForEach(picked) { site in
+                        pickedRow(site.id, kind: site.path == nil ? "Website" : "Single page") {
+                            SiteIcon(host: site.host)
+                        } remove: {
+                            session.allowedSites.removeAll { $0 == site }
+                            session.blockedSites.removeAll { $0 == site }
+                        }
+                    }
                 }
             }
-            ForEach(sites(session)) { site in
-                pickedChip(site.id) {
-                    SiteIcon(host: site.host)
-                } remove: {
-                    session.allowedSites.removeAll { $0 == site }
-                    session.blockedSites.removeAll { $0 == site }
-                }
-            }
+            .padding(.top, 8)
         }
     }
 
-    private func pickedChip<Icon: View>(
+    private func pickedRow<Icon: View>(
         _ title: String,
+        kind: String,
         @ViewBuilder icon: () -> Icon,
         remove: @escaping () -> Void
     ) -> some View {
-        HStack(spacing: 6) {
-            icon().frame(width: 16, height: 16)
-            Text(title)
-                .font(.system(size: 12, weight: .medium))
-                .lineLimit(1)
-                .truncationMode(.middle)
-                .frame(maxWidth: 260, alignment: .leading)
-            Button(action: remove) {
-                Image(systemName: "xmark").font(.system(size: 9, weight: .bold))
+        VStack(spacing: 0) {
+            HStack(spacing: 12) {
+                icon().frame(width: 22, height: 22)
+                Text(title)
+                    .font(.system(size: 15))
+                    .lineLimit(1)
+                    .truncationMode(.middle)
+                Spacer()
+                Text(kind).font(.system(size: 13)).foregroundStyle(Palette.muted)
+                Button(action: remove) {
+                    Image(systemName: "xmark")
+                        .font(.system(size: 12, weight: .bold))
+                        .foregroundStyle(Palette.muted)
+                        .frame(width: 36, height: 36)
+                        .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel("Remove \(title)")
             }
-            .buttonStyle(.plain)
-            .accessibilityLabel("Remove \(title)")
+            .frame(minHeight: 48)
+            RowLine()
         }
-        .padding(.horizontal, 8)
-        .padding(.vertical, 5)
-        .background(Palette.cream, in: Capsule())
-        .overlay(Capsule().stroke(Palette.ink.opacity(0.2), lineWidth: 1))
-        .foregroundStyle(Palette.ink)
     }
 
     private func sites(_ session: SessionController) -> [SiteRule] {
