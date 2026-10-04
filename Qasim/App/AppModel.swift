@@ -198,12 +198,23 @@ final class AppModel {
 
     func openSettings() {
         if settingsPanel == nil {
-            settingsPanel = makeCardPanel(title: "Customize", size: NSSize(width: 520, height: 720))
+            settingsPanel = makeCardPanel(title: "Settings", size: NSSize(width: 480, height: 720))
             let view = SettingsView()
                 .environment(self)
             settingsPanel?.contentView = NSHostingView(rootView: view)
         }
         present(settingsPanel)
+    }
+
+    /// Back arrow on Settings / Analytics. They open over Home, so closing one shows Home again.
+    func closeSettings() {
+        settingsPanel?.orderOut(nil)
+        reopen()
+    }
+
+    func closeProgress() {
+        progressPanel?.orderOut(nil)
+        reopen()
     }
 
     func openSessionEditor() {
@@ -223,7 +234,7 @@ final class AppModel {
 
     func openProgress(showStats: Bool = false) {
         if progressPanel == nil {
-            progressPanel = makeCardPanel(title: "Analytics", size: NSSize(width: 900, height: 820))
+            progressPanel = makeCardPanel(title: "Analytics", size: NSSize(width: 480, height: 720))
         }
         let view = ProgressBoardView(initialTab: showStats ? .stats : .today)
             .environment(self)
@@ -1075,11 +1086,12 @@ final class AppModel {
     private func makeCardPanel(title: String, size: NSSize) -> NSPanel {
         let panel = NSPanel(
             contentRect: NSRect(origin: .zero, size: size),
-            styleMask: [.titled, .closable, .miniaturizable, .fullSizeContentView],
+            styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView],
             backing: .buffered,
             defer: false
         )
         panel.title = title
+        panel.contentMinSize = NSSize(width: 400, height: 560)
         // Keep cards at the normal window level. The character overlay is transparent
         // where these cards are shown, so they stay visible without floating over
         // whichever app the user clicks next.
@@ -1087,12 +1099,14 @@ final class AppModel {
         panel.isReleasedWhenClosed = false
         panel.titlebarAppearsTransparent = true
         panel.appearance = NSAppearance(named: .aqua)
-        panel.backgroundColor = NSColor(Palette.paper)
+        panel.backgroundColor = NSColor(Palette.ground)
         if let screen = NSScreen.main {
             let x = screen.visibleFrame.midX - size.width / 2
             let y = screen.visibleFrame.midY - size.height / 2
             panel.setFrameOrigin(NSPoint(x: x, y: y))
         }
+        // Remembers where the user put it and how big they made it.
+        panel.setFrameAutosaveName("Qasim.\(title)")
         return panel
     }
 
@@ -1138,7 +1152,7 @@ final class AppModel {
 
     private func presentBreakPanel(activate: Bool = true) {
         if breakPanel == nil {
-            breakPanel = makeCardPanel(title: "Break", size: NSSize(width: 320, height: 450))
+            breakPanel = makeCardPanel(title: "Break", size: NSSize(width: 480, height: 640))
             breakPanel?.contentView = NSHostingView(
                 rootView: BreakView().environment(self)
             )
