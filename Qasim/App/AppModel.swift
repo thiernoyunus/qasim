@@ -161,7 +161,7 @@ final class AppModel {
         } else {
             AnyView(SetupView().environment(self))
         }
-        setupPanel?.contentView = NSHostingView(rootView: view)
+        setupPanel?.contentView = cardHost(view)
         present(setupPanel)
     }
 
@@ -192,7 +192,7 @@ final class AppModel {
             setupPanel = makeCardPanel(title: "Qasim", size: NSSize(width: 480, height: 720))
         }
         let view = NewSessionView().environment(self)
-        setupPanel?.contentView = NSHostingView(rootView: view)
+        setupPanel?.contentView = cardHost(view)
         present(setupPanel)
     }
 
@@ -201,7 +201,7 @@ final class AppModel {
             settingsPanel = makeCardPanel(title: "Settings", size: NSSize(width: 480, height: 720))
             let view = SettingsView()
                 .environment(self)
-            settingsPanel?.contentView = NSHostingView(rootView: view)
+            settingsPanel?.contentView = cardHost(view)
         }
         present(settingsPanel)
     }
@@ -228,7 +228,7 @@ final class AppModel {
             setupPanel = makeCardPanel(title: "Qasim", size: NSSize(width: 480, height: 720))
         }
         let view = NewSessionView().environment(self)
-        setupPanel?.contentView = NSHostingView(rootView: view)
+        setupPanel?.contentView = cardHost(view)
         present(setupPanel)
     }
 
@@ -238,7 +238,7 @@ final class AppModel {
         }
         let view = ProgressBoardView(initialTab: tab)
             .environment(self)
-        progressPanel?.contentView = NSHostingView(rootView: view)
+        progressPanel?.contentView = cardHost(view)
         present(progressPanel)
     }
 
@@ -1083,6 +1083,12 @@ final class AppModel {
         )
     }
 
+    /// Card windows size themselves from their SwiftUI content, so the smallest
+    /// allowed window lives here. Below it the one-column layouts start to crowd.
+    private func cardHost<V: View>(_ view: V) -> NSView {
+        NSHostingView(rootView: view.frame(minWidth: 440, minHeight: 660))
+    }
+
     private func makeCardPanel(title: String, size: NSSize) -> NSPanel {
         let panel = NSPanel(
             contentRect: NSRect(origin: .zero, size: size),
@@ -1091,7 +1097,6 @@ final class AppModel {
             defer: false
         )
         panel.title = title
-        panel.contentMinSize = NSSize(width: 400, height: 560)
         // Keep cards at the normal window level. The character overlay is transparent
         // where these cards are shown, so they stay visible without floating over
         // whichever app the user clicks next.
@@ -1153,9 +1158,7 @@ final class AppModel {
     private func presentBreakPanel(activate: Bool = true) {
         if breakPanel == nil {
             breakPanel = makeCardPanel(title: "Break", size: NSSize(width: 480, height: 640))
-            breakPanel?.contentView = NSHostingView(
-                rootView: BreakView().environment(self)
-            )
+            breakPanel?.contentView = cardHost(BreakView().environment(self))
         }
         breakPanel?.title = breakState == .running ? "Break" : "Session complete"
         present(breakPanel, activate: activate)

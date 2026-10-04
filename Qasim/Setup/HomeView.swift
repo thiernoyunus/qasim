@@ -165,6 +165,11 @@ struct HomeView: View {
         let peak = max(minutes.max() ?? 0, 1)
         return VStack(alignment: .leading, spacing: 8) {
             SectionLabel("This week")
+            if minutes.allSatisfy({ $0 == 0 }) {
+                Text("No focus yet this week.")
+                    .font(.system(size: 15))
+                    .foregroundStyle(Palette.muted)
+            } else {
             HStack(alignment: .bottom, spacing: 10) {
                 ForEach(Array(zip(days, minutes)), id: \.0) { day, value in
                     VStack(spacing: 6) {
@@ -183,6 +188,7 @@ struct HomeView: View {
                 }
             }
             .frame(height: 110, alignment: .bottom)
+            }
         }
     }
 

@@ -171,15 +171,17 @@ struct NewSessionView: View {
                         .font(.system(size: 14))
                         .foregroundStyle(Palette.muted)
                 } else {
-                    ForEach(apps.prefix(6)) { app in
+                    ForEach(apps.prefix(3)) { app in
                         Image(nsImage: model.catalog.icon(for: app)).resizable().frame(width: 20, height: 20)
                     }
-                    ForEach(picked.prefix(max(0, 6 - apps.count))) { site in
+                    ForEach(picked.prefix(max(0, 3 - apps.count))) { site in
                         SiteIcon(host: site.host).frame(width: 18, height: 18)
                     }
-                    if total > 6 {
-                        Text("+\(total - 6)").font(.system(size: 12, weight: .semibold))
-                    }
+                    Text((apps.map(\.name) + picked.map(\.host)).joined(separator: ", "))
+                        .font(.system(size: 14))
+                        .foregroundStyle(Palette.muted)
+                        .lineLimit(1)
+                        .padding(.leading, 2)
                 }
                 Spacer()
                 Image(systemName: "pencil").font(.system(size: 13, weight: .semibold))

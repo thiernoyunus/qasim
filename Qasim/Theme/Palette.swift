@@ -147,11 +147,14 @@ struct SwitchRow: View {
     @Binding var isOn: Bool
 
     var body: some View {
-        Toggle(isOn: $isOn) {
+        HStack {
             Text(title).font(.system(size: 15)).foregroundStyle(Palette.ink)
+            Spacer(minLength: 12)
+            Toggle(title, isOn: $isOn)
+                .labelsHidden()
+                .toggleStyle(.switch)
+                .tint(Palette.ink)
         }
-        .toggleStyle(.switch)
-        .tint(Palette.ink)
         .padding(.horizontal, 14)
         .frame(minHeight: 50)
     }

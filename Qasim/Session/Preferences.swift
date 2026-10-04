@@ -6,6 +6,8 @@ final class Preferences {
     var userName: String = ""
     var companion: CompanionID = .qasim
     var voice: VoiceStyle = .dry
+    /// How fast they escalate when you drift. Set in Settings, used by every session.
+    var temper: Temper = .normal
     var perch: PerchCorner = .bottomTrailing
     var characterScale: Double = 1.0
     var alwaysOnDesktop = true
@@ -73,12 +75,15 @@ final class Preferences {
         save()
     }
 
+    /// Drift reactions that are part of every companion and can't be switched off.
+    static let alwaysOnMoves: Set<AngryMove> = [.talk, .lights, .fire, .notes, .sitOnWindow]
+
     func allows(_ move: AngryMove) -> Bool {
-        enabledMoves.contains(move)
+        Self.alwaysOnMoves.contains(move) || enabledMoves.contains(move)
     }
 
     func allows(_ move: AngryMove, previewing previewMove: AngryMove?) -> Bool {
-        enabledMoves.contains(move) || previewMove == move
+        allows(move) || previewMove == move
     }
 
     func toggle(_ move: AngryMove) {
@@ -99,6 +104,7 @@ final class Preferences {
             userName: userName,
             companion: companion,
             voice: voice,
+            temper: temper,
             perch: perch,
             characterScale: characterScale,
             alwaysOnDesktop: alwaysOnDesktop,
@@ -144,6 +150,7 @@ final class Preferences {
         userName = box.userName ?? ""
         companion = box.companion
         voice = box.voice
+        temper = box.temper ?? .normal
         perch = box.perch
         characterScale = min(1.6, max(0.7, box.characterScale))
         alwaysOnDesktop = box.alwaysOnDesktop
@@ -185,6 +192,7 @@ final class Preferences {
         var userName: String?
         var companion: CompanionID
         var voice: VoiceStyle
+        var temper: Temper?
         var perch: PerchCorner
         var characterScale: Double
         var alwaysOnDesktop: Bool
