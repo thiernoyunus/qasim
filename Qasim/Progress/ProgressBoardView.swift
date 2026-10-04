@@ -1,275 +1,446 @@
 import AppKit
 import SwiftUI
 
-enum AnalyticsTab: Hashable {
-    case today
-    case history
-    case stats
-
-    var title: String {
-        switch self {
-        case .today: "Today"
-        case .history: "History"
-        case .stats: "Stats"
-        }
-    }
-
-    var icon: String {
-        switch self {
-        case .today: "sun.max"
-        case .history: "calendar"
-        case .stats: "chart.bar.xaxis"
-        }
-    }
+enum AnalyticsTab: String, CaseIterable {
+    case today = "Today"
+    case week = "Week"
+    case month = "Month"
 }
 
-struct AnalyticsSection<Content: View>: View {
-    var title: String?
-    var detail: String?
-    let content: Content
+/// Analytics: Today / Week / Month. Narrow windows stack everything in one
+/// column; at 720pt and wider the chart sits left and the list sits right.
+struct ProgressBoardView: View {
+    @Environment(AppModel.self) private var model
+    @State private var tab: AnalyticsTab
+    /// Any day inside the week being shown.
+    @State private var weekDay = Date()
+    /// The selected day in the month calendar; its month is the month shown.
+    @State private var monthDay = Date()
 
-    init(title: String? = nil, detail: String? = nil, @ViewBuilder content: () -> Content) {
-        self.title = title
-        self.detail = detail
-        self.content = content()
+    private let calendar = Calendar.current
+
+    init(initialTab: AnalyticsTab = .today) {
+        _tab = State(initialValue: initialTab)
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 14) {
-            if title != nil || detail != nil {
-                HStack(alignment: .firstTextBaseline) {
-                    if let title {
-                        Text(title)
-                            .font(Typeface.display(18, weight: .semibold))
-                            .foregroundStyle(Palette.ink)
+        GeometryReader { geo in
+            VStack(spacing: 0) {
+                ScreenHeader(title: "Analytics", back: { model.closeProgress() })
+                if geo.size.width >= 720 {
+                    HStack(alignment: .top, spacing: 56) {
+                        ScrollView {
+                            VStack(alignment: .leading, spacing: 24) {
+                                tabPicker.frame(maxWidth: 360)
+                                summary(wide: true)
+                            }
+                            .padding(.bottom, 32)
+                        }
+                        ScrollView {
+                            detail.padding(.top, 6).padding(.bottom, 32)
+                        }
+                        .frame(width: (geo.size.width - 96 - 56) / 2.4)
                     }
-                    Spacer()
-                    if let detail {
-                        Text(detail)
-                            .font(.system(size: 11, weight: .medium))
-                            .foregroundStyle(Palette.inkSoft)
+                    .padding(.horizontal, 48)
+                    .padding(.top, 8)
+                } else {
+                    ScrollView {
+                        VStack(alignment: .leading, spacing: 22) {
+                            tabPicker
+                            summary(wide: false)
+                            detail
+                        }
+                        .padding(.horizontal, 28)
+                        .padding(.top, 8)
+                        .padding(.bottom, 24)
+                        .frame(maxWidth: 520)
+                        .frame(maxWidth: .infinity)
                     }
                 }
             }
-            content
         }
-        .padding(20)
-        .background(Palette.cream.opacity(0.82), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
-        .overlay(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .stroke(Palette.ink.opacity(0.08), lineWidth: 1)
-        )
-        .shadow(color: Palette.ink.opacity(0.05), radius: 10, y: 4)
-    }
-}
-
-struct AnalyticsMetric: View {
-    let label: String
-    let value: String
-    let color: Color
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Text(label.uppercased())
-                .font(.system(size: 10, weight: .bold))
-                .tracking(0.8)
-                .foregroundStyle(Palette.inkSoft)
-            Text(value)
-                .font(.system(size: 24, weight: .bold, design: .rounded))
-                .foregroundStyle(color)
-                .lineLimit(1)
-                .minimumScaleFactor(0.7)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.horizontal, 14)
-        .padding(.vertical, 13)
-        .background(Palette.paper.opacity(0.48), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
-        .overlay(
-            RoundedRectangle(cornerRadius: 12, style: .continuous)
-                .stroke(Palette.ink.opacity(0.06), lineWidth: 1)
-        )
-    }
-}
-
-/// The one summary row used by every tab, so Today, History and Stats read the same.
-struct AnalyticsSummaryStrip: View {
-    let productive: TimeInterval
-    let distracted: TimeInterval
-    let sessions: Int
-
-    private var score: String {
-        let total = productive + distracted
-        guard total > 0 else { return "—" }
-        return "\(Int((productive / total * 100).rounded()))%"
+        .background(Palette.ground)
+        .foregroundStyle(Palette.ink)
+        .preferredColorScheme(.light)
     }
 
-    var body: some View {
-        HStack(alignment: .top, spacing: 10) {
-            AnalyticsMetric(label: "Focus score", value: score, color: Palette.ink)
-            AnalyticsMetric(label: "Productive", value: Self.duration(productive), color: Palette.goodText)
-            AnalyticsMetric(label: "Distracted", value: Self.duration(distracted), color: Palette.emberText)
-            AnalyticsMetric(label: "Sessions", value: "\(sessions)", color: Palette.waxText)
-        }
-    }
+    // MARK: - Shared pieces
 
-    static func duration(_ seconds: TimeInterval) -> String {
-        let minutes = Int(seconds / 60)
-        if minutes < 60 { return "\(minutes)m" }
-        return "\(minutes / 60)h \(minutes % 60)m"
-    }
-}
-
-struct AnalyticsTabPicker: View {
-    @Binding var selection: AnalyticsTab
-
-    var body: some View {
-        HStack(spacing: 3) {
-            ForEach([AnalyticsTab.today, .history, .stats], id: \.self) { tab in
-                Button {
-                    withAnimation(.easeInOut(duration: 0.18)) {
-                        selection = tab
-                    }
-                } label: {
-                    HStack(spacing: 6) {
-                        Image(systemName: tab.icon)
-                            .font(.system(size: 11, weight: .semibold))
-                        Text(tab.title)
-                            .font(.system(size: 12, weight: .semibold))
-                    }
-                    .foregroundStyle(selection == tab ? Palette.cream : Palette.inkSoft)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 8)
-                    .background(
-                        Capsule()
-                            .fill(selection == tab ? Palette.ink : .clear)
-                    )
+    private var tabPicker: some View {
+        HStack(spacing: 0) {
+            ForEach(AnalyticsTab.allCases, id: \.self) { option in
+                let selected = tab == option
+                Button { tab = option } label: {
+                    Text(option.rawValue)
+                        .font(.system(size: 14, weight: selected ? .semibold : .regular))
+                        .frame(maxWidth: .infinity, minHeight: 34)
+                        .background {
+                            if selected {
+                                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                                    .fill(Palette.field)
+                                    .shadow(color: Palette.ink.opacity(0.15), radius: 1, y: 1)
+                            }
+                        }
+                        .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
-                .accessibilityAddTraits(selection == tab ? .isSelected : [])
+                .accessibilityAddTraits(selected ? .isSelected : [])
             }
         }
-        .padding(4)
-        .background(Palette.cream.opacity(0.72), in: Capsule())
-        .overlay(Capsule().stroke(Palette.ink.opacity(0.08), lineWidth: 1))
-    }
-}
-
-struct AnalyticsActivityBreakdown: View {
-    let activities: [ActivityStat]
-    var limit: Int = 5
-
-    private var totalSeconds: TimeInterval {
-        activities.reduce(0) { $0 + $1.totalSeconds }
+        .padding(3)
+        .background(Palette.ink.opacity(0.08), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
     }
 
-    private var applications: [ActivityStat] {
-        Array(activities.filter { $0.kind == .application }.prefix(limit))
-    }
-
-    private var websites: [ActivityStat] {
-        Array(activities.filter { $0.kind == .website }.prefix(limit))
-    }
-
-    var body: some View {
-        if applications.isEmpty || websites.isEmpty {
-            activityColumn(
-                title: applications.isEmpty ? "Websites" : "Apps",
-                caption: applications.isEmpty ? "visited sites" : "tracked apps",
-                activities: applications.isEmpty ? websites : applications
-            )
-        } else {
-            HStack(alignment: .top, spacing: 22) {
-                activityColumn(title: "Apps", caption: "tracked apps", activities: applications)
-                activityColumn(title: "Websites", caption: "visited sites", activities: websites)
-            }
+    @ViewBuilder
+    private func summary(wide: Bool) -> some View {
+        switch tab {
+        case .today: todaySummary
+        case .week: weekSummary(wide: wide)
+        case .month: monthSummary
         }
     }
 
-    private func activityColumn(
-        title: String,
-        caption: String,
-        activities: [ActivityStat]
-    ) -> some View {
-        VStack(alignment: .leading, spacing: 4) {
-            HStack(alignment: .firstTextBaseline) {
-                Text(title)
-                    .font(Typeface.display(17, weight: .semibold))
-                Spacer()
-                Text(caption)
-                    .font(.system(size: 10, weight: .medium))
-                    .foregroundStyle(Palette.inkSoft)
-            }
+    @ViewBuilder
+    private var detail: some View {
+        switch tab {
+        case .today: timeList(model.progress.activityTotals(on: Date()))
+        case .week: timeList(model.progress.activityTotals(in: week))
+        case .month: selectedDaySessions
+        }
+    }
 
-            ForEach(Array(activities.enumerated()), id: \.offset) { index, activity in
-                activityRow(activity)
-                if index < activities.count - 1 {
-                    Divider().opacity(0.22)
+    private func bigNumber(_ seconds: TimeInterval) -> some View {
+        Text(Self.duration(seconds))
+            .font(.system(size: 44, weight: .bold))
+            .monospacedDigit()
+    }
+
+    private func muted(_ text: String) -> some View {
+        Text(text).font(.system(size: 15)).foregroundStyle(Palette.muted)
+    }
+
+    private func swatch(_ color: Color, _ text: String) -> some View {
+        HStack(spacing: 6) {
+            RoundedRectangle(cornerRadius: 3).fill(color).frame(width: 10, height: 10)
+            Text(text)
+        }
+    }
+
+    /// ‹ title › row for stepping through weeks or months. Can't step into the future.
+    private func stepper(_ title: String, unit: String, canGoForward: Bool, step: @escaping (Int) -> Void) -> some View {
+        HStack {
+            IconButton(systemName: "chevron.left", label: "Previous \(unit)") { step(-1) }
+            Spacer()
+            Text(title).font(.system(size: 15, weight: .semibold))
+            Spacer()
+            IconButton(systemName: "chevron.right", label: "Next \(unit)") { step(1) }
+                .disabled(!canGoForward)
+                .opacity(canGoForward ? 1 : 0.3)
+        }
+        .padding(.horizontal, -12)
+    }
+
+    private func timeList(_ activities: [ActivityStat]) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            SectionLabel("Where your time went")
+            if activities.isEmpty {
+                muted("Nothing tracked yet.")
+            } else {
+                VStack(spacing: 0) {
+                    ForEach(activities.prefix(8)) { activity in
+                        HStack(spacing: 12) {
+                            AnalyticsActivityLogo(activity: activity)
+                            Text(activity.name)
+                                .font(.system(size: 15))
+                                .lineLimit(1)
+                                .truncationMode(.middle)
+                            Spacer(minLength: 8)
+                            if activity.distractedSeconds > activity.focusedSeconds {
+                                Text("distraction")
+                                    .font(.system(size: 13, weight: .semibold))
+                                    .foregroundStyle(Palette.emberText)
+                            }
+                            Text(Self.duration(activity.totalSeconds))
+                                .font(.system(size: 15))
+                                .monospacedDigit()
+                        }
+                        .frame(minHeight: 48)
+                        .accessibilityElement(children: .combine)
+                        RowLine()
+                    }
                 }
             }
         }
-        .frame(maxWidth: .infinity, alignment: .topLeading)
     }
 
-    private func activityRow(_ activity: ActivityStat) -> some View {
-        let share = totalSeconds > 0 ? min(1, activity.totalSeconds / totalSeconds) : 0
-        let focusedShare = activity.totalSeconds > 0 ? activity.focusedSeconds / activity.totalSeconds : 0
+    // MARK: - Today
 
-        return VStack(alignment: .leading, spacing: 5) {
-            HStack(spacing: 8) {
-                AnalyticsActivityLogo(activity: activity)
-                Text(activity.name)
-                    .font(.system(size: 13, weight: .semibold))
-                    .lineLimit(1)
-                    .truncationMode(.middle)
-                Spacer(minLength: 8)
-                Text(AnalyticsSummaryStrip.duration(activity.totalSeconds))
-                    .font(.system(size: 12, weight: .bold, design: .rounded))
-                    .foregroundStyle(Palette.ink)
-            }
-
-            // Bar length is this row's share of all tracked time; inside it the
-            // dark green part is focused time and the orange part distracted.
-            // The two differ in lightness as well as hue, and the caption below
-            // spells out both numbers, so color is never the only signal.
-            GeometryReader { proxy in
-                let barWidth = max(6, proxy.size.width * share)
-                ZStack(alignment: .leading) {
-                    Capsule().fill(Palette.ink.opacity(0.08))
+    private var todaySummary: some View {
+        let day = model.progress.focus(on: Date())
+        let count = model.progress.sessions(on: Date()).count
+        let focused = Int(day.focusPercent.rounded())
+        return VStack(alignment: .leading, spacing: 4) {
+            bigNumber(day.focusedSeconds)
+            if day.totalSeconds == 0 {
+                muted("No focus yet today.")
+            } else {
+                muted("focused across \(count) session\(count == 1 ? "" : "s")")
+                GeometryReader { bar in
                     HStack(spacing: 0) {
-                        Rectangle()
-                            .fill(Palette.goodText)
-                            .frame(width: barWidth * focusedShare)
-                        Rectangle()
-                            .fill(Palette.ember)
+                        Palette.ink.frame(width: bar.size.width * day.focusedSeconds / day.totalSeconds)
+                        Palette.distracted
+                    }
+                }
+                .frame(height: 14)
+                .clipShape(Capsule())
+                .padding(.top, 12)
+                .accessibilityElement()
+                .accessibilityLabel("\(focused) percent focused, \(100 - focused) percent distracted")
+                HStack(spacing: 18) {
+                    swatch(Palette.ink, "Focused \(focused)%")
+                    swatch(Palette.distracted, "Distracted \(100 - focused)%")
+                }
+                .font(.system(size: 13))
+                .foregroundStyle(Palette.muted)
+                .padding(.top, 4)
+                .accessibilityHidden(true)
+            }
+        }
+    }
+
+    // MARK: - Week
+
+    private var week: DateInterval {
+        calendar.dateInterval(of: .weekOfYear, for: weekDay) ?? DateInterval(start: weekDay, duration: 7 * 86_400)
+    }
+
+    private func weekSummary(wide: Bool) -> some View {
+        let days = (0..<7).compactMap { calendar.date(byAdding: .day, value: $0, to: week.start) }
+        let focus = days.map { model.progress.focus(on: $0) }
+        let total = focus.reduce(0) { $0 + $1.focusedSeconds }
+        let goal = model.prefs.dailyGoalMinutes
+        let met = focus.filter { goal > 0 && $0.focusMinutes >= goal }.count
+        let isThisWeek = week.contains(Date())
+        let range = "\(week.start.formatted(.dateTime.month(.abbreviated).day())) – "
+            + (days.last ?? week.start).formatted(.dateTime.month(.abbreviated).day())
+        let best = zip(days, focus).max { $0.1.focusedSeconds < $1.1.focusedSeconds }
+
+        return VStack(alignment: .leading, spacing: 4) {
+            stepper(range, unit: "week", canGoForward: !isThisWeek) { step in
+                weekDay = min(Date(), calendar.date(byAdding: .day, value: 7 * step, to: weekDay) ?? weekDay)
+            }
+            bigNumber(total)
+            if total == 0 {
+                muted(isThisWeek ? "No focus yet this week." : "No focus this week.")
+            } else {
+                muted(goal > 0 ? "focused \u{00B7} goal met \(met) of 7 days" : "focused")
+                weekChart(days: days, focus: focus, height: wide ? 210 : 130, barWidth: wide ? 44 : 28)
+                    .padding(.top, 18)
+                HStack(spacing: 18) {
+                    swatch(Palette.ink, "Focused")
+                    swatch(Palette.distracted, "Distracted")
+                    Spacer()
+                    if let best {
+                        Text("Best day: \(best.0.formatted(.dateTime.weekday(.wide)))")
+                    }
+                }
+                .font(.system(size: 13))
+                .foregroundStyle(Palette.muted)
+                .padding(.top, 8)
+            }
+        }
+    }
+
+    private func weekChart(days: [Date], focus: [DayFocus], height: CGFloat, barWidth: CGFloat) -> some View {
+        let goal = Double(model.prefs.dailyGoalMinutes)
+        let scale = max(focus.map { $0.totalSeconds / 60 }.max() ?? 0, goal * 1.2, 1)
+        func barHeight(_ seconds: TimeInterval) -> CGFloat { height * CGFloat(seconds / 60 / scale) }
+
+        return VStack(spacing: 6) {
+            HStack(alignment: .bottom, spacing: 6) {
+                ForEach(Array(zip(days, focus)), id: \.0) { day, value in
+                    VStack(spacing: 0) {
+                        Palette.distracted.frame(height: barHeight(value.distractedSeconds))
+                        Palette.ink.frame(height: barHeight(value.focusedSeconds))
                     }
                     .frame(width: barWidth)
-                    .clipShape(Capsule())
+                    .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
+                    .frame(maxWidth: .infinity)
+                    .accessibilityElement()
+                    .accessibilityLabel(day.formatted(.dateTime.weekday(.wide)))
+                    .accessibilityValue(
+                        "\(Self.duration(value.focusedSeconds)) focused, \(Self.duration(value.distractedSeconds)) distracted"
+                    )
                 }
             }
-            .frame(height: 6)
-            .accessibilityHidden(true)
-
-            HStack {
-                Text("\(AnalyticsSummaryStrip.duration(activity.focusedSeconds)) focused")
-                    .foregroundStyle(Palette.goodText)
-                Text("\(AnalyticsSummaryStrip.duration(activity.distractedSeconds)) distracted")
-                    .foregroundStyle(activity.distractedSeconds > 0 ? Palette.emberText : Palette.inkSoft)
-                Spacer()
-                Text("\(Int((share * 100).rounded()))% of time")
-                    .foregroundStyle(Palette.inkSoft)
+            .frame(height: height, alignment: .bottom)
+            .overlay(alignment: .bottom) {
+                if goal > 0 {
+                    HLine()
+                        .stroke(Palette.muted, style: StrokeStyle(lineWidth: 1.5, dash: [4, 3]))
+                        .frame(height: 1.5)
+                        .overlay(alignment: .bottomTrailing) {
+                            Text("goal \(Self.goalText(Int(goal)))")
+                                .font(.system(size: 12))
+                                .foregroundStyle(Palette.muted)
+                                .padding(.bottom, 4)
+                        }
+                        .offset(y: -barHeight(goal * 60))
+                        .accessibilityHidden(true)
+                }
             }
-            .font(.system(size: 10, weight: .medium))
+            HStack(spacing: 6) {
+                ForEach(days, id: \.self) { day in
+                    let today = calendar.isDateInToday(day)
+                    Text(day.formatted(.dateTime.weekday(.abbreviated)))
+                        .font(.system(size: 13, weight: today ? .bold : .regular))
+                        .foregroundStyle(today ? Palette.ink : Palette.muted)
+                        .frame(maxWidth: .infinity)
+                }
+            }
+            .accessibilityHidden(true)
         }
-        .padding(.vertical, 9)
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel(
-            "\(activity.name), \(AnalyticsSummaryStrip.duration(activity.totalSeconds)) total, "
-            + "\(AnalyticsSummaryStrip.duration(activity.focusedSeconds)) focused, "
-            + "\(AnalyticsSummaryStrip.duration(activity.distractedSeconds)) distracted"
-        )
+    }
+
+    // MARK: - Month
+
+    private var monthSummary: some View {
+        let interval = calendar.dateInterval(of: .month, for: monthDay) ?? DateInterval(start: monthDay, duration: 0)
+        let count = calendar.range(of: .day, in: .month, for: monthDay)?.count ?? 30
+        let dates = (0..<count).compactMap { calendar.date(byAdding: .day, value: $0, to: interval.start) }
+        let focus = dates.map { model.progress.focus(on: $0) }
+        let total = focus.reduce(0) { $0 + $1.focusedSeconds }
+        let focusedDays = focus.filter { $0.focusedSeconds > 0 }.count
+        let lead = (calendar.component(.weekday, from: interval.start) - calendar.firstWeekday + 7) % 7
+        let symbols = calendar.veryShortWeekdaySymbols
+        let headers = Array(symbols[(calendar.firstWeekday - 1)...] + symbols[..<(calendar.firstWeekday - 1)])
+
+        return VStack(alignment: .leading, spacing: 4) {
+            stepper(monthDay.formatted(.dateTime.month(.wide).year()), unit: "month",
+                    canGoForward: !interval.contains(Date())) { step in
+                monthDay = min(Date(), calendar.date(byAdding: .month, value: step, to: monthDay) ?? monthDay)
+            }
+            HStack(alignment: .firstTextBaseline, spacing: 10) {
+                bigNumber(total)
+                muted(focusedDays == 0 ? "No focus this month." : "focused on \(focusedDays) day\(focusedDays == 1 ? "" : "s")")
+            }
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 5), count: 7), spacing: 5) {
+                ForEach(Array(headers.enumerated()), id: \.offset) { _, symbol in
+                    Text(symbol)
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundStyle(Palette.muted)
+                        .accessibilityHidden(true)
+                }
+                ForEach(0..<lead, id: \.self) { _ in Color.clear.frame(height: 44) }
+                ForEach(Array(zip(dates, focus)), id: \.0) { date, value in
+                    dayCell(date, value)
+                }
+            }
+            .padding(.top, 16)
+            HStack(spacing: 6) {
+                Text("Less")
+                ForEach(1...4, id: \.self) { level in
+                    RoundedRectangle(cornerRadius: 4).fill(Self.shade(level)).frame(width: 14, height: 14)
+                }
+                Text("More focus")
+            }
+            .font(.system(size: 12))
+            .foregroundStyle(Palette.muted)
+            .padding(.top, 10)
+            .accessibilityHidden(true)
+        }
+    }
+
+    private func dayCell(_ date: Date, _ value: DayFocus) -> some View {
+        let selected = calendar.isDate(date, inSameDayAs: monthDay)
+        let level = Self.level(minutes: value.focusMinutes, goal: model.prefs.dailyGoalMinutes)
+        return Button { monthDay = date } label: {
+            Text("\(calendar.component(.day, from: date))")
+                .font(.system(size: 14, weight: calendar.isDateInToday(date) ? .bold : .regular))
+                .monospacedDigit()
+                .foregroundStyle(level >= 3 ? Palette.field : Palette.ink)
+                .frame(maxWidth: .infinity, minHeight: 44)
+                .background(Self.shade(level), in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+                .overlay {
+                    if selected {
+                        RoundedRectangle(cornerRadius: 10, style: .continuous)
+                            .stroke(Palette.ink, lineWidth: 2)
+                            .padding(-3.5)
+                    }
+                }
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(date.formatted(date: .complete, time: .omitted))
+        .accessibilityValue(value.focusedSeconds > 0 ? "\(Self.duration(value.focusedSeconds)) focused" : "No focus")
+        .accessibilityAddTraits(selected ? .isSelected : [])
+    }
+
+    private var selectedDaySessions: some View {
+        let records = model.progress.sessions(on: monthDay)
+        let focused = model.progress.focus(on: monthDay).focusedSeconds
+        return VStack(alignment: .leading, spacing: 8) {
+            SectionLabel(monthDay.formatted(.dateTime.weekday(.wide).month(.abbreviated).day())
+                + " \u{00B7} \(Self.duration(focused))")
+            if records.isEmpty {
+                muted("No sessions on this day.")
+            } else {
+                VStack(spacing: 0) {
+                    ForEach(records) { record in
+                        let length = record.durationMinutes <= 0 ? "Stopwatch" : "\(record.durationMinutes) min"
+                        SessionRow(
+                            record: record,
+                            detail: "\(length) \u{00B7} \(record.strategy.title) \u{00B7} "
+                                + record.date.formatted(date: .omitted, time: .shortened)
+                        )
+                        RowLine()
+                    }
+                }
+            }
+        }
+    }
+
+    // MARK: - Formatting
+
+    /// "58m", "1h 05m".
+    static func duration(_ seconds: TimeInterval) -> String {
+        let minutes = Int(seconds / 60)
+        return minutes < 60 ? "\(minutes)m" : String(format: "%dh %02dm", minutes / 60, minutes % 60)
+    }
+
+    /// "2h" for whole hours, otherwise like `duration`.
+    private static func goalText(_ minutes: Int) -> String {
+        minutes >= 60 && minutes % 60 == 0 ? "\(minutes / 60)h" : duration(TimeInterval(minutes * 60))
+    }
+
+    /// 0 = nothing, 1–4 = share of the daily goal (2h when no goal is set).
+    private static func level(minutes: Int, goal: Int) -> Int {
+        guard minutes > 0 else { return 0 }
+        let share = Double(minutes) / Double(goal > 0 ? goal : 120)
+        return share < 0.25 ? 1 : share < 0.6 ? 2 : share < 1 ? 3 : 4
+    }
+
+    private static func shade(_ level: Int) -> Color {
+        switch level {
+        case 1: Color(red: 0.890, green: 0.855, blue: 0.796)
+        case 2: Color(red: 0.725, green: 0.678, blue: 0.608)
+        case 3: Color(red: 0.431, green: 0.388, blue: 0.349)
+        case 4: Palette.ink
+        default: Palette.ink.opacity(0.05)
+        }
     }
 }
 
+private struct HLine: Shape {
+    func path(in rect: CGRect) -> Path {
+        Path { path in
+            path.move(to: CGPoint(x: rect.minX, y: rect.midY))
+            path.addLine(to: CGPoint(x: rect.maxX, y: rect.midY))
+        }
+    }
+}
+
+/// App icon or website favicon for an activity row.
 private struct AnalyticsActivityLogo: View {
     @Environment(AppModel.self) private var model
     let activity: ActivityStat
@@ -308,14 +479,13 @@ private struct AnalyticsActivityLogo: View {
                 Image(nsImage: appIcon)
                     .resizable()
                     .scaledToFit()
-                    .padding(3)
             } else if let websiteLogoURL {
                 AsyncImage(url: websiteLogoURL) { phase in
                     if case .success(let image) = phase {
                         image
                             .resizable()
                             .scaledToFit()
-                            .padding(4)
+                            .padding(3)
                     } else {
                         fallbackLogo
                     }
@@ -324,363 +494,16 @@ private struct AnalyticsActivityLogo: View {
                 fallbackLogo
             }
         }
-        .frame(width: 28, height: 28)
-        .background(Palette.paper.opacity(0.75), in: RoundedRectangle(cornerRadius: 8, style: .continuous))
-        .overlay(
-            RoundedRectangle(cornerRadius: 8, style: .continuous)
-                .stroke(Palette.ink.opacity(0.08), lineWidth: 1)
-        )
+        .frame(width: 24, height: 24)
+        .background(Palette.field, in: RoundedRectangle(cornerRadius: 6, style: .continuous))
         .accessibilityHidden(true)
     }
 
     /// Shown while a favicon loads, or when a site has none.
     private var fallbackLogo: some View {
-        Text(activity.kind == .website
-            ? String(activity.name.first ?? "?").uppercased()
-            : String(activity.name.prefix(2)).uppercased())
-            .font(.system(size: activity.kind == .website ? 12 : 9, weight: .bold, design: .rounded))
-            .foregroundStyle(activity.kind == .website ? Palette.emberText : Palette.inkSoft)
+        Text(String(activity.name.first ?? "?").uppercased())
+            .font(.system(size: 11, weight: .bold))
+            .foregroundStyle(Palette.muted)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
-}
-
-struct ProgressBoardView: View {
-    @Environment(AppModel.self) private var model
-    @State private var month = Date()
-    @State private var selectedDay = Date()
-    @State private var tab: AnalyticsTab
-
-    init(initialTab: AnalyticsTab = .today) {
-        _tab = State(initialValue: initialTab)
-    }
-
-    var body: some View {
-        VStack(spacing: 0) {
-            header
-            Divider().opacity(0.15)
-            switch tab {
-            case .today:
-                todayContent
-            case .history:
-                historyContent
-            case .stats:
-                StatsBoardView()
-            }
-        }
-        .background(Palette.paper)
-        .foregroundStyle(Palette.ink)
-        .preferredColorScheme(.light)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-    }
-
-    private var header: some View {
-        HStack(spacing: 12) {
-            Image(model.prefs.companion.assetName(for: .idle))
-                .resizable()
-                .scaledToFit()
-                .frame(width: 46, height: 46)
-
-            VStack(alignment: .leading, spacing: 2) {
-                Text("Analytics")
-                    .font(Typeface.display(25, weight: .semibold))
-                Text("Your focus, without the noise.")
-                    .font(.system(size: 12, weight: .medium))
-                    .foregroundStyle(Palette.inkSoft)
-            }
-
-            Spacer()
-            AnalyticsTabPicker(selection: $tab)
-        }
-        .padding(.horizontal, 22)
-        .padding(.top, 18)
-        .padding(.bottom, 16)
-    }
-
-    private var todayContent: some View {
-        let day = model.progress.focus(on: Date())
-        let activities = model.progress.activityTotals(on: Date())
-        let sessions = model.progress.sessions(on: Date())
-
-        return ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
-                todayOverview(day)
-
-                AnalyticsSummaryStrip(
-                    productive: day.focusedSeconds,
-                    distracted: day.distractedSeconds,
-                    sessions: day.sessions
-                )
-
-                AnalyticsSection(title: "Where your time went", detail: "apps and websites") {
-                    if activities.isEmpty {
-                        Text("Finish a focus session and Qasim will show the apps and sites that shaped your day.")
-                            .font(.system(size: 13))
-                            .foregroundStyle(Palette.inkSoft)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.vertical, 4)
-                    } else {
-                        AnalyticsActivityBreakdown(activities: activities)
-                    }
-                }
-
-                sessionSection(title: "Sessions", records: sessions)
-            }
-            .padding(24)
-        }
-    }
-
-    private func todayOverview(_ day: DayFocus) -> some View {
-        let goalMinutes = model.prefs.dailyGoalMinutes
-        let progress = goalMinutes > 0 ? min(1, Double(day.focusMinutes) / Double(goalMinutes)) : 0
-        let goalLabel = goalMinutes > 0
-            ? "\(day.focusMinutes) / \(goalMinutes) min goal"
-            : "No daily goal set"
-
-        return AnalyticsSection {
-            HStack(alignment: .top, spacing: 24) {
-                VStack(alignment: .leading, spacing: 7) {
-                    Text("TODAY'S FOCUS")
-                        .font(.system(size: 10, weight: .bold))
-                        .tracking(1.0)
-                        .foregroundStyle(Palette.inkSoft)
-                    Text(AnalyticsSummaryStrip.duration(day.focusedSeconds))
-                        .font(.system(size: 38, weight: .bold, design: .rounded))
-                        .foregroundStyle(Palette.ink)
-                    Text(todayDate)
-                        .font(.system(size: 12, weight: .medium))
-                        .foregroundStyle(Palette.inkSoft)
-                }
-
-                Spacer(minLength: 12)
-
-                VStack(alignment: .trailing, spacing: 10) {
-                    Text(day.totalSeconds > 0 ? "\(Int(day.focusPercent.rounded()))% focused" : "Ready when you are")
-                        .font(.system(size: 12, weight: .semibold))
-                        .foregroundStyle(day.totalSeconds > 0 ? Palette.goodText : Palette.inkSoft)
-                    if goalMinutes > 0 {
-                        ProgressView(value: progress)
-                            .progressViewStyle(.linear)
-                            .tint(Palette.ember)
-                            .frame(width: 190)
-                        Text(goalLabel)
-                            .font(.system(size: 11, weight: .medium))
-                            .foregroundStyle(Palette.inkSoft)
-                    } else {
-                        Text(goalLabel)
-                            .font(.system(size: 11, weight: .medium))
-                            .foregroundStyle(Palette.inkSoft)
-                    }
-                }
-            }
-        }
-    }
-
-    private var historyContent: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
-                AnalyticsSection(title: monthTitle, detail: "Select a day") {
-                    HStack(spacing: 10) {
-                        Spacer()
-                        Button("Today") {
-                            month = Date()
-                            selectedDay = Date()
-                        }
-                        .buttonStyle(.plain)
-                        .font(.system(size: 12, weight: .semibold))
-                        .foregroundStyle(Palette.emberText)
-                        monthButton("chevron.left", label: "Previous month", offset: -1)
-                        monthButton("chevron.right", label: "Next month", offset: 1)
-                    }
-                    calendarGrid
-                }
-
-                selectedDaySection
-            }
-            .padding(24)
-        }
-    }
-
-    private func monthButton(_ icon: String, label: String, offset: Int) -> some View {
-        Button {
-            month = Calendar.current.date(byAdding: .month, value: offset, to: month) ?? month
-        } label: {
-            Image(systemName: icon)
-                .font(.system(size: 12, weight: .semibold))
-                .foregroundStyle(Palette.ink)
-                .frame(width: 28, height: 28)
-                .background(Palette.ink.opacity(0.06), in: Circle())
-                .contentShape(Circle())
-        }
-        .buttonStyle(.plain)
-        .accessibilityLabel(label)
-    }
-
-    private var calendarGrid: some View {
-        let cells = model.progress.monthGrid(containing: month)
-        return LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 6), count: 7), spacing: 6) {
-            ForEach(Array(["S", "M", "T", "W", "T", "F", "S"].enumerated()), id: \.offset) { _, day in
-                Text(day)
-                    .font(.system(size: 10, weight: .semibold))
-                    .foregroundStyle(Palette.inkSoft)
-                    .frame(maxWidth: .infinity)
-                    .padding(.bottom, 2)
-            }
-            ForEach(Array(cells.enumerated()), id: \.offset) { _, cell in
-                dayCell(cell)
-            }
-        }
-    }
-
-    private func dayCell(_ cell: DayFocus?) -> some View {
-        guard let cell, let date = ProgressStore.date(from: cell.day) else {
-            return AnyView(Color.clear.frame(height: 46))
-        }
-        let selected = ProgressStore.stamp(selectedDay) == cell.day
-        let hasData = cell.totalSeconds > 0
-        let dayNumber = Calendar.current.component(.day, from: date)
-        let intensity = hasData ? min(0.85, 0.18 + cell.focusedSeconds / 9_000) : 0
-
-        return AnyView(
-            Button {
-                selectedDay = date
-            } label: {
-                VStack(spacing: 3) {
-                    Text("\(dayNumber)")
-                        .font(.system(size: 12, weight: selected ? .bold : .medium))
-                        .foregroundStyle(Palette.ink)
-                    Text(hasData ? AnalyticsSummaryStrip.duration(cell.focusedSeconds) : " ")
-                        .font(.system(size: 9, weight: .semibold))
-                        // Full ink: the soft ink drops below 4.5:1 on the darker greens.
-                        .foregroundStyle(Palette.ink)
-                }
-                .frame(maxWidth: .infinity)
-                .frame(height: 46)
-                .background(
-                    RoundedRectangle(cornerRadius: 8, style: .continuous)
-                        .fill(hasData ? Palette.good.opacity(intensity) : Palette.paperDeep.opacity(0.28))
-                )
-                .overlay(
-                    RoundedRectangle(cornerRadius: 8, style: .continuous)
-                        .stroke(selected ? Palette.ink : Palette.ink.opacity(0.07), lineWidth: selected ? 2 : 1)
-                )
-            }
-            .buttonStyle(.plain)
-            .accessibilityLabel(
-                "\(date.formatted(date: .complete, time: .omitted)), "
-                + (hasData ? "\(AnalyticsSummaryStrip.duration(cell.focusedSeconds)) focused" : "no focus time")
-            )
-            .accessibilityAddTraits(selected ? .isSelected : [])
-        )
-    }
-
-    private var selectedDaySection: some View {
-        let day = model.progress.focus(on: selectedDay)
-        let records = model.progress.sessions(on: selectedDay)
-        let activities = model.progress.activityTotals(on: selectedDay)
-
-        return AnalyticsSection(
-            title: selectedDayTitle,
-            detail: records.isEmpty ? "No completed sessions" : "\(records.count) session\(records.count == 1 ? "" : "s")"
-        ) {
-            AnalyticsSummaryStrip(
-                productive: day.focusedSeconds,
-                distracted: day.distractedSeconds,
-                sessions: day.sessions
-            )
-
-            if records.isEmpty {
-                Text("No sessions on this day.")
-                    .font(.system(size: 13))
-                    .foregroundStyle(Palette.inkSoft)
-            } else {
-                Divider().opacity(0.3)
-                ForEach(records) { record in
-                    sessionRow(record)
-                }
-            }
-
-            if !activities.isEmpty {
-                Divider().opacity(0.3)
-                AnalyticsActivityBreakdown(activities: activities, limit: 4)
-            }
-        }
-    }
-
-    private func sessionSection(title: String, records: [SessionRecord]) -> some View {
-        AnalyticsSection(title: title, detail: records.isEmpty ? nil : "\(records.count) logged") {
-            if records.isEmpty {
-                Text("No sessions yet.")
-                    .font(.system(size: 13))
-                    .foregroundStyle(Palette.inkSoft)
-            } else {
-                ForEach(records) { record in
-                    sessionRow(record)
-                }
-            }
-        }
-    }
-
-    private func sessionRow(_ record: SessionRecord) -> some View {
-        HStack(spacing: 10) {
-            VStack(alignment: .leading, spacing: 3) {
-                Text(record.taskTitle.isEmpty ? "Untitled session" : record.taskTitle)
-                    .font(.system(size: 13, weight: .semibold))
-                    .lineLimit(1)
-                Text(detailLine(for: record))
-                    .font(.system(size: 11))
-                    .foregroundStyle(Palette.inkSoft)
-            }
-            Spacer()
-            Text(scoreLabel(record.focusPercent, hasData: record.totalSeconds > 0))
-                .font(.system(size: 13, weight: .semibold, design: .rounded))
-                .foregroundStyle(record.focusPercent >= 50 ? Palette.goodText : Palette.emberText)
-            if model.session.phase != .running && model.session.phase != .paused {
-                Button("Restart") { model.restartSession(record) }
-                    .font(.system(size: 11, weight: .semibold))
-                    .buttonStyle(.plain)
-                    .foregroundStyle(Palette.ink)
-                    .padding(.horizontal, 10)
-                    .padding(.vertical, 5)
-                    .overlay(Capsule().stroke(Palette.ink.opacity(0.3), lineWidth: 1))
-                    .help("Start a new session with the same task and settings")
-            }
-        }
-        .padding(.vertical, 3)
-    }
-
-    private var monthTitle: String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MMMM yyyy"
-        return formatter.string(from: month)
-    }
-
-    private var todayDate: String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "EEEE, MMMM d"
-        return formatter.string(from: Date())
-    }
-
-    private var selectedDayTitle: String {
-        if Calendar.current.isDateInToday(selectedDay) { return "Today" }
-        let formatter = DateFormatter()
-        formatter.dateFormat = "EEEE, MMMM d"
-        return formatter.string(from: selectedDay)
-    }
-
-    private func detailLine(for record: SessionRecord) -> String {
-        let length = record.durationMinutes <= 0 ? "Stopwatch" : "\(record.durationMinutes)m"
-        let time = Self.relative.localizedString(for: record.date, relativeTo: Date())
-        let marker = record.finished ? "✓" : "•"
-        return "\(marker) \(length) · \(record.strategy.title) · \(time)"
-    }
-
-    private func scoreLabel(_ percent: Double, hasData: Bool) -> String {
-        hasData ? "\(Int(percent.rounded()))%" : "—"
-    }
-
-    private static let relative: RelativeDateTimeFormatter = {
-        let formatter = RelativeDateTimeFormatter()
-        formatter.unitsStyle = .abbreviated
-        return formatter
-    }()
 }

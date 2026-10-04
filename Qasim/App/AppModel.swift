@@ -232,11 +232,11 @@ final class AppModel {
         present(setupPanel)
     }
 
-    func openProgress(showStats: Bool = false) {
+    func openProgress(_ tab: AnalyticsTab = .today) {
         if progressPanel == nil {
             progressPanel = makeCardPanel(title: "Analytics", size: NSSize(width: 480, height: 720))
         }
-        let view = ProgressBoardView(initialTab: showStats ? .stats : .today)
+        let view = ProgressBoardView(initialTab: tab)
             .environment(self)
         progressPanel?.contentView = NSHostingView(rootView: view)
         present(progressPanel)

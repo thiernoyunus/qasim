@@ -137,41 +137,12 @@ struct HomeView: View {
             } else {
                 VStack(spacing: 0) {
                     ForEach(sessions) { record in
-                        sessionRow(record)
+                        SessionRow(record: record, detail: detailLine(for: record))
                         RowLine()
                     }
                 }
             }
         }
-    }
-
-    private func sessionRow(_ record: SessionRecord) -> some View {
-        HStack(spacing: 12) {
-            VStack(alignment: .leading, spacing: 2) {
-                Text(record.taskTitle.isEmpty ? "Untitled session" : record.taskTitle)
-                    .font(.system(size: 15, weight: .semibold))
-                    .lineLimit(1)
-                Text(detailLine(for: record))
-                    .font(.system(size: 13))
-                    .foregroundStyle(Palette.muted)
-            }
-            Spacer()
-            if !sessionActive {
-                Button {
-                    model.restartSession(record)
-                } label: {
-                    Image(systemName: "arrow.counterclockwise")
-                        .font(.system(size: 15, weight: .semibold))
-                        .frame(width: 44, height: 44)
-                        .overlay(Circle().stroke(Palette.ink, lineWidth: 1.5))
-                        .contentShape(Circle())
-                }
-                .buttonStyle(.plain)
-                .accessibilityLabel("Run \(record.taskTitle) again")
-                .help("Start again with the same task and settings")
-            }
-        }
-        .frame(minHeight: 56)
     }
 
     private func detailLine(for record: SessionRecord) -> String {
@@ -224,5 +195,41 @@ struct HomeView: View {
             }
         }
         .keyboardShortcut(.defaultAction)
+    }
+}
+
+/// A past session with a circular "run again" button, hidden while a session runs.
+struct SessionRow: View {
+    @Environment(AppModel.self) private var model
+    let record: SessionRecord
+    let detail: String
+
+    var body: some View {
+        HStack(spacing: 12) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(record.taskTitle.isEmpty ? "Untitled session" : record.taskTitle)
+                    .font(.system(size: 15, weight: .semibold))
+                    .lineLimit(1)
+                Text(detail)
+                    .font(.system(size: 13))
+                    .foregroundStyle(Palette.muted)
+            }
+            Spacer()
+            if model.session.phase != .running && model.session.phase != .paused {
+                Button {
+                    model.restartSession(record)
+                } label: {
+                    Image(systemName: "arrow.counterclockwise")
+                        .font(.system(size: 15, weight: .semibold))
+                        .frame(width: 44, height: 44)
+                        .overlay(Circle().stroke(Palette.ink, lineWidth: 1.5))
+                        .contentShape(Circle())
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel("Run \(record.taskTitle) again")
+                .help("Start again with the same task and settings")
+            }
+        }
+        .frame(minHeight: 56)
     }
 }

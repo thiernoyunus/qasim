@@ -130,7 +130,7 @@ struct BreakView: View {
         HStack(spacing: 8) {
             Button(label, action: action)
                 .buttonStyle(OutlineButtonStyle())
-            Button("View stats") { model.openProgress(showStats: true) }
+            Button("View stats") { model.openProgress(.week) }
                 .buttonStyle(.plain)
                 .font(.system(size: 15, weight: .semibold))
                 .frame(minHeight: 44)
