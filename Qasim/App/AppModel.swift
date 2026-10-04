@@ -746,7 +746,8 @@ final class AppModel {
     private func stepSalah(dt: TimeInterval) {
         salah.refresh(now: Date(), dt: dt, prefs: prefs)
         // He finishes his prayer before he goes back to policing you.
-        session.praying = salah.matVisible
+        // Stay quiet during prayer even with "Pray on the desktop" off: the user may be praying.
+        session.praying = salah.prayerInProgress
         if wasPraying, !salah.matVisible {
             let inSession = session.phase == .running || session.phase == .paused
             brain.speak(

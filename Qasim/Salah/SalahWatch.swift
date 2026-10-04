@@ -41,6 +41,11 @@ final class SalahWatch {
     var tomorrow: PrayerTimes?
     var phase: SalahPhase = .none
     var matVisible = false
+    /// Prayer time is happening, whether or not he prays on the desktop.
+    var prayerInProgress: Bool {
+        if case .now = phase { return true }
+        return false
+    }
     var salahPose: QasimPose = .qiyam
     /// The prayer being prayed right now, and when it started. Used for the raka'
     /// count and so the rest of the app knows not to scold mid-prayer.
