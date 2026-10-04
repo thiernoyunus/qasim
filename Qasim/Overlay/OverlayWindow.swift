@@ -11,6 +11,13 @@ final class TimerOverlayPanel: NSPanel {
     override var canBecomeMain: Bool { false }
 }
 
+/// The timer sits in a window that isn't focused while you work elsewhere.
+/// Without this, the first click only focuses the window and the button
+/// needs a second click.
+final class FirstClickHostingView<Content: View>: NSHostingView<Content> {
+    override func acceptsFirstMouse(for event: NSEvent?) -> Bool { true }
+}
+
 final class FlippedContainer: NSView {
     override var isFlipped: Bool { true }
 }

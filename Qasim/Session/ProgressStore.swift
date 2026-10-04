@@ -68,19 +68,6 @@ struct ActivityStat: Identifiable, Codable, Hashable {
     }
 }
 
-struct HourlyActivity: Identifiable, Hashable {
-    var hour: Int
-    var focusedSeconds: TimeInterval
-    var distractedSeconds: TimeInterval
-
-    var id: Int { hour }
-    var label: String {
-        let suffix = hour < 12 ? "AM" : "PM"
-        let displayHour = hour % 12 == 0 ? 12 : hour % 12
-        return "\(displayHour)\(suffix)"
-    }
-}
-
 struct SessionRecord: Identifiable, Codable, Hashable {
     var id: UUID
     var date: Date
@@ -203,48 +190,16 @@ final class ProgressStore {
         return days[stamp] ?? DayFocus(day: stamp, focusedSeconds: 0, distractedSeconds: 0, sessions: 0)
     }
 
-    func daySeries(last count: Int, ending date: Date = Date()) -> [DayFocus] {
-        guard count > 0 else { return [] }
-        let calendar = Calendar.current
-        let end = calendar.startOfDay(for: date)
-        return (0..<count).compactMap { offset in
-            guard let day = calendar.date(byAdding: .day, value: -(count - offset - 1), to: end) else { return nil }
-            return focus(on: day)
-        }
-    }
-
-    func sessions(since date: Date) -> [SessionRecord] {
-        recentSessions.filter { $0.date >= date }
-    }
-
     func sessions(on date: Date) -> [SessionRecord] {
         recentSessions.filter { Calendar.current.isDate($0.date, inSameDayAs: date) }
     }
 
-    func activityTotals(since date: Date) -> [ActivityStat] {
-        activityTotals(for: sessions(since: date))
+    func activityTotals(in interval: DateInterval) -> [ActivityStat] {
+        activityTotals(for: recentSessions.filter { interval.start <= $0.date && $0.date < interval.end })
     }
 
     func activityTotals(on date: Date) -> [ActivityStat] {
         activityTotals(for: sessions(on: date))
-    }
-
-    func hourlyActivity(since date: Date) -> [HourlyActivity] {
-        var focused = Array(repeating: 0.0, count: 24)
-        var distracted = Array(repeating: 0.0, count: 24)
-        for session in sessions(since: date) {
-            for hour in 0..<24 {
-                if session.hourlyFocusedSeconds.indices.contains(hour) {
-                    focused[hour] += session.hourlyFocusedSeconds[hour]
-                }
-                if session.hourlyDistractedSeconds.indices.contains(hour) {
-                    distracted[hour] += session.hourlyDistractedSeconds[hour]
-                }
-            }
-        }
-        return (0..<24).map {
-            HourlyActivity(hour: $0, focusedSeconds: focused[$0], distractedSeconds: distracted[$0])
-        }
     }
 
     private func activityTotals(for sessions: [SessionRecord]) -> [ActivityStat] {
@@ -262,24 +217,6 @@ final class ProgressStore {
             }
         }
         return totals.values.sorted { $0.totalSeconds > $1.totalSeconds }
-    }
-
-    func monthGrid(containing date: Date) -> [DayFocus?] {
-        var calendar = Calendar.current
-        calendar.firstWeekday = 1
-        guard let interval = calendar.dateInterval(of: .month, for: date) else { return [] }
-        let startWeekday = calendar.component(.weekday, from: interval.start)
-        let pad = (startWeekday - calendar.firstWeekday + 7) % 7
-        let daysInMonth = calendar.range(of: .day, in: .month, for: date)?.count ?? 30
-        var cells: [DayFocus?] = Array(repeating: nil, count: pad)
-        for day in 1...daysInMonth {
-            var comps = calendar.dateComponents([.year, .month], from: date)
-            comps.day = day
-            if let d = calendar.date(from: comps) {
-                cells.append(focus(on: d))
-            }
-        }
-        return cells
     }
 
     private func load() {

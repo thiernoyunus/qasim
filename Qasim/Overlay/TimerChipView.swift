@@ -9,6 +9,11 @@ final class TimerChipState {
     var paused = false
     var expanded = false
     var quickToggleTitle: String?
+    /// What the quick-toggle button acts on, for its logo.
+    var quickToggleHost: String?
+    var quickToggleBundleID = ""
+    /// Time left on a "2 min" snooze, or nil when not snoozed.
+    var snoozeRemaining: String?
 
     func update(
         remaining: String,
@@ -16,7 +21,10 @@ final class TimerChipState {
         task: String,
         paused: Bool,
         expanded: Bool,
-        quickToggleTitle: String?
+        quickToggleTitle: String?,
+        quickToggleHost: String?,
+        quickToggleBundleID: String,
+        snoozeRemaining: String?
     ) {
         if self.remaining != remaining { self.remaining = remaining }
         if self.angry != angry { self.angry = angry }
@@ -24,6 +32,9 @@ final class TimerChipState {
         if self.paused != paused { self.paused = paused }
         if self.expanded != expanded { self.expanded = expanded }
         if self.quickToggleTitle != quickToggleTitle { self.quickToggleTitle = quickToggleTitle }
+        if self.quickToggleHost != quickToggleHost { self.quickToggleHost = quickToggleHost }
+        if self.quickToggleBundleID != quickToggleBundleID { self.quickToggleBundleID = quickToggleBundleID }
+        if self.snoozeRemaining != snoozeRemaining { self.snoozeRemaining = snoozeRemaining }
     }
 }
 
@@ -35,10 +46,13 @@ struct TimerChipView: View {
     var onEdit: (() -> Void)?
     var onStop: (() -> Void)?
     var onFinish: (() -> Void)?
-    var onResizeChanged: ((CGSize) -> Void)?
+    var onResizeChanged: (() -> Void)?
     var onResizeEnded: (() -> Void)?
     var onQuickToggle: (() -> Void)?
     var onSnooze: (() -> Void)?
+    var onEndSnooze: (() -> Void)?
+    var onMoveChanged: (() -> Void)?
+    var onMoveEnded: (() -> Void)?
 
     private var remaining: String { state.remaining }
     private var angry: Bool { state.angry }
@@ -71,6 +85,11 @@ struct TimerChipView: View {
         )
         .shadow(color: .black.opacity(0.22), radius: 8, y: 4)
         .contentShape(Rectangle())
+        .gesture(
+            DragGesture(minimumDistance: 2)
+                .onChanged { _ in onMoveChanged?() }
+                .onEnded { _ in onMoveEnded?() }
+        )
         .onHover { isHovering = $0 }
         .popover(isPresented: $showingEndChoice, arrowEdge: .trailing) {
             EndSessionChoiceView(
@@ -88,7 +107,7 @@ struct TimerChipView: View {
                     .contentShape(Rectangle())
                     .highPriorityGesture(
                         DragGesture(minimumDistance: 2)
-                            .onChanged { value in onResizeChanged?(value.translation) }
+                            .onChanged { _ in onResizeChanged?() }
                             .onEnded { _ in onResizeEnded?() }
                     )
                     .accessibilityLabel("Resize timer")
@@ -107,7 +126,8 @@ struct TimerChipView: View {
                 Image(systemName: "xmark")
                     .font(.system(size: 11, weight: .bold))
                     .foregroundStyle(Palette.ink)
-                    .frame(width: 20, height: 20)
+                    .frame(width: 28, height: 28)
+                    .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
             .accessibilityLabel("End session")
@@ -129,7 +149,8 @@ struct TimerChipView: View {
                 Image(systemName: expanded ? "chevron.up" : "ellipsis")
                     .font(.system(size: 11, weight: .bold))
                     .foregroundStyle(Palette.ink)
-                    .frame(width: 22, height: 22)
+                    .frame(width: 28, height: 28)
+                    .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
             .accessibilityLabel(expanded ? "Hide timer controls" : "Show timer controls")
@@ -156,14 +177,18 @@ struct TimerChipView: View {
 
     private var timeDisplay: some View {
         VStack(spacing: 4) {
-            Text(angry ? "FOCUS!" : remaining)
+            Text(angry ? "FOCUS!" : (state.snoozeRemaining ?? remaining))
                 .font(.system(size: 48, weight: .semibold, design: .rounded))
                 .monospacedDigit()
                 .foregroundStyle(Palette.cream)
                 .minimumScaleFactor(0.5)
                 .lineLimit(1)
 
-            if !task.isEmpty && !angry {
+            if state.snoozeRemaining != nil {
+                Text("Snoozed")
+                    .font(.system(size: 12, weight: .medium))
+                    .foregroundStyle(Palette.cream.opacity(0.7))
+            } else if !task.isEmpty && !angry {
                 Text(task)
                     .font(.system(size: 12, weight: .medium))
                     .foregroundStyle(Palette.cream.opacity(0.7))
@@ -177,41 +202,62 @@ struct TimerChipView: View {
     // stealing focus, plus stop and a 2-minute "leave me alone" snooze.
     private var hoverActions: some View {
         VStack(spacing: 6) {
-            if let quickToggleTitle {
+            if state.snoozeRemaining != nil {
+                Text("Snoozed")
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundStyle(Palette.ink)
+                    .frame(maxWidth: .infinity, minHeight: 34)
+            } else if let quickToggleTitle {
                 Button {
                     onQuickToggle?()
                 } label: {
-                    Text(quickToggleTitle.uppercased())
-                        .font(.system(size: 11, weight: .bold))
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.7)
-                        .frame(maxWidth: .infinity, minHeight: 28)
+                    HStack(spacing: 7) {
+                        quickToggleLogo.frame(width: 18, height: 18)
+                        Text(quickToggleTitle)
+                            .font(.system(size: 13, weight: .semibold))
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.75)
+                    }
+                    .padding(.horizontal, 10)
+                    .frame(maxWidth: .infinity, minHeight: 34)
+                    .contentShape(Capsule())
                 }
                 .buttonStyle(.plain)
                 .foregroundStyle(Palette.cream)
                 .background(Capsule().fill(Palette.ink))
             }
             HStack(spacing: 8) {
-                hoverPill(icon: "stop.fill", text: nil, label: "End session", action: requestEnd)
-                hoverPill(icon: nil, text: "ZZ", label: "Snooze for 2 minutes", action: onSnooze)
+                hoverPill(icon: "stop.fill", text: "End", label: "End session", action: requestEnd)
+                if state.snoozeRemaining != nil {
+                    hoverPill(icon: "play.fill", text: "Resume", label: "End the snooze now", action: onEndSnooze)
+                } else {
+                    hoverPill(icon: "moon.zzz.fill", text: "2 min", label: "Snooze for 2 minutes", action: onSnooze)
+                }
             }
         }
     }
 
-    private func hoverPill(icon: String?, text: String?, label: String, action: (() -> Void)?) -> some View {
+    @ViewBuilder
+    private var quickToggleLogo: some View {
+        if let host = state.quickToggleHost {
+            SiteIcon(host: host)
+        } else if let url = NSWorkspace.shared.urlForApplication(withBundleIdentifier: state.quickToggleBundleID) {
+            Image(nsImage: NSWorkspace.shared.icon(forFile: url.path)).resizable()
+        }
+    }
+
+    private func hoverPill(icon: String, text: String, label: String, action: (() -> Void)?) -> some View {
         Button {
             action?()
         } label: {
-            Group {
-                if let icon {
-                    Image(systemName: icon).font(.system(size: 13, weight: .bold))
-                } else if let text {
-                    Text(text).font(.system(size: 12, weight: .bold))
-                }
-            }
-            .foregroundStyle(Palette.ink)
-            .frame(maxWidth: .infinity, minHeight: 28)
+            Label(text, systemImage: icon)
+                .font(.system(size: 12, weight: .semibold))
+                .lineLimit(1)
+                .foregroundStyle(Palette.ink)
+                .frame(maxWidth: .infinity, minHeight: 32)
+                .contentShape(RoundedRectangle(cornerRadius: 9, style: .continuous))
         }
+        .help(label)
         .buttonStyle(.plain)
         .background(
             RoundedRectangle(cornerRadius: 9, style: .continuous)

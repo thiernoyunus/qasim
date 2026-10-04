@@ -1,9 +1,9 @@
 import AppKit
 import SwiftUI
 
-/// The home dashboard shown after onboarding: today's focus progress, a recent
-/// sessions list, and a single big "New session" button. The detailed
-/// new-session config (task/mode/apps/duration) opens from that button.
+/// The home screen shown after onboarding: the companion, today's progress
+/// toward the daily goal, today's sessions, and one big New session bar.
+/// When the window is made wide it splits into two columns.
 struct HomeView: View {
     @Environment(AppModel.self) private var model
 
@@ -12,194 +12,230 @@ struct HomeView: View {
     }
 
     var body: some View {
-        VStack(spacing: 0) {
-            header
-            Divider().opacity(0.15)
-            ScrollView {
-                VStack(alignment: .leading, spacing: 18) {
-                    todaySection
-                    recentSessionsSection
+        GeometryReader { geo in
+            VStack(spacing: 0) {
+                ScreenHeader {
+                    IconButton(systemName: "slider.horizontal.3", label: "Settings") { model.openSettings() }
                 }
-                .padding(22)
+                .overlay(alignment: .leading) {
+                    IconButton(systemName: "chart.bar", label: "Analytics") { model.openProgress() }
+                        .padding(.leading, 12)
+                }
+
+                if geo.size.width >= 720 {
+                    wideLayout
+                } else {
+                    narrowLayout
+                }
             }
-            newSessionBar
         }
-        .background(Palette.paper)
+        .background(Palette.ground)
         .foregroundStyle(Palette.ink)
         .preferredColorScheme(.light)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
-    private var header: some View {
-        HStack(alignment: .center, spacing: 12) {
+    private var narrowLayout: some View {
+        VStack(spacing: 0) {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 22) {
+                    CompanionVisibilityNotice()
+                    greeting
+                    todayCard
+                    sessionsList
+                }
+                .padding(.horizontal, 28)
+                .padding(.bottom, 20)
+                .frame(maxWidth: 520)
+                .frame(maxWidth: .infinity)
+            }
+            newSessionButton
+                .buttonStyle(BarButtonStyle())
+        }
+    }
+
+    private var wideLayout: some View {
+        HStack(alignment: .top, spacing: 48) {
+            VStack(spacing: 22) {
+                CompanionVisibilityNotice()
+                greeting
+                todayCard
+                newSessionButton
+                    .buttonStyle(BarButtonStyle())
+                    .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+            }
+            .frame(width: 360)
+
+            ScrollView {
+                VStack(alignment: .leading, spacing: 28) {
+                    sessionsList
+                    weekBars
+                }
+                .padding(.top, 12)
+            }
+        }
+        .padding(.horizontal, 48)
+        .padding(.bottom, 32)
+        .frame(maxWidth: 1100)
+        .frame(maxWidth: .infinity)
+    }
+
+    private var greeting: some View {
+        let name = model.prefs.userName.trimmingCharacters(in: .whitespaces)
+        return VStack(spacing: 6) {
             Image(model.prefs.companion.assetName(for: .idle))
                 .resizable()
                 .scaledToFit()
-                .frame(width: 56, height: 56)
-            VStack(alignment: .leading, spacing: 2) {
-                Text(model.prefs.companion.displayName)
-                    .font(Typeface.display(28))
-                    .foregroundStyle(Palette.ink)
-                Text("One thing. Or the lights go out.")
-                    .font(.system(size: 12))
-                    .foregroundStyle(Palette.inkSoft)
-            }
-            Spacer()
-            Button("Analytics") {
-                model.openProgress()
-            }
-            .buttonStyle(.plain)
-            .font(.system(size: 12, weight: .semibold))
-            .foregroundStyle(Palette.inkSoft)
-            .accessibilityLabel("Analytics")
-            Button("Customize") {
-                model.openSettings()
-            }
-            .buttonStyle(.plain)
-            .font(.system(size: 12, weight: .semibold))
-            .foregroundStyle(Palette.inkSoft)
-            .accessibilityLabel("Customize")
+                .frame(height: 140)
+                .padding(.bottom, 8)
+                .accessibilityLabel("\(model.prefs.companion.displayName), your companion")
+            Text(name.isEmpty ? "Salaam." : "Salaam, \(name).")
+                .font(.system(size: 24, weight: .bold))
+            Text("One thing at a time.")
+                .font(.system(size: 15))
+                .foregroundStyle(Palette.muted)
         }
-        .padding(.horizontal, 22)
-        .padding(.top, 18)
-        .padding(.bottom, 14)
+        .frame(maxWidth: .infinity)
     }
 
-    private var todaySection: some View {
-        let today = model.progress.focus(on: Date())
-        let todayMinutes = today.focusMinutes
-        let goalMinutes = model.prefs.dailyGoalMinutes
-        let progress = goalMinutes > 0 ? min(1, Double(todayMinutes) / Double(goalMinutes)) : 0
-        return VStack(alignment: .leading, spacing: 8) {
+    private var todayCard: some View {
+        let minutes = model.progress.focus(on: Date()).focusMinutes
+        let goal = model.prefs.dailyGoalMinutes
+        let progress = goal > 0 ? min(1, Double(minutes) / Double(goal)) : 0
+        return VStack(alignment: .leading, spacing: 10) {
             HStack(alignment: .firstTextBaseline) {
-                Text("Today")
-                    .font(Typeface.display(20))
-                    .foregroundStyle(Palette.ink)
+                Text("Today").font(.system(size: 15, weight: .semibold))
                 Spacer()
-                Text(goalMinutes > 0
-                    ? "\(todayMinutes) / \(goalMinutes) min"
-                    : "\(todayMinutes) min")
-                    .font(.system(size: 12, weight: .semibold))
-                    .foregroundStyle(Palette.inkSoft)
+                Text("\(minutes)").font(.system(size: 15, weight: .bold)).monospacedDigit()
+                    + Text(goal > 0 ? " of \(goal) min" : " min").font(.system(size: 15)).foregroundColor(Palette.muted)
             }
-            ProgressView(value: progress)
-                .progressViewStyle(.linear)
-                .tint(Palette.ember)
-                .frame(height: 8)
-            Text(goalMinutes > 0 && todayMinutes >= goalMinutes ? "Daily goal reached" : "Daily focus goal")
-                .font(.system(size: 11, weight: .semibold))
-                .foregroundStyle(Palette.inkSoft)
+            GeometryReader { bar in
+                ZStack(alignment: .leading) {
+                    Capsule().fill(Palette.ink.opacity(0.12))
+                    Capsule().fill(Palette.ink).frame(width: bar.size.width * progress)
+                }
+            }
+            .frame(height: 8)
+            .accessibilityElement()
+            .accessibilityLabel("Daily focus goal")
+            .accessibilityValue("\(minutes) of \(goal) minutes")
         }
-        .padding(14)
-        .background(Palette.cream, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
-        .overlay(
-            RoundedRectangle(cornerRadius: 12, style: .continuous)
-                .stroke(Palette.ink.opacity(0.08), lineWidth: 1)
-        )
+        .padding(.horizontal, 16)
+        .padding(.vertical, 14)
+        .background(Palette.field, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 12, style: .continuous).stroke(Palette.ink, lineWidth: 1.5))
     }
 
-    private var recentSessionsSection: some View {
+    private var sessionsList: some View {
         let sessions = model.progress.sessions(on: Date())
-
         return VStack(alignment: .leading, spacing: 8) {
-            Text("Today's sessions")
-                .font(Typeface.display(20))
-                .foregroundStyle(Palette.ink)
+            SectionLabel("Earlier today")
             if sessions.isEmpty {
-                Text("No sessions yet today. Start one below.")
-                    .font(.system(size: 12))
-                    .foregroundStyle(Palette.inkSoft)
-                    .padding(.vertical, 8)
+                Text("No sessions yet today.")
+                    .font(.system(size: 15))
+                    .foregroundStyle(Palette.muted)
+                    .padding(.vertical, 6)
             } else {
-                LazyVStack(spacing: 6) {
+                VStack(spacing: 0) {
                     ForEach(sessions) { record in
-                        sessionRow(record)
+                        SessionRow(record: record, detail: detailLine(for: record))
+                        RowLine()
                     }
                 }
             }
         }
     }
 
-    private func sessionRow(_ record: SessionRecord) -> some View {
-        HStack(alignment: .center, spacing: 10) {
-            VStack(alignment: .leading, spacing: 2) {
-                Text(record.taskTitle.isEmpty ? "Untitled session" : record.taskTitle)
-                    .font(.system(size: 13, weight: .semibold))
-                    .foregroundStyle(Palette.ink)
-                    .lineLimit(1)
-                Text(detailLine(for: record))
-                    .font(.system(size: 11))
-                    .foregroundStyle(Palette.inkSoft)
-            }
-            Spacer()
-            if !sessionActive {
-                Button {
-                    model.restartSession(record)
-                } label: {
-                    Text("Restart")
-                        .font(.system(size: 11, weight: .semibold))
-                        .foregroundStyle(Palette.cream)
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 6)
-                        .background(
-                            RoundedRectangle(cornerRadius: 6, style: .continuous)
-                                .fill(Palette.ink)
-                        )
-                }
-                .buttonStyle(.plain)
-                .help("Start a new session with the same task and settings")
-            }
-        }
-        .padding(10)
-        .background(
-            RoundedRectangle(cornerRadius: 8, style: .continuous)
-                .fill(Palette.cream)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 8, style: .continuous)
-                        .stroke(Palette.ink.opacity(0.08), lineWidth: 1)
-                )
-        )
-    }
-
     private func detailLine(for record: SessionRecord) -> String {
-        let length = record.durationMinutes <= 0
-            ? "Stopwatch"
-            : "\(record.durationMinutes)m"
+        let length = record.durationMinutes <= 0 ? "Stopwatch" : "\(record.durationMinutes) min"
         let time = Self.relative.localizedString(for: record.date, relativeTo: Date())
-        let dot = record.finished ? "\u{2713}" : "\u{2022}"
-        return "\(dot) \(length) \u{00B7} \(record.strategy.title) \u{00B7} \(time)"
+        return "\(length) \u{00B7} \(record.strategy.title) \u{00B7} \(time)"
     }
 
     private static let relative: RelativeDateTimeFormatter = {
         let f = RelativeDateTimeFormatter()
-        f.unitsStyle = .abbreviated
+        f.unitsStyle = .full
         return f
     }()
 
-    private var newSessionBar: some View {
-        VStack(spacing: 8) {
-            Button {
-                if sessionActive {
-                    model.openSessionEditor()
-                } else {
-                    model.openNewSessionConfig()
-                }
-            } label: {
-                Label(
-                    sessionActive ? "Edit current session" : "New session",
-                    systemImage: sessionActive ? "pencil" : "plus"
-                )
-                    .font(.system(size: 16, weight: .bold))
-                    .foregroundStyle(Palette.cream)
+    /// Last seven days of focus, shown only in the wide layout.
+    private var weekBars: some View {
+        let calendar = Calendar.current
+        let days = (0..<7).reversed().compactMap { calendar.date(byAdding: .day, value: -$0, to: Date()) }
+        let minutes = days.map { model.progress.focus(on: $0).focusMinutes }
+        let peak = max(minutes.max() ?? 0, 1)
+        return VStack(alignment: .leading, spacing: 8) {
+            SectionLabel("This week")
+            if minutes.allSatisfy({ $0 == 0 }) {
+                Text("No focus yet this week.")
+                    .font(.system(size: 15))
+                    .foregroundStyle(Palette.muted)
+            } else {
+            HStack(alignment: .bottom, spacing: 10) {
+                ForEach(Array(zip(days, minutes)), id: \.0) { day, value in
+                    VStack(spacing: 6) {
+                        RoundedRectangle(cornerRadius: 6)
+                            .fill(calendar.isDateInToday(day) ? Palette.ink.opacity(0.3) : Palette.ink)
+                            .frame(maxWidth: 34)
+                            .frame(height: max(4, 84 * CGFloat(value) / CGFloat(peak)))
+                        Text(calendar.isDateInToday(day) ? "Today" : day.formatted(.dateTime.weekday(.abbreviated)))
+                            .font(.system(size: 12, weight: calendar.isDateInToday(day) ? .bold : .regular))
+                            .foregroundStyle(calendar.isDateInToday(day) ? Palette.ink : Palette.muted)
+                    }
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, 14)
-                    .background(Palette.ink, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
-                    .contentShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                    .accessibilityElement(children: .ignore)
+                    .accessibilityLabel(day.formatted(.dateTime.weekday(.wide)))
+                    .accessibilityValue("\(value) minutes focused")
+                }
             }
-            .buttonStyle(.plain)
-            .keyboardShortcut(.defaultAction)
+            .frame(height: 110, alignment: .bottom)
+            }
         }
-        .padding(18)
-        .background(Palette.paperDeep.opacity(0.5))
+    }
+
+    private var newSessionButton: some View {
+        Button(sessionActive ? "Edit current session" : "New session") {
+            if sessionActive {
+                model.openSessionEditor()
+            } else {
+                model.openNewSessionConfig()
+            }
+        }
+        .keyboardShortcut(.defaultAction)
+    }
+}
+
+/// A past session with a circular "run again" button, hidden while a session runs.
+struct SessionRow: View {
+    @Environment(AppModel.self) private var model
+    let record: SessionRecord
+    let detail: String
+
+    var body: some View {
+        HStack(spacing: 12) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(record.taskTitle.isEmpty ? "Untitled session" : record.taskTitle)
+                    .font(.system(size: 15, weight: .semibold))
+                    .lineLimit(1)
+                Text(detail)
+                    .font(.system(size: 13))
+                    .foregroundStyle(Palette.muted)
+            }
+            Spacer()
+            if model.session.phase != .running && model.session.phase != .paused {
+                Button {
+                    model.restartSession(record)
+                } label: {
+                    Image(systemName: "arrow.counterclockwise")
+                        .font(.system(size: 15, weight: .semibold))
+                        .frame(width: 44, height: 44)
+                        .overlay(Circle().stroke(Palette.ink, lineWidth: 1.5))
+                        .contentShape(Circle())
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel("Run \(record.taskTitle) again")
+                .help("Start again with the same task and settings")
+            }
+        }
+        .frame(minHeight: 56)
     }
 }

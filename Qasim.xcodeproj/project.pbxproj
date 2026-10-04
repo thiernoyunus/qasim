@@ -17,7 +17,6 @@
 		227690A8DDE69D30E16CBBA9 /* ProgressStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 816C4D6B72EA675C1123C977 /* ProgressStore.swift */; };
 		25DE0CCE72B0BB3086537373 /* SessionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE633F9C501241BE45D1720 /* SessionController.swift */; };
 		2E6E10799B9067742E2ADB96 /* SoundBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E9C5B865CB8452D5C4434A /* SoundBoard.swift */; };
-		36394C1A83FC0415D29A8557 /* StatsBoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 169854CFF311FB39FD45EF65 /* StatsBoardView.swift */; };
 		3EA37ECAEFC672EA041EC5F7 /* PoseTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE289B54DE74ED940EA7EBD9 /* PoseTransition.swift */; };
 		4879136E2BDF8D1A438EF645 /* CharacterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11468B4DDDB1D40727AD6D1A /* CharacterView.swift */; };
 		55C119A4AF34DABBDDE61134 /* Effects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DA5ED7D8201687EF75FE3FB /* Effects.swift */; };
@@ -59,7 +58,6 @@
 		0D914C8E09DA32B69AB8333A /* BreakActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreakActivity.swift; sourceTree = "<group>"; };
 		0DE519D5F9644F526CBF7C12 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		11468B4DDDB1D40727AD6D1A /* CharacterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterView.swift; sourceTree = "<group>"; };
-		169854CFF311FB39FD45EF65 /* StatsBoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsBoardView.swift; sourceTree = "<group>"; };
 		1B3A83C537155459845FAD1A /* fire-maxhammarback.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "fire-maxhammarback.mp3"; sourceTree = "<group>"; };
 		1C5071EF2CBDA7E4C820BECD /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
 		2EE633F9C501241BE45D1720 /* SessionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionController.swift; sourceTree = "<group>"; };
@@ -258,7 +256,6 @@
 			isa = PBXGroup;
 			children = (
 				ABB343AEC2BD64757EAEA7BF /* ProgressBoardView.swift */,
-				169854CFF311FB39FD45EF65 /* StatsBoardView.swift */,
 			);
 			path = Progress;
 			sourceTree = "<group>";
@@ -413,7 +410,6 @@
 				E01339D3D8794A3B9A993CDE /* SetupView.swift in Sources */,
 				2E6E10799B9067742E2ADB96 /* SoundBoard.swift in Sources */,
 				BFF0DE2F4213F62748A61A8C /* SpeechLines.swift in Sources */,
-				36394C1A83FC0415D29A8557 /* StatsBoardView.swift in Sources */,
 				BA5D626031023F7E5FBEE2C7 /* TimerChipView.swift in Sources */,
 				F20E8B4650C43C77C0FA6544 /* UpdaterController.swift in Sources */,
 			);

@@ -6,6 +6,8 @@ final class Preferences {
     var userName: String = ""
     var companion: CompanionID = .qasim
     var voice: VoiceStyle = .dry
+    /// How fast they escalate when you drift. Set in Settings, used by every session.
+    var temper: Temper = .normal
     var perch: PerchCorner = .bottomTrailing
     var characterScale: Double = 1.0
     var alwaysOnDesktop = true
@@ -31,6 +33,10 @@ final class Preferences {
     var salahStandInTheWay = true
     /// A chime with the prayer nudge.
     var salahChime = true
+    /// Pray on the prayer mat at salah time. Off: reminders only.
+    var prayOnDesktop = true
+    var breakAdhkar = true
+    var breakQuran = true
     var salahMethod: CalculationMethod = .isna
     var asrSchool: AsrSchool = .standard
     var salahSource: SalahSource = .location
@@ -73,12 +79,15 @@ final class Preferences {
         save()
     }
 
+    /// Drift reactions that are part of every companion and can't be switched off.
+    static let alwaysOnMoves: Set<AngryMove> = [.talk, .lights, .fire, .notes, .sitOnWindow]
+
     func allows(_ move: AngryMove) -> Bool {
-        enabledMoves.contains(move)
+        Self.alwaysOnMoves.contains(move) || enabledMoves.contains(move)
     }
 
     func allows(_ move: AngryMove, previewing previewMove: AngryMove?) -> Bool {
-        enabledMoves.contains(move) || previewMove == move
+        allows(move) || previewMove == move
     }
 
     func toggle(_ move: AngryMove) {
@@ -99,6 +108,7 @@ final class Preferences {
             userName: userName,
             companion: companion,
             voice: voice,
+            temper: temper,
             perch: perch,
             characterScale: characterScale,
             alwaysOnDesktop: alwaysOnDesktop,
@@ -118,6 +128,9 @@ final class Preferences {
             salahAsk: salahAsk,
             salahStandInTheWay: salahStandInTheWay,
             salahChime: salahChime,
+            prayOnDesktop: prayOnDesktop,
+            breakAdhkar: breakAdhkar,
+            breakQuran: breakQuran,
             salahMethod: salahMethod,
             asrSchool: asrSchool,
             salahSource: salahSource,
@@ -144,6 +157,7 @@ final class Preferences {
         userName = box.userName ?? ""
         companion = box.companion
         voice = box.voice
+        temper = box.temper ?? .normal
         perch = box.perch
         characterScale = min(1.6, max(0.7, box.characterScale))
         alwaysOnDesktop = box.alwaysOnDesktop
@@ -163,6 +177,9 @@ final class Preferences {
         salahAsk = box.salahAsk ?? true
         salahStandInTheWay = box.salahStandInTheWay ?? true
         salahChime = box.salahChime ?? true
+        prayOnDesktop = box.prayOnDesktop ?? true
+        breakAdhkar = box.breakAdhkar ?? true
+        breakQuran = box.breakQuran ?? true
         salahMethod = box.salahMethod ?? .isna
         asrSchool = box.asrSchool ?? .standard
         salahSource = box.salahSource ?? .location
@@ -185,6 +202,7 @@ final class Preferences {
         var userName: String?
         var companion: CompanionID
         var voice: VoiceStyle
+        var temper: Temper?
         var perch: PerchCorner
         var characterScale: Double
         var alwaysOnDesktop: Bool
@@ -204,6 +222,9 @@ final class Preferences {
         var salahAsk: Bool?
         var salahStandInTheWay: Bool?
         var salahChime: Bool?
+        var prayOnDesktop: Bool?
+        var breakAdhkar: Bool?
+        var breakQuran: Bool?
         var salahMethod: CalculationMethod?
         var asrSchool: AsrSchool?
         var salahSource: SalahSource?

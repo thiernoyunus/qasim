@@ -6,7 +6,6 @@ final class SessionController {
     var phase: SessionPhase = .idle
     var taskTitle: String = ""
     var strategy: FocusStrategy = .allow
-    var temper: Temper = .normal
     var durationMinutes: Int = 25
     var allowedApps: [AppIdentity] = []
     var blockedApps: [AppIdentity] = []
@@ -18,6 +17,11 @@ final class SessionController {
     var elapsedDistracted: TimeInterval = 0
     var distractedFor: TimeInterval = 0
     var escalation: Escalation = .calm
+    /// "2 min" on the timer: reactions stand down until then, and the drift
+    /// clock starts fresh afterwards. Time still counts as distracted.
+    var snoozedUntil: Date = .distantPast
+    /// Lights and notes share a threshold; take turns so both actually happen.
+    private var notesNext = false
     var isOnTask: Bool = true
     var forceDistracted: Bool = false
     /// True while the companion is on the prayer mat. He finishes the prayer
@@ -56,6 +60,7 @@ final class SessionController {
         elapsedDistracted = 0
         distractedFor = 0
         escalation = .calm
+        snoozedUntil = .distantPast
         isOnTask = true
         forceDistracted = false
         previewTheater = nil
@@ -131,6 +136,7 @@ final class SessionController {
         if isOnTask {
             elapsedFocused += dt
             distractedFor = 0
+            if escalation == .lights { notesNext = true } else if escalation == .notes { notesNext = false }
             if previewTheater == nil {
                 escalation = .calm
             }
@@ -161,17 +167,24 @@ final class SessionController {
             return
         }
 
+        if Date() < snoozedUntil {
+            distractedFor = 0
+            escalation = .calm
+            return
+        }
+
         if isOnTask {
             return
         }
 
-        let t = temper.thresholds
+        let t = prefs.temper.thresholds
         if prefs.allows(.fire, previewing: previewMove), distractedFor >= t.fire {
             escalation = .fire
+        } else if prefs.allows(.notes, previewing: previewMove), distractedFor >= t.lights,
+                  notesNext || !prefs.allows(.lights, previewing: previewMove) {
+            escalation = .notes
         } else if prefs.allows(.lights, previewing: previewMove), distractedFor >= t.lights {
             escalation = .lights
-        } else if prefs.allows(.notes, previewing: previewMove), distractedFor >= t.lights {
-            escalation = .notes
         } else if (prefs.allows(.talk, previewing: previewMove)
             || prefs.allows(.chase, previewing: previewMove)
             || prefs.allows(.sitOnWindow, previewing: previewMove)),
