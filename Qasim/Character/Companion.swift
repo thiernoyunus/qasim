@@ -24,13 +24,24 @@ enum CompanionID: String, CaseIterable, Identifiable, Codable {
         }
     }
 
+    /// Short label shown under the name in the pickers.
+    var personality: String {
+        switch self {
+        case .qasim: "Hype man"
+        case .hana: "Dramatic big sister"
+        case .nur: "Silent judge"
+        case .ahmed: "Nonchalant"
+        case .safa: "Sweet but savage"
+        }
+    }
+
     var blurb: String {
         switch self {
-        case .qasim: "Thobe, kufi, and a look that says go back to work."
-        case .hana: "Hijab, warm eyes, zero patience for scrolling."
-        case .nur: "Niqab. You only see the eyes. That’s enough."
-        case .ahmed: "Kufi, crisp thobe. No face needed to judge you."
-        case .safa: "Blue niqab and abaya. Calm, until you start scrolling."
+        case .qasim: "Thinks you're a legend, and takes it personally when you act otherwise."
+        case .hana: "Every distraction is a personal betrayal. She will tell your mum."
+        case .nur: "Barely says a word. Doesn't need to."
+        case .ahmed: "Unbothered and deadpan. Roasts you without even trying."
+        case .safa: "Polite, warm, and somehow every compliment stings."
         }
     }
 
@@ -67,7 +78,7 @@ enum VoiceStyle: String, CaseIterable, Identifiable, Codable {
 
     var blurb: String {
         switch self {
-        case .dry: "Playful jabs about the distraction — never your identity."
+        case .dry: "Real roasts, in your character\u{2019}s own style. About the distraction, never about you."
         case .gentle: "Warm reminders without the pressure."
         case .stern: "Short, direct, and not interested in excuses."
         }

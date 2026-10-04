@@ -79,7 +79,8 @@ final class AppModel {
     private var lastTheater: Theater = .none
     private var distractionEffectAge: TimeInterval = 0
     private var distractionEffect: Theater = .none
-    private let distractionEffectDuration: TimeInterval = 10
+    /// How long each distraction effect (fire, lights, notes...) runs before switching.
+    static let distractionEffectDuration: TimeInterval = 20
     private var nextNoteSoundAt: TimeInterval = 0
     private var wasPraying = false
     private var lastAskRound: String?
@@ -269,7 +270,7 @@ final class AppModel {
         prefs.hasCompletedSetup = true
         prefs.save()
         session.start()
-        brain.speak(SpeechLines.startLine(voice: prefs.voice, name: prefs.userName), seconds: 2.5, prefs: prefs)
+        brain.speak(SpeechLines.startLine(companion: prefs.companion, name: prefs.userName), seconds: 2.5, prefs: prefs)
         theater = .none
         stopLightShow()
         sounds.stopAll()
@@ -300,7 +301,7 @@ final class AppModel {
         isEditingSession = false
         timerExpanded = false
         if finished {
-            brain.speak(SpeechLines.doneLine(voice: prefs.voice, name: prefs.userName), seconds: 4, prefs: prefs)
+            brain.speak(SpeechLines.doneLine(companion: prefs.companion, name: prefs.userName), seconds: 4, prefs: prefs)
             showBreakChoice()
         } else {
             clearBreakFlow()
@@ -726,7 +727,7 @@ final class AppModel {
         session.tick(dt, prefs: prefs)
         if wasRunning, session.phase == .finished {
             recordSession(finished: true)
-            brain.speak(SpeechLines.doneLine(voice: prefs.voice, name: prefs.userName), seconds: 4, prefs: prefs)
+            brain.speak(SpeechLines.doneLine(companion: prefs.companion, name: prefs.userName), seconds: 4, prefs: prefs)
             showBreakChoice()
         }
         if breakState == .running {
@@ -848,14 +849,15 @@ final class AppModel {
                 return
             }
 
+            // Random order so the person can't predict what's coming next;
+            // never repeat the effect that just played.
             if !effects.contains(distractionEffect) {
-                distractionEffect = effects[0]
+                distractionEffect = effects.randomElement()!
                 distractionEffectAge = 0
             } else {
                 distractionEffectAge += dt
-                if distractionEffectAge >= distractionEffectDuration {
-                    let current = effects.firstIndex(of: distractionEffect) ?? 0
-                    distractionEffect = effects[(current + 1) % effects.count]
+                if distractionEffectAge >= Self.distractionEffectDuration {
+                    distractionEffect = effects.filter { $0 != distractionEffect }.randomElement() ?? distractionEffect
                     distractionEffectAge = 0
                 }
             }

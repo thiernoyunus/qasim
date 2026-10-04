@@ -128,6 +128,9 @@ struct SetupView: View {
                                 .frame(height: 104)
                             Text(companion.displayName)
                                 .font(.system(size: 15, weight: isOn ? .semibold : .regular))
+                            Text(companion.personality)
+                                .font(.system(size: 12))
+                                .foregroundStyle(Palette.muted)
                         }
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 14)
@@ -139,11 +142,11 @@ struct SetupView: View {
                         .contentShape(Rectangle())
                     }
                     .buttonStyle(.plain)
-                    .accessibilityLabel(companion.displayName)
+                    .accessibilityLabel("\(companion.displayName), \(companion.personality)")
                     .accessibilityAddTraits(isOn ? .isSelected : [])
                 }
             }
-            Text("\(selected.displayName): \(selected.blurb)")
+            Text("\(selected.displayName), \(selected.personality.lowercased()): \(selected.blurb)")
                 .font(.system(size: 14))
                 .foregroundStyle(Palette.muted)
                 .multilineTextAlignment(.center)
