@@ -52,7 +52,10 @@ struct SettingsView: View {
                     }
                 }
             }
-            .padding(.bottom, 4)
+            Text(prefs.companion.blurb)
+                .font(.system(size: 12))
+                .foregroundStyle(Palette.inkSoft)
+                .padding(.bottom, 4)
             FieldBox {
                 SettingsRow("Temper") {
                     segments("Temper", prefs.saving(\.temper), Temper.allCases) { $0.title }
@@ -310,6 +313,11 @@ private struct CompanionTile: View {
                     .font(.system(size: 13, weight: selected ? .semibold : .regular))
                     .lineLimit(1)
                     .minimumScaleFactor(0.8)
+                Text(companion.personality)
+                    .font(.system(size: 10))
+                    .foregroundStyle(Palette.inkSoft)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
             }
             .padding(.vertical, 8)
             .frame(maxWidth: .infinity)
@@ -321,7 +329,7 @@ private struct CompanionTile: View {
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
-        .accessibilityLabel(companion.displayName)
+        .accessibilityLabel("\(companion.displayName), \(companion.personality)")
         .accessibilityAddTraits(selected ? .isSelected : [])
     }
 }

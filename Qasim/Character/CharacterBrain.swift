@@ -133,7 +133,7 @@ final class CharacterBrain {
                 target = perch(in: canvas, prefs: prefs, window: .zero)
                 move(dt: dt, prefs: prefs)
                 if lastEscalation != .calm {
-                    speak(SpeechLines.doneLine(voice: prefs.voice, name: prefs.userName), seconds: 4, prefs: prefs)
+                    speak(SpeechLines.doneLine(companion: prefs.companion, name: prefs.userName), seconds: 4, prefs: prefs)
                 }
                 lastEscalation = .calm
             }
@@ -150,7 +150,7 @@ final class CharacterBrain {
     }
 
     func poke(prefs: Preferences) {
-        speak(SpeechLines.pokeLine(companion: prefs.companion, voice: prefs.voice), seconds: 2.4, prefs: prefs)
+        speak(SpeechLines.pokeLine(companion: prefs.companion), seconds: 2.4, prefs: prefs)
         hopPhase += 2
     }
 
@@ -293,7 +293,7 @@ final class CharacterBrain {
                 distractionTransitionAge = 0
             }
             if escalation == .calm, session.isOnTask {
-                speak(SpeechLines.startLine(voice: prefs.voice, name: prefs.userName), seconds: 2.4, prefs: prefs)
+                speak(SpeechLines.startLine(companion: prefs.companion, name: prefs.userName), seconds: 2.4, prefs: prefs)
             }
             lastEscalation = escalation
         }
