@@ -70,8 +70,9 @@ final class AppModel {
     private var timerHost: NSHostingView<TimerChipView>?
     private let timerState = TimerChipState()
     private var timerPanelOrigin: NSPoint?
-    private var timerPanelSize = NSSize(width: 160, height: 110)
-    private var timerPanelResizeStart: (size: NSSize, origin: NSPoint)?
+    private var timerPanelSize = NSSize(width: 230, height: 140)
+    private var timerPanelResizeStart: (size: NSSize, origin: NSPoint, mouse: NSPoint)?
+    private var timerPanelMoveStart: (origin: NSPoint, mouse: NSPoint)?
     private var lastTimerExpanded = false
     private var lastTimerOnTop = true
     private var tickTask: Task<Void, Never>?
@@ -344,7 +345,7 @@ final class AppModel {
 
     func timerChip(
         size: CGSize? = nil,
-        onResizeChanged: ((CGSize) -> Void)? = nil,
+        onResizeChanged: (() -> Void)? = nil,
         onResizeEnded: (() -> Void)? = nil
     ) -> TimerChipView {
         return TimerChipView(
@@ -358,7 +359,10 @@ final class AppModel {
             onResizeChanged: onResizeChanged,
             onResizeEnded: onResizeEnded,
             onQuickToggle: { [weak self] in self?.quickToggleCurrentApp() },
-            onSnooze: { [weak self] in self?.prefs.hide(for: 2 * 60) }
+            onSnooze: { [weak self] in self?.session.snoozedUntil = Date().addingTimeInterval(2 * 60) },
+            onEndSnooze: { [weak self] in self?.session.snoozedUntil = .distantPast },
+            onMoveChanged: { [weak self] in self?.moveTimerPanel() },
+            onMoveEnded: { [weak self] in self?.timerPanelMoveStart = nil }
         )
     }
 
@@ -375,10 +379,9 @@ final class AppModel {
         let ctx = session.monitor.context
         guard canQuickToggleCurrentApp else { return nil }
         if let host = ctx.host {
-            guard let rule = SiteRule.normalize(host).map({ SiteRule(host: $0) }) else { return nil }
-            let already = session.strategy == .block
-                ? session.blockedSites.contains(rule)
-                : session.allowedSites.contains(rule)
+            // Covered already counts: a rule for youtube.com covers m.youtube.com and youtu.be.
+            let rules = session.strategy == .block ? session.blockedSites : session.allowedSites
+            let already = rules.contains { $0.matches(host, path: ctx.path) }
             return already ? nil : (session.strategy == .block ? "Block \(host)" : "Allow \(host)")
         }
         let app = AppIdentity(bundleID: ctx.bundleID, name: ctx.appName, path: "")
@@ -388,18 +391,45 @@ final class AppModel {
         return already ? nil : (session.strategy == .block ? "Block \(ctx.appName)" : "Allow \(ctx.appName)")
     }
 
-    func resizeTimerPanel(_ translation: CGSize) {
+    private var snoozeRemainingLabel: String? {
+        let left = Int(session.snoozedUntil.timeIntervalSinceNow.rounded(.up))
+        return left > 0 ? String(format: "%d:%02d", left / 60, left % 60) : nil
+    }
+
+    /// Smallest timer that still fits the full "Allow <app>" button and time.
+    private var timerMinimumSize: NSSize {
+        timerExpanded ? NSSize(width: 220, height: 200) : NSSize(width: 210, height: 130)
+    }
+
+    private let timerMaximumSize = NSSize(width: 340, height: 240)
+
+    /// Drag anywhere on the timer to move it. Measured in screen coordinates,
+    /// so the window moving under the cursor doesn't feed back into the drag.
+    private func moveTimerPanel() {
         guard let timerPanel else { return }
+        let mouse = NSEvent.mouseLocation
+        if timerPanelMoveStart == nil {
+            timerPanelMoveStart = (timerPanel.frame.origin, mouse)
+        }
+        guard let start = timerPanelMoveStart else { return }
+        let origin = NSPoint(x: start.origin.x + mouse.x - start.mouse.x, y: start.origin.y + mouse.y - start.mouse.y)
+        timerPanel.setFrameOrigin(origin)
+        timerPanelOrigin = origin
+    }
+
+    func resizeTimerPanel() {
+        guard let timerPanel else { return }
+        let mouse = NSEvent.mouseLocation
         if timerPanelResizeStart == nil {
-            timerPanelResizeStart = (timerPanel.frame.size, timerPanel.frame.origin)
+            timerPanelResizeStart = (timerPanel.frame.size, timerPanel.frame.origin, mouse)
         }
         guard let start = timerPanelResizeStart else { return }
+        // Screen y grows upward; dragging the corner down makes it taller.
+        let translation = CGSize(width: mouse.x - start.mouse.x, height: start.mouse.y - mouse.y)
 
         let visible = screen.visibleFrame
-        let minimum = timerExpanded
-            ? NSSize(width: 180, height: 170)
-            : NSSize(width: 150, height: 110)
-        let maximum = NSSize(width: 420, height: 300)
+        let minimum = timerMinimumSize
+        let maximum = timerMaximumSize
         let width = min(
             max(minimum.width, start.size.width + translation.width),
             min(maximum.width, visible.width)
@@ -431,7 +461,8 @@ final class AppModel {
 
     func startBreak() {
         guard breakState == .choice else { return }
-        breakActivity = [BreakActivity.adhkar, .quran].randomElement() ?? .adhkar
+        let choices: [BreakActivity] = (prefs.breakAdhkar ? [.adhkar] : []) + (prefs.breakQuran ? [.quran] : [])
+        breakActivity = choices.randomElement() ?? .rest
         breakRemaining = TimeInterval(prefs.breakMinutes * 60)
         breakState = .running
         presentBreakPanel()
@@ -981,7 +1012,10 @@ final class AppModel {
             task: session.taskTitle,
             paused: paused,
             expanded: timerExpanded,
-            quickToggleTitle: currentQuickToggleTitle()
+            quickToggleTitle: currentQuickToggleTitle(),
+            quickToggleHost: session.monitor.context.host,
+            quickToggleBundleID: session.monitor.context.bundleID,
+            snoozeRemaining: snoozeRemainingLabel
         )
 
         let shouldShow = prefs.showTimerChip
@@ -992,15 +1026,16 @@ final class AppModel {
             return
         }
 
-        let minimum = timerExpanded
-            ? NSSize(width: 180, height: 170)
-            : NSSize(width: 150, height: 110)
-        let maximum = NSSize(width: 420, height: 300)
+        let minimum = timerMinimumSize
+        let maximum = timerMaximumSize
         timerPanelSize.width = min(max(timerPanelSize.width, minimum.width), maximum.width)
         timerPanelSize.height = min(max(timerPanelSize.height, minimum.height), maximum.height)
         let size = timerPanelSize
         if let timerPanel, timerPanelOrigin != nil, timerPanelResizeStart == nil {
-            timerPanelOrigin = timerPanel.frame.origin
+            // Keep the top edge where the user put it when the size changes;
+            // AppKit grows windows from the bottom corner, which made it drop.
+            let frame = timerPanel.frame
+            timerPanelOrigin = NSPoint(x: frame.minX, y: frame.maxY - size.height)
         }
         let layoutChanged = timerPanel == nil
             || timerExpanded != lastTimerExpanded
@@ -1023,12 +1058,15 @@ final class AppModel {
             panel.isReleasedWhenClosed = false
             panel.ignoresMouseEvents = false
             panel.title = "Qasim Timer"
-            let host = NSHostingView(rootView: timerChip(
+            let host = FirstClickHostingView(rootView: timerChip(
                 size: size,
-                onResizeChanged: { [weak self] translation in self?.resizeTimerPanel(translation) },
+                onResizeChanged: { [weak self] in self?.resizeTimerPanel() },
                 onResizeEnded: { [weak self] in self?.finishResizingTimerPanel() }
             ))
             host.frame = NSRect(origin: .zero, size: size)
+            // The panel's size comes from timerPanelSize only; don't let the
+            // SwiftUI content grow or shrink the window behind our back.
+            host.sizingOptions = []
             panel.contentView = host
             timerHost = host
             timerPanel = panel

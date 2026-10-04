@@ -33,6 +33,10 @@ final class Preferences {
     var salahStandInTheWay = true
     /// A chime with the prayer nudge.
     var salahChime = true
+    /// Pray on the prayer mat at salah time. Off: reminders only.
+    var prayOnDesktop = true
+    var breakAdhkar = true
+    var breakQuran = true
     var salahMethod: CalculationMethod = .isna
     var asrSchool: AsrSchool = .standard
     var salahSource: SalahSource = .location
@@ -124,6 +128,9 @@ final class Preferences {
             salahAsk: salahAsk,
             salahStandInTheWay: salahStandInTheWay,
             salahChime: salahChime,
+            prayOnDesktop: prayOnDesktop,
+            breakAdhkar: breakAdhkar,
+            breakQuran: breakQuran,
             salahMethod: salahMethod,
             asrSchool: asrSchool,
             salahSource: salahSource,
@@ -170,6 +177,9 @@ final class Preferences {
         salahAsk = box.salahAsk ?? true
         salahStandInTheWay = box.salahStandInTheWay ?? true
         salahChime = box.salahChime ?? true
+        prayOnDesktop = box.prayOnDesktop ?? true
+        breakAdhkar = box.breakAdhkar ?? true
+        breakQuran = box.breakQuran ?? true
         salahMethod = box.salahMethod ?? .isna
         asrSchool = box.asrSchool ?? .standard
         salahSource = box.salahSource ?? .location
@@ -212,6 +222,9 @@ final class Preferences {
         var salahAsk: Bool?
         var salahStandInTheWay: Bool?
         var salahChime: Bool?
+        var prayOnDesktop: Bool?
+        var breakAdhkar: Bool?
+        var breakQuran: Bool?
         var salahMethod: CalculationMethod?
         var asrSchool: AsrSchool?
         var salahSource: SalahSource?

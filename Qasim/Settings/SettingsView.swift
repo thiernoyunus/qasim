@@ -408,14 +408,18 @@ struct ActionsCustomizeSection: View {
                 }
             }
             group("At salah time") {
-                actionRow("Salah", "Preview Qiyam, Ruku, and Sujood on the prayer mat.",
-                          previewing: model.previewingSalah, preview: model.previewSalah) { EmptyView() }
+                actionRow("Pray on the desktop", "Qiyam, Ruku, and Sujood on the prayer mat when it\u{2019}s time.",
+                          previewing: model.previewingSalah, preview: model.previewSalah) {
+                    onOff("Pray on the desktop", \.prayOnDesktop)
+                }
             }
             group("On breaks") {
                 rows(BreakActivity.allCases.filter { $0 != .rest }) { activity in
                     actionRow(activity.title, activity.blurb,
                               previewing: model.actionPreview == .breakActivity(activity),
-                              preview: { model.preview(activity) }) { EmptyView() }
+                              preview: { model.preview(activity) }) {
+                        onOff(activity.title, activity == .adhkar ? \.breakAdhkar : \.breakQuran)
+                    }
                 }
             }
         }
@@ -433,6 +437,15 @@ struct ActionsCustomizeSection: View {
             if item != items.first { RowLine() }
             row(item)
         }
+    }
+
+    private func onOff(_ title: String, _ key: ReferenceWritableKeyPath<Preferences, Bool>) -> some View {
+        let prefs = model.prefs
+        return Toggle(title, isOn: Binding(get: { prefs[keyPath: key] }, set: { prefs[keyPath: key] = $0; prefs.save() }))
+            .toggleStyle(.switch)
+            .tint(Palette.ink)
+            .labelsHidden()
+            .frame(width: 44)
     }
 
     private func actionRow<Leading: View>(

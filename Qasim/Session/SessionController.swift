@@ -17,6 +17,9 @@ final class SessionController {
     var elapsedDistracted: TimeInterval = 0
     var distractedFor: TimeInterval = 0
     var escalation: Escalation = .calm
+    /// "2 min" on the timer: reactions stand down until then, and the drift
+    /// clock starts fresh afterwards. Time still counts as distracted.
+    var snoozedUntil: Date = .distantPast
     /// Lights and notes share a threshold; take turns so both actually happen.
     private var notesNext = false
     var isOnTask: Bool = true
@@ -57,6 +60,7 @@ final class SessionController {
         elapsedDistracted = 0
         distractedFor = 0
         escalation = .calm
+        snoozedUntil = .distantPast
         isOnTask = true
         forceDistracted = false
         previewTheater = nil
@@ -159,6 +163,12 @@ final class SessionController {
         }
 
         if strategy == .company {
+            escalation = .calm
+            return
+        }
+
+        if Date() < snoozedUntil {
+            distractedFor = 0
             escalation = .calm
             return
         }

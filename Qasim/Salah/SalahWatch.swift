@@ -132,8 +132,8 @@ final class SalahWatch {
             if elapsed >= 0, elapsed < current.name.prayerSeconds {
                 started.insert(key)
                 phase = .now(current.name)
-                matVisible = true
-                prayingNow = current.name
+                matVisible = prefs.prayOnDesktop
+                prayingNow = prefs.prayOnDesktop ? current.name : nil
                 salahPose = current.name.pose(elapsed: elapsed)
                 return
             }

@@ -82,6 +82,12 @@ struct AppIdentity: Identifiable, Hashable, Codable, Sendable {
     var path: String
 
     var id: String { bundleID.isEmpty ? path : bundleID }
+
+    // The same app can be saved with or without its path or display name (the
+    // app list knows the path, the timer's quick "Allow" doesn't), so compare
+    // by identity only.
+    static func == (a: AppIdentity, b: AppIdentity) -> Bool { a.id == b.id }
+    func hash(into hasher: inout Hasher) { hasher.combine(id) }
 }
 
 struct SiteRule: Identifiable, Hashable, Codable, Sendable {
