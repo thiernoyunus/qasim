@@ -1,3 +1,17 @@
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/header/glow.svg?title=Qasim&subtitle=A+focus+companion+for+your+Mac&logo=apple&mode=dark" />
+    <img alt="Qasim" src="https://shieldcn.dev/header/glow.svg?title=Qasim&subtitle=A+focus+companion+for+your+Mac&logo=apple&mode=light" />
+  </picture>
+</p>
+
+<p align="center">
+  <img alt="macOS 14+" src="https://shieldcn.dev/badge/macOS-14%2B-black.svg?variant=secondary&logo=apple" />
+  <img alt="Swift" src="https://shieldcn.dev/badge/Swift-SwiftUI-f05138.svg?variant=secondary&logo=swift" />
+  <a href="https://github.com/thiernoyunus/qasim"><img alt="Last commit" src="https://shieldcn.dev/github/last-commit/thiernoyunus/qasim.svg?variant=secondary" /></a>
+  <a href="https://github.com/thiernoyunus/qasim"><img alt="Stars" src="https://shieldcn.dev/github/stars/thiernoyunus/qasim.svg?variant=secondary" /></a>
+</p>
+
 # Qasim
 
 Qasim is a macOS focus companion that notices when you leave the apps or websites chosen for a session, then responds using the character and tone you selected.
