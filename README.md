@@ -1,4 +1,8 @@
 <p align="center">
+  <img src="Art/app-icon-1024.png" width="112" alt="Qasim logo" />
+</p>
+
+<p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://shieldcn.dev/header/glow.svg?title=Qasim&subtitle=A+focus+companion+for+your+Mac&logo=apple&mode=dark" />
     <img alt="Qasim" src="https://shieldcn.dev/header/glow.svg?title=Qasim&subtitle=A+focus+companion+for+your+Mac&logo=apple&mode=light" />
